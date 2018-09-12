@@ -1,0 +1,36 @@
+config_meta:
+  create: '2018-08-01 17:20:17.439386'
+  modify: '2018-08-02 08:10:35.729496'
+  uid: 1533162017439
+contract:
+  stock-prices:
+    cleaners: {}
+    enrichment: {}
+    source: {}
+    version: '0.00'
+storage:
+  folder:
+    data:
+      clean: 2_clean
+      dict: 1_dictionary
+      raw: 0_raw
+    feature:
+      engineer: 4_engineer
+      extract: 3_extract
+      frame: 5_frame
+    insight:
+      visual: 8_visualize
+    ml:
+      model: 6_model
+      train: 7_train
+    scratch:
+      play: x_scratch
+  path:
+    data: /Users/msanchez/cortex/cortex-examples-1/workspace/cortex-examples/skill-lab/deep-learning/stock-price-prediction/datasets/demo/stock-prices-fb/data
+    work: /Users/msanchez/cortex/cortex-examples-1/workspace/cortex-examples/skill-lab/deep-learning/stock-price-prediction/datasets/demo/stock-prices-fb
+  pattern:
+    clean: clean_{}_v{}.p
+    dict: dict_{}_v{}.p
+    excel: excel_{}_v{}.xlsx
+    feature: fea_{}_{}_v{}.p
+    visual: vis_{}_{}_v{}.png
