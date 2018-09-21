@@ -2,13 +2,16 @@
 
 ## Setup
 1. Create a new Skill Lab project
-2. Open the terminal
-  1. Unzip `cortex-skill-lab-examples.zip` into the current working directory:
+2. Open the Skill Lab terminal. It will open in your Conda / Python workspace directory.
+3. Install the `cortex-examples`:
+  1. From zip file: Unzip `cortex-skill-lab-examples.zip` into the current working directory:
     ```bash
       $ unzip <path/to/cortex-skill-lab-examples.zip>
     ```
-  2. conda install -c conda-forge scikit-learn 
-
+  2. From source:
+    ```bash
+      git clone git@github.com:CognitiveScale/cortex-examples.git
+    ```
 
 ## Cortex Skill Lab Hello World example
 
