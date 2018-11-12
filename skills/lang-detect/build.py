@@ -1,21 +1,10 @@
 import sys
 from cortex import Cortex
 
-_shim = """
-def main(params):
-    return %s(params)
-"""
-
-
-def load_source(path, fn):
-    with open(path) as f:
-        source = f.read()
-    return '{}\n\n{}'.format(source, _shim % fn)
-
 
 def build_detect_action(builder):
-    action = builder.action('c12e/lang-detect').from_source(
-        load_source('lang_detect/detect.py', 'detect')).with_requirements(['langdetect']).daemon().build()
+    action = builder.action('c12e/lang-detect').from_source_file(
+        'lang_detect/detect.py', 'detect').with_requirements(['langdetect']).daemon().build()
 
     return action
 
