@@ -1,0 +1,51 @@
+/*
+ * CognitiveScale Cortex Studio
+ *
+ * Copyright (c) Cognitive Scale, Inc.
+ * All rights reserved.
+ * Dissemination or any rights to code or any derivative works thereof is strictly forbidden
+ * unless licensed and subject to a separate written agreement with CognitiveScale.
+ */
+
+.cortex-panel {
+    display: flex;
+    flex-direction: column;
+    min-width: 301px;
+    overflow: auto;
+    background-color: var(--jp-layout-color1);
+
+    &__content {
+        margin: auto;
+    }
+
+    &__tablogo {
+        background-size: 100%;
+        width: var(--jp-private-sidebar-tab-width);
+        height: var(--jp-private-sidebar-tab-width);
+        background-image: url(../../../assets/icon.png);
+    }
+}
+
+
+.cortex-inspector {
+
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: 0;
+    padding: 10px;
+    overflow: hidden;
+
+    background-color: var(--jp-layout-color1);
+
+    &__icon {
+        background-size: 100%;
+        width: var(--jp-private-sidebar-tab-width);
+        height: var(--jp-private-sidebar-tab-width);
+        background-image: url(../../../assets/icon.png);
+    }
+}

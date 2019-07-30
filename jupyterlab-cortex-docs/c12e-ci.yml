@@ -1,0 +1,8 @@
+builder:
+  image: nikolaik/python-nodejs:python3.6-nodejs8
+  command: "./build.sh CI"
+  environment:
+    - PYPI_UPLOAD
+    - REPO_NAME
+    - REPO_USER
+    - REPO_PASSWORD
