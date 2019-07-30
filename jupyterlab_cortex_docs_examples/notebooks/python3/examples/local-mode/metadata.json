@@ -1,0 +1,6 @@
+{
+    "contentDefinition": {
+        "title": "Local Mode",
+        "description": "Run the dataset and experiments examples in local mode."
+    }
+}

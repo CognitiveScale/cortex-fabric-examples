@@ -1,0 +1,6 @@
+{
+    "contentDefinition": {
+        "title": "Pipeline",
+        "description": "Create, use, and persist pipelines to work with datasets."
+    }
+}
