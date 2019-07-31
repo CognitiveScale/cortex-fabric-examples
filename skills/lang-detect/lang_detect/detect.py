@@ -1,9 +1,10 @@
-from cortex import Message
+from cortex import Message, Cortex
 from langdetect import detect_langs
 
 
 def detect(params):
     msg = Message(params)
+    cortex= Cortex.client(msg.apiEndpoint, token = msg.token)
     text = msg.payload.get('text')
 
     results = detect_langs(text)
@@ -14,5 +15,5 @@ def detect(params):
 
     top_lang = results[0]
 
-    return Message.with_payload(
+    return cortex.message(
         {'text': text, 'lang': top_lang.lang, 'score': top_lang.prob, 'other_langs': others}).to_params()
