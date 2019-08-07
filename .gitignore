@@ -5,4 +5,7 @@
 .idea/
 .DS_Store
 .vscode
+.cache
+.pytest_cache
+.tox
 _venv
