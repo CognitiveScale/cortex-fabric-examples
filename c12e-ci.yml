@@ -1,0 +1,6 @@
+builder:
+  image: python:3.6-slim
+  command: bash -cx 'apt-get update
+    && apt-get install -y libmagic-dev gcc make
+    && make install
+    && make test'

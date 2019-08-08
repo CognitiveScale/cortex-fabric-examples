@@ -1,5 +1,5 @@
 cortex-python[viz,jupyter,builders]
-sklearn # needed for ames-example
+sklearn # needed for ames, experiment_annotations, experiment_basics, 02_local_experiments
 pytest>=3.2.5,<3.3
 pytest-cov==2.5.1
 nbval==0.9.2
