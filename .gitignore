@@ -1,7 +1,10 @@
 *.pyc
-**/datasets
 **/experiments
 .ipynb_checkpoints/
 .idea/
 .DS_Store
 .vscode
+.cache
+.pytest_cache
+.tox
+_venv

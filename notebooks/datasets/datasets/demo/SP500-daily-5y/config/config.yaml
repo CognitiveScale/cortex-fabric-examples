@@ -1,0 +1,36 @@
+config_meta:
+  create: '2018-07-27 17:08:31.512618'
+  modify: '2018-07-31 11:35:44.459791'
+  uid: 1532729311513
+contract:
+  SP500_clean:
+    cleaners: {}
+    enrichment: {}
+    source: {}
+    version: '0.00'
+storage:
+  folder:
+    data:
+      clean: 2_clean
+      dict: 1_dictionary
+      raw: 0_raw
+    feature:
+      engineer: 4_engineer
+      extract: 3_extract
+      frame: 5_frame
+    insight:
+      visual: 8_visualize
+    ml:
+      model: 6_model
+      train: 7_train
+    scratch:
+      play: x_scratch
+  path:
+    data: /Users/msanchez/cortex/cortex-examples-1/workspace/cortex-examples/skill-lab/datasets/datasets/demo/SP500-daily-5y/data
+    work: /Users/msanchez/cortex/cortex-examples-1/workspace/cortex-examples/skill-lab/datasets/datasets/demo/SP500-daily-5y
+  pattern:
+    clean: clean_{}_v{}.p
+    dict: dict_{}_v{}.p
+    excel: excel_{}_v{}.xlsx
+    feature: fea_{}_{}_v{}.p
+    visual: vis_{}_{}_v{}.png
