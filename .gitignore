@@ -8,3 +8,4 @@
 .pytest_cache
 .tox
 _venv
+*BranchRevision.json
