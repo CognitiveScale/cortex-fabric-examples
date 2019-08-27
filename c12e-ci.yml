@@ -4,3 +4,5 @@ builder:
     && apt-get install -y libmagic-dev gcc make
     && make install
     && make test'
+  environment:
+    - TOX_ENV_REQUIREMENTS
