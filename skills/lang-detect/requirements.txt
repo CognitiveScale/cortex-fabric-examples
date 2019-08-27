@@ -1,2 +1,0 @@
-langdetect==1.0.7
-cortex-python[builders,jupyter,viz]
