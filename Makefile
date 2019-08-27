@@ -5,9 +5,18 @@ install:
 
 dev.test:
 	pytest --cache-clear  \
+	    --capture=no \
 		--ignore cortex_docs_examples/notebooks/python3/examples/deployment \
 		--nbval-lax cortex_docs_examples/notebooks/python3/examples
-	
+
+dev.network.test:
+	pytest --cache-clear  \
+		--capture=no \
+		--current-env \
+		--invitation_code=${INVITATION_CODE} \
+		--nbval-lax \
+		tests/setup.py cortex_docs_examples/notebooks/python3/examples notebooks
+
 test:
 	tox -r
 
