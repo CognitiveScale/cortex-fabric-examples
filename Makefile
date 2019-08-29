@@ -1,3 +1,5 @@
+.PHONY: install dev.test test dist
+
 install:
 	pip install -r requirements-dev.txt
 
@@ -9,5 +11,8 @@ dev.test:
 test:
 	tox -r
 
-zipit:
-	zip -r  cortex-skill-lab-examples.zip . -x *.git*
+dist:
+	mkdir -p dist && \
+	cd cortex_docs_examples && \
+	zip -r ../dist/notebooks.zip . && \
+	cd -

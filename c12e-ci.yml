@@ -3,6 +3,7 @@ builder:
   command: bash -cx 'apt-get update
     && apt-get install -y libmagic-dev gcc make
     && make install
-    && make test'
+    && make test
+    && make dist'
   environment:
     - TOX_ENV_REQUIREMENTS
