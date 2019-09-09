@@ -1,0 +1,6 @@
+{
+    "contentDefinition": {
+        "title": "Pipeline",
+        "description": "Use this template to create pipelines for working with your datasets."
+    }
+}

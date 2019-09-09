@@ -1,2 +1,0 @@
-langdetect==1.0.7
-cortex-client>=5.5a6

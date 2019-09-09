@@ -1,0 +1,6 @@
+{
+    "contentDefinition": {
+        "title": "Experiment",
+        "description": "Set up and perform experiments to assist in choosing the best Machine Learning model for a skill. Learn how to annotate experiments with parameters, metrics, artifacts, and metadata."
+    }
+}
