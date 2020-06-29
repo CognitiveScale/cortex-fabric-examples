@@ -1,9 +1,0 @@
-builder:
-  image: python:3.6-slim
-  command: bash -cx 'apt-get update
-    && apt-get install -y libmagic-dev gcc make zip
-    && make install
-    && make test
-    && make dist'
-  environment:
-    - TOX_ENV_REQUIREMENTS

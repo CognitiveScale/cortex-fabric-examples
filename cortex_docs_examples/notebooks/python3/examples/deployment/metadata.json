@@ -1,6 +1,0 @@
-{
-    "contentDefinition": {
-        "title": "Deployment",
-        "description": "Learn how to use runs from experiments to deploy a model as a Cortex skill."
-    }
-}
