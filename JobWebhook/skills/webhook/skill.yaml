@@ -1,0 +1,23 @@
+camel: 1.0.0
+name: cortex/webhook-skill
+title: Post the payload to a webhook
+description: |
+  This skill takes the payload provided and POSTs it to a webhook.
+properties:
+  - name: webhook-URL
+    title: Web hook URL
+    description: Post payload to this webhook
+    required: true
+    type: String
+    defaultValue:  https://webhook.site/71db092b-11c5-4f2a-954e-f63d1b97faae
+inputs:
+  - name: input
+    title: input
+    routing:
+      all:
+        action: cortex/webhook
+        output: output
+        runtime: cortex/jobs
+outputs:
+  - name: output
+    title: output

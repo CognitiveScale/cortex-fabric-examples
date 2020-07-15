@@ -1,8 +1,8 @@
 # Job Chaining example (cortex/Job_Chaining_Example)
 The `cortex/Job_Chaining_Example` agent consists of two skills `cortex/datagenerator-skill` and `cortex/dataconsumer-skill`.
-`cortex/datagenerator-skill` generates a data file of json records and writes the datafile to cortex's managed content with a unique filename.  
+- `cortex/datagenerator-skill` generates a data file of json records and writes the datafile to cortex's managed content with a unique filename.  
 The filename uses the `activationId` which is passed to all skills/actions during an agent invoke.  
-The `cortex/dataconsumer-skill` reads the file from managed content and computes a color count from the data file.
+- `cortex/dataconsumer-skill` reads the file from managed content and computes a color count from the data file.
 
 ## Requirements
 - Python 3.x
@@ -76,11 +76,9 @@ You can manually copy/paste the apiEndpoint and token from your ~/.cortex/config
 Running the data generator from the command-line
 ```
 python ./skills/datagenerator/job.py "{\"apiEndpoint\":\"$(jq -r .profiles.default.url  ~/.cortex/config)\",\"token\":\"$(jq -r .profiles.default.token  ~/.cortex/config)\", \"payload\":{\"recordCount\": 10}}"    
-
 ```
 
 Running the data consumer code from the command-line
 ```
 python ./skills/dataconsumer/job.py "{\"apiEndpoint\":\"$(jq -r .profiles.default.url  ~/.cortex/config)\",\"token\":\"$(jq -r .profiles.default.token  ~/.cortex/config)\", \"payload\":{\"datafileKey\":\"<jobchain-data-key>\"}}"
-
 ```
