@@ -25,7 +25,7 @@ function actionSkillInstall() {
     docker build -t ${SKILLNAME} -f "${SKILLDIR}/Dockerfile" "${SKILLDIR}"
     # create action and push image to cortex server
     if [ "${DOCKER_PUSH}" == "true" ]; then
-      cortex actions deploy cortex/${SKILLNAME} --actionType job --push-docker --docker ${SKILLNAME}
+      cortex actions deploy cortex/${SKILLNAME} --actionType daemon --port 5000 --push-docker --docker ${SKILLNAME}
     else
       cortex actions deploy cortex/${SKILLNAME} --actionType daemon --port 5000  --docker ${SKILLNAME}
     fi
