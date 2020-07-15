@@ -1,0 +1,55 @@
+camel: 1.0.0
+name: cortex/Job_Chaining_Example
+tags:
+  - label: example
+    value: example
+title: Job orchestration example
+inputs:
+- name: input
+  output: output
+  signalId: d31b8e6c-e192-40c5-b158-6aa1f68cc178
+  signalType: Service
+  title: input
+  parameters:
+  - name: recordCount
+    required: true
+    title: Record Count
+    type: number
+outputs:
+- name: output
+  signalId: 40bf50f6-153d-4e04-9c79-8123d6f30618
+  signalType: Service
+  title: output
+  parameters:
+  - name: colorCounts
+    required: true
+    title: Color counts
+    type: object
+mappings:
+- from:
+    input:
+      signalId: d31b8e6c-e192-40c5-b158-6aa1f68cc178
+  to:
+    skill:
+      input: input
+      refId: 9f6f0a49-1938-4163-82d4-fb463904e1e0
+- from:
+    skill:
+      output: output
+      refId: 9f6f0a49-1938-4163-82d4-fb463904e1e0
+  to:
+    skill:
+      input: input
+      refId: 22d7ae77-7948-4dc6-9cb0-6b08c8ba31da
+- from:
+    skill:
+      output: output
+      refId: 22d7ae77-7948-4dc6-9cb0-6b08c8ba31da
+  to:
+    output:
+      signalId: 40bf50f6-153d-4e04-9c79-8123d6f30618
+skills:
+- skillName: cortex/datagenerator-skill
+  refId: 9f6f0a49-1938-4163-82d4-fb463904e1e0
+- skillName: cortex/dataconsumer-skill
+  refId: 22d7ae77-7948-4dc6-9cb0-6b08c8ba31da

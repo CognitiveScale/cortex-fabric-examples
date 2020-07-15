@@ -1,0 +1,15 @@
+camel: 1.0.0
+name: cortex/datagenerator-skill
+title: Data generator job skill
+description: ...
+inputs:
+  - name: input
+    title: input
+    routing:
+      all:
+        action: cortex/datagenerator
+        output: output
+        runtime: cortex/jobs
+outputs:
+  - name: output
+    title: output
