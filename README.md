@@ -11,5 +11,5 @@ Each folder in the repository contains a standalone example consisting of:
 ## Contents
  | Folder | Language |Description |
  | --------| -------- |----------- |
- | [JobChaining/](./JobChaining) | Python | An agent with two jobs one generating a data file and the second job consuming an emitting a file.  The jobs use managed content for read/write file content.
+ | [JobChaining/](./JobChaining) | Python | An agent with two jobs one generating a data file and the second job consuming a generated file.  The jobs use managed content for read/write file content.
  | [HelloWorldDaemon/](./HelloWorldDaemon) | Python | A simple agent with a single flask app |
