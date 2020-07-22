@@ -23,7 +23,7 @@ Then build the docker containers and deploy the agent, skills, and actions to co
 ## Invoking the agent
 After deploying the agent and skills you can invoke the agent using the cortex cli.
 ```
-cortex agents invoke cortex/Hello_daemon_example input --payload '{"text":"This is a test"}'
+cortex agents invoke cortex/Hello_daemon_example input --params ‘{“payload”:{“text”:“This is a test”}}’
 ```
 
 You'll get a response with an `activationId` like below:
@@ -64,8 +64,8 @@ The activation response will include the stdout from the dataconsumer job.
 Create python virtual env
 ```
 virtualenv venv
-source ./venv/activate
-pip install -r skills/helldaemon/requirements.txt
+source ./venv/bin/activate
+pip install -r skills/hellodaemon/requirements.txt
 ```
 
 The scripts below uses `jq`,  this is an optional tool for parsing/scripting with JSON files.
@@ -73,7 +73,7 @@ You can manually copy/paste the apiEndpoint and token from your ~/.cortex/config
 
 Running the daemon from the command-line
 ```
-python daemon.py "    
+python ./skills/hellodaemon/daemon.py"    
 ```
 
 Invoking the daemon

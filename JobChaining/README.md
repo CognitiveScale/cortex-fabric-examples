@@ -66,7 +66,7 @@ The activation response will include the stdout from the dataconsumer job.
 Create python virtual env
 ```
 virtualenv venv
-source ./venv/activate
+source ./venv/bin/activate
 pip install -r skills/dataconsumer/requirements.txt
 ```
 
@@ -75,12 +75,12 @@ You can manually copy/paste the apiEndpoint and token from your ~/.cortex/config
 
 Running the data generator from the command-line
 ```
-python job.py "{\"apiEndpoint\":\"$(jq -r .profiles.default.url  ~/.cortex/config)\",\"token\":\"$(jq -r .profiles.default.token  ~/.cortex/config)\", \"payload\":{\"recordCount\": 10}}"    
+python ./skills/datagenerator/job.py "{\"apiEndpoint\":\"$(jq -r .profiles.default.url  ~/.cortex/config)\",\"token\":\"$(jq -r .profiles.default.token  ~/.cortex/config)\", \"payload\":{\"recordCount\": 10}}"    
 
 ```
 
 Running the data consumer code from the command-line
 ```
-python job.py "{\"apiEndpoint\":\"$(jq -r .profiles.default.url  ~/.cortex/config)\",\"token\":\"$(jq -r .profiles.default.token  ~/.cortex/config)\", \"payload\":{\"datafileKey\":\"<jobchain-data-key>\"}}"
+python ./skills/dataconsumer/job.py "{\"apiEndpoint\":\"$(jq -r .profiles.default.url  ~/.cortex/config)\",\"token\":\"$(jq -r .profiles.default.token  ~/.cortex/config)\", \"payload\":{\"datafileKey\":\"<jobchain-data-key>\"}}"
 
 ```
