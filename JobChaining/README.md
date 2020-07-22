@@ -1,7 +1,7 @@
 # Job Chaining example (cortex/Job_Chaining_Example)
 The `cortex/Job_Chaining_Example` agent consists of two skills `cortex/datagenerator-skill` and `cortex/dataconsumer-skill`.
-`cortex/datagenerator-skill` generates a data file of json records and write the datafile to cortex's managed content with a unique filename.  
-The filename uses the `activationId` which is passed to all skills/actions during and agent invoke.  
+`cortex/datagenerator-skill` generates a data file of json records and writes the datafile to cortex's managed content with a unique filename.  
+The filename uses the `activationId` which is passed to all skills/actions during an agent invoke.  
 The `cortex/dataconsumer-skill` reads the file from managed content and computes a color count from the data file.
 
 ## Requirements
