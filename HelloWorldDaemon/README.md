@@ -1,6 +1,6 @@
 # Hello Daemon example (cortex/Hello_daemon_example)
 The `cortex/Hello_daemon_example` agent consists of a single skill `cortex/hello-daemon-skill`.
-`cortex/hello-daemon-skill` reads `text` from the payload and responds with a message.  
+- `cortex/hello-daemon-skill` reads `text` from the payload and responds with a message.  
 
 ## Requirements
 - Python 3.x
