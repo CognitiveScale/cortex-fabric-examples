@@ -23,7 +23,7 @@ Then build the docker containers and deploy the agent, skills, and actions to co
 ## Invoking the agent
 After deploying the agent and skills you can invoke the agent using the cortex cli.
 ```
-cortex agents invoke cortex/Hello_daemon_example input --params ‘{“payload”:{“text”:“This is a test”}}’
+cortex agents invoke cortex/Hello_daemon_example input --params '{"payload":{"text":"This is a test"}}'
 ```
 
 You'll get a response with an `activationId` like below:
@@ -55,7 +55,7 @@ The activation response will include the stdout from the dataconsumer job.
   "outputServiceName": "output",
   "status": "COMPLETE",
   "end": 1594839690094,
-  "response": "\"Got payload: Got payload: {}\\nDONE GENERATING DATA\\nWrote datafile to managed content key: jobchain-data-d14bae04-2817-4f68-84a7-b71d56129d71\\n\\nFetching datafile from managed content: jobchain-data-d14bae04-2817-4f68-84a7-b71d56129d71\\n{\\\"green\\\":266,\\\"yellow\\\":265,\\\"blue\\\":242,\\\"red\\\":227}\\n\"",
+  "response": {"message": "Hello received: 'This is a test', word count: 4"},
   "type": "ServiceActivation"
 }
 ```
