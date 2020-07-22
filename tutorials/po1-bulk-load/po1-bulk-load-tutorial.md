@@ -37,7 +37,7 @@ occur within jobs. Accordingly, the examples provided showcase various aspects o
 
    [bulk_po1__synthesize_data.py](/tutorials/po1-bulk-load/code/bulk_po1__synthesize_data.py)
 
-   The data generated is similar to [this](tutorials/po1-bulk-load/bulk_po1_sample_data.md).
+   The data generated is similar to [this](/tutorials/po1-bulk-load/bulk_po1_sample_data.md).
 
 3. Load created data file to Managed Content.
 
@@ -61,7 +61,7 @@ occur within jobs. Accordingly, the examples provided showcase various aspects o
 
 The packaged implementation of the Cortex job leverages the bulk load Profile-of-One APIs.
 
-The package can be downloaded [here](tutorials/po1-bulk-load/code/po1-bulk-load-job.zip).
+The package can be downloaded [here](/tutorials/po1-bulk-load/code/po1-bulk-load-job.zip).
 
 The package contains: `bulk-po1-load-job/main.py`, which implements the Cortex job.
 
