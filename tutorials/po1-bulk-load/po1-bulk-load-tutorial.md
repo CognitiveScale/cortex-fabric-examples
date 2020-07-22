@@ -29,7 +29,7 @@ occur within jobs. Accordingly, the examples provided showcase various aspects o
 
 1. Log into the appropriate Cortex environment
 
-  [Configure the CLI](cortex-fabric/docs/docs/getting-started/use-cli.md) to authenticate to the account where you will run the bulk loading job.
+  [Configure the CLI](https://cognitivescale.github.io/cortex-fabric/docs/getting-started/use-cli.md) to authenticate to the account where you will run the bulk loading job.
 
 2. Synthesize raw data to load.
 
@@ -37,7 +37,7 @@ occur within jobs. Accordingly, the examples provided showcase various aspects o
 
    [bulk_po1__synthesize_data.py](/tutorials/po1-bulk-load/code/bulk_po1__synthesize_data.py)
 
-   The data generated is similar to [this](/tutorials/bulk_po1_sample_data.md).
+   The data generated is similar to [this](tutorials/po1-bulk-load/bulk_po1_sample_data.md).
 
 3. Load created data file to Managed Content.
 
