@@ -1,0 +1,15 @@
+camel: 1.0.0
+name: cortex/dataconsumer-skill
+title: Data Consumer job skill
+description: ...
+inputs:
+  - name: input
+    title: input
+    routing:
+      all:
+        action: cortex/dataconsumer
+        output: output
+        runtime: cortex/jobs
+outputs:
+  - name: output
+    title: output
