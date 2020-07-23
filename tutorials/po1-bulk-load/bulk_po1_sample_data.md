@@ -5,7 +5,7 @@ description: >
   This page provides sample data for the bulk load tutorial.
 ---
 
-This page provides sample data for the [bulk load tutorial](/profile-of-one/tutorials/bulk-load-tutorial.md).
+This page provides sample data for the [bulk load tutorial](/tutorials/po1-bulk-load/po1-bulk-load-tutorial.md).
 
 | profileId   |   age | name            |   total.likedRecommendations |   total.abandonedRecommendations |   total.viewedRecommendations |   total.logins |   predictedTotal.loginsNextWeek |   predictedTotal.loginsNextWeek.confidence |
 |:------------|------:|:----------------|-----------------------------:|---------------------------------:|------------------------------:|---------------:|--------------------------------:|-------------------------------------------:|
