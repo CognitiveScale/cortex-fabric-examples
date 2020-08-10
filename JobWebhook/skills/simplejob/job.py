@@ -1,3 +1,8 @@
+"""
+Copyright (c) 2020. Cognitive Scale Inc. All rights reserved.
+
+Licensed under CognitiveScale Example Code License  
+"""
 import sys
 import time
 import json

@@ -1,3 +1,8 @@
+"""
+Copyright (c) 2020. Cognitive Scale Inc. All rights reserved.
+
+Licensed under CognitiveScale Example Code License  
+"""
 from cortex import Cortex
 from cortex.content import ManagedContentClient
 import json
