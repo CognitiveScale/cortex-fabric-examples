@@ -1,7 +1,7 @@
 """
 Copyright (c) 2020. Cognitive Scale Inc. All rights reserved.
 
-Licensed under CognitiveScale Example Code License  
+Licensed under CognitiveScale Example Code [License](https://cognitivescale.github.io/cortex-fabric-examples/LICENSE.md)
 """
 import requests
 import sys
