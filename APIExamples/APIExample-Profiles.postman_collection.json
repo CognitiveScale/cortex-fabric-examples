@@ -1,0 +1,403 @@
+{
+	"info": {
+		"_postman_id": "7314cf81-619f-47a0-b98b-826feb2e9b69",
+		"name": "Getting Started with Profile-of-One API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "1.00 Save Schema",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "authorization",
+						"type": "text",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"camel\": \"2.0.0\",\n    \"context\": \"cortex/profile-schema\",\n    \"name\": \"{{schema}}\",\n    \"title\": \"Test Profile Schema\",\n    \"profileType\": \"{{schema}}\",\n    \"attributes\": [\n\t\t{\n            \"questions\": [],\n            \"tags\": [],\n            \"name\": \"fullname\",\n            \"type\": \"cortex/attributes-declared\",\n            \"label\": \"String\",\n            \"description\": \"A sample string in the profile.\",\n            \"valueType\": {\n                \"outerType\": \"cortex/attribute-value-string\",\n                \"innerTypes\": []\n            }\n        }, \n\t\t{\n            \"questions\": [],\n            \"tags\": [],\n            \"name\": \"age\",\n            \"type\": \"cortex/attributes-declared\",\n            \"label\": \"Number\",\n            \"description\": \"A sample number in the profile.\",\n            \"valueType\": {\n                \"outerType\": \"cortex/attribute-value-number\",\n                \"innerTypes\": []\n            }\n        }\n    ],\n    \"tags\": [],\n    \"taxonomy\": [],\n    \"facets\": [],\n    \"attributeTags\": []\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/v3/graph/profiles/schemas",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"v3",
+						"graph",
+						"profiles",
+						"schemas"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "2.00 List Schemas",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "content-type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "authorization",
+						"type": "text",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/v3/graph/profiles/schemas",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"v3",
+						"graph",
+						"profiles",
+						"schemas"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "2.10 Get Specific Schema",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "content-type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "authorization",
+						"type": "text",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/v3/graph/profiles/schemas/{{schema}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"v3",
+						"graph",
+						"profiles",
+						"schemas",
+						"{{schema}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "3.01 Submit First Set of Entity Events",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n\t{\n\t\t\"event\": \"fullname\",\n\t\t\"entityId\": \"{{profileId}}\",\n\t\t\"entityType\": \"{{schema}}\",\n\t\t\"properties\": {\n\t\t\t\"value\": \"Synthetic Profile\", \n\t\t\t\"context\": \"cortex/attribute-value-string\"\n\t\t} \n\t}\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/v3/graph/events/entities",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"v3",
+						"graph",
+						"events",
+						"entities"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "3.02 Submit Second Set of Entity Events",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "authorization",
+						"type": "text",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n\t{\n\t\t\"event\": \"age\",\n\t\t\"entityId\": \"actual-profile-1\",\n\t\t\"entityType\": \"{{schema}}\",\n\t\t\"properties\": {\n\t\t\t\"value\": 100, \n\t\t\t\"context\": \"cortex/attribute-value-number\"\n\t\t} \n\t}\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/v3/graph/events/entities",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"v3",
+						"graph",
+						"events",
+						"entities"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "4.00 List Profiles",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "content-type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "authorization",
+						"type": "text",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/v3/graph/profiles",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"v3",
+						"graph",
+						"profiles"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "4.10 Find Specific Profiles",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "content-type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "authorization",
+						"type": "text",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/v3/graph/profiles?filter={\"profileId\":{\"$regex\": \"^actual-.*\"}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"v3",
+						"graph",
+						"profiles"
+					],
+					"query": [
+						{
+							"key": "filter",
+							"value": "{\"profileId\":{\"$regex\": \"^actual-.*\"}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "5.00 Get Latest Profile",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "content-type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "authorization",
+						"type": "text",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/v3/graph/profiles/{{profileId}}?schemaNames={{schema}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"v3",
+						"graph",
+						"profiles",
+						"{{profileId}}"
+					],
+					"query": [
+						{
+							"key": "schemaNames",
+							"value": "{{schema}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "5.10 Get Historic Profile",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "content-type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "authorization",
+						"type": "text",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/v3/graph/profiles/{{profileId}}?historic=true&schemaNames={{schema}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"v3",
+						"graph",
+						"profiles",
+						"{{profileId}}"
+					],
+					"query": [
+						{
+							"key": "historic",
+							"value": "true"
+						},
+						{
+							"key": "schemaNames",
+							"value": "{{schema}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "6.00 Delete Schema",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "content-type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "authorization",
+						"type": "text",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/v3/graph/profiles/schemas/cortex/TestSchema",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"v3",
+						"graph",
+						"profiles",
+						"schemas",
+						"cortex",
+						"TestSchema"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "6.10 Delete Profile",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "content-type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "authorization",
+						"type": "text",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/v3/graph/profiles/{{pid}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"v3",
+						"graph",
+						"profiles",
+						"{{pid}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
