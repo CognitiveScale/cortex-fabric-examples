@@ -6,15 +6,18 @@ properties:
   - name: daemon.method
     title: Daemon method
     description: method
-    required: true
     type: String
     defaultValue: POST
   - name: daemon.path
     title: Daemon path
     description: path
-    required: true
     type: String
     defaultValue: v1/hello
+  - name: daemon.port
+    title: Daemon port
+    description: port
+    type: Number
+    defaultValue: 5000
 inputs:
   - name: input
     title: input
