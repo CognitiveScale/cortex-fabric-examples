@@ -1,5 +1,5 @@
 camel: 1.0.0
-name: cortex/httpbinApi
+name: httpbinApi
 title: Calls httpbin api
 description: Calls https://httpbin.org/post api
 properties:
@@ -28,7 +28,6 @@ inputs:
     title: input
     routing:
       all:
-        action: cortex/simplejob
         output: output
         runtime: cortex/external-api
 outputs:
