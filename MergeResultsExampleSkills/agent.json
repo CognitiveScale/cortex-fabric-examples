@@ -1,0 +1,211 @@
+{
+  "camel": "1.0.0",
+  "name": "merge-results-7932c",
+  "title": "Merge Results",
+  "tags": [],
+  "inputs": [
+    {
+      "signalType": "Service",
+      "name": "test",
+      "title": "Text",
+      "signalId": "4cb30cbc-17d6-491a-aec5-2c573b54f3fe",
+      "parameters": {
+        "$ref": "cortex/text"
+      },
+      "output": "test"
+    }
+  ],
+  "outputs": [
+    {
+      "signalType": "Service",
+      "name": "test",
+      "title": "Text",
+      "signalId": "a2a16ec1-820e-426b-88c4-0c76a3759f7d",
+      "parameters": {
+        "$ref": "cortex/text"
+      }
+    }
+  ],
+  "skills": [
+    {
+      "properties": [],
+      "skillName": "hello-daemon",
+      "title": "hello-daemon",
+      "description": "Returns hello-daemon",
+      "refId": "a6c9125d-b0fe-4e74-8ea7-786af59f92dd",
+      "_layout": {
+        "cellIndex": 68
+      }
+    },
+    {
+      "properties": [],
+      "skillName": "sessions-skill-a",
+      "title": "sessions-skill-a",
+      "description": "Returns sessions-skill-a",
+      "refId": "5b85b3b5-2fb7-4446-b8e8-b760c10f5cc9",
+      "_layout": {
+        "cellIndex": 71
+      }
+    },
+    {
+      "properties": [],
+      "skillName": "sessions-skill-b",
+      "title": "sessions-skill-b",
+      "description": "Returns sessions-skill-b",
+      "refId": "5b8c4d24-8f99-442b-9290-5dea0b9fdccb",
+      "_layout": {
+        "cellIndex": 74
+      }
+    },
+    {
+      "properties": [],
+      "skillName": "merge-results",
+      "title": "Merge Results",
+      "description": "Merges the results of skills linked",
+      "refId": "241283f7-0740-447c-b8a4-8431df447aca",
+      "_layout": {
+        "cellIndex": 78
+      }
+    },
+    {
+      "properties": [],
+      "skillName": "writer-skill",
+      "title": "Writer Skill",
+      "description": "Returns writer-skill",
+      "refId": "7a1ec34c-222c-4f88-9f8a-6d6075875102",
+      "_layout": {
+        "cellIndex": 82
+      }
+    }
+  ],
+  "mappings": [
+    {
+      "from": {
+        "input": {
+          "signalId": "4cb30cbc-17d6-491a-aec5-2c573b54f3fe"
+        }
+      },
+      "to": {
+        "skill": {
+          "refId": "a6c9125d-b0fe-4e74-8ea7-786af59f92dd",
+          "input": "request"
+        }
+      },
+      "rules": []
+    },
+    {
+      "from": {
+        "skill": {
+          "refId": "a6c9125d-b0fe-4e74-8ea7-786af59f92dd",
+          "output": "response"
+        }
+      },
+      "to": {
+        "skill": {
+          "refId": "5b85b3b5-2fb7-4446-b8e8-b760c10f5cc9",
+          "input": "request"
+        }
+      },
+      "rules": []
+    },
+    {
+      "from": {
+        "skill": {
+          "refId": "a6c9125d-b0fe-4e74-8ea7-786af59f92dd",
+          "output": "response"
+        }
+      },
+      "to": {
+        "skill": {
+          "refId": "5b8c4d24-8f99-442b-9290-5dea0b9fdccb",
+          "input": "request"
+        }
+      },
+      "rules": []
+    },
+    {
+      "from": {
+        "skill": {
+          "refId": "5b85b3b5-2fb7-4446-b8e8-b760c10f5cc9",
+          "output": "response"
+        }
+      },
+      "to": {
+        "skill": {
+          "refId": "241283f7-0740-447c-b8a4-8431df447aca",
+          "input": "request"
+        }
+      },
+      "rules": []
+    },
+    {
+      "from": {
+        "skill": {
+          "refId": "5b8c4d24-8f99-442b-9290-5dea0b9fdccb",
+          "output": "response"
+        }
+      },
+      "to": {
+        "skill": {
+          "refId": "241283f7-0740-447c-b8a4-8431df447aca",
+          "input": "request"
+        }
+      },
+      "rules": []
+    },
+    {
+      "from": {
+        "skill": {
+          "refId": "241283f7-0740-447c-b8a4-8431df447aca",
+          "output": "do-nothing"
+        }
+      },
+      "to": {
+        "output": {
+          "signalId": "a2a16ec1-820e-426b-88c4-0c76a3759f7d"
+        }
+      },
+      "rules": [
+        {
+          "source": {
+            "manual": ""
+          },
+          "target": {
+            "parameter": "text"
+          },
+          "_id": "606ed1040a36e4365be873a9"
+        }
+      ]
+    },
+    {
+      "from": {
+        "skill": {
+          "refId": "7a1ec34c-222c-4f88-9f8a-6d6075875102",
+          "output": "response"
+        }
+      },
+      "to": {
+        "output": {
+          "signalId": "a2a16ec1-820e-426b-88c4-0c76a3759f7d"
+        }
+      },
+      "rules": []
+    },
+    {
+      "from": {
+        "skill": {
+          "refId": "241283f7-0740-447c-b8a4-8431df447aca",
+          "output": "merged-results"
+        }
+      },
+      "to": {
+        "skill": {
+          "refId": "7a1ec34c-222c-4f88-9f8a-6d6075875102",
+          "input": "request"
+        }
+      },
+      "rules": []
+    }
+  ],
+  "properties": []
+}
