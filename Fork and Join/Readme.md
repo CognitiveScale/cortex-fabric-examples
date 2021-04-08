@@ -1,5 +1,5 @@
-# Merge Results Skills Example
-This example demonstrates how to use `Merge Results` accelerator skill to merge multiple skills results using `Merge Results` accelerator.
+# Fork and Join Example
+This example demonstrates how to use `Merge Results` accelerator skill to merge multiple skills results.
 
 `Merge Results` is not part of this repo, find in `cortex-accelerator` repo and Deploy from there
 https://github.com/CognitiveScale/cortex-accelerators
