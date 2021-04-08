@@ -7,10 +7,10 @@ CORTEX_TOKEN=$(shell cortex configure token)
 
 ## Docker details
 DOCKER_TAG:=$(shell git describe --long --always --match='v*.*' | sed 's/v//; s/-/./').a
-DOCKER_REGISTRY=private-registry.qa12062020.qa-eks.insights.ai
+DOCKER_REGISTRY=<registry>
 #DOCKER_REGISTRY=`curl -s -H "Content-Type: application/json" -H "Authorization: Bearer ${CORTEX_TOKEN}" ${CORTEX_URL}/fabric/v4/actions/_config | jq -r .config.dockerPrivateRegistryUrl`
-DOCKER_USERNAME=docker
-DOCKER_PASSWORD=Passw0rd
+DOCKER_USERNAME=<usernaame>
+DOCKER_PASSWORD=<password>
 
 
 help:
