@@ -1,0 +1,43 @@
+camel: 1.0.0
+name: hello-daemon
+title: hello-daemon
+description: Returns hello-daemon
+inputs:
+  - name: request
+    title: request
+    parameters:
+      - name: text
+        type: string
+        required: false
+    routing:
+      all:
+        action: hello-daemon
+        runtime: cortex/functions
+        output: response
+outputs:
+  - name: response
+    title: response
+    parameters:
+      - name: text
+        type: string
+        required: false
+
+properties:
+  - name: daemon.method
+    title: Daemon method
+    description: method
+    required: true
+    type: String
+    defaultValue: POST
+  - name: daemon.path
+    title: Daemon path
+    description: path
+    required: true
+    type: String
+    defaultValue: invoke
+  - name: daemon.port
+    title: Daemon Port
+    description: port
+    required: true
+    type: Number
+    defaultValue: 5000
