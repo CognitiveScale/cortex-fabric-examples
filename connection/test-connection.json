@@ -1,0 +1,23 @@
+{
+  "allowRead": true,
+  "allowWrite": false,
+  "name": "test-connection",
+  "title": "Test Connection",
+  "description": "To store data",
+  "connectionType": "mongo",
+  "tags": [],
+  "params": [
+    {
+      "name": "uri",
+      "value": "#SECURE.test-db-uri"
+    },
+    {
+      "name": "database",
+      "value": "#SECURE.test-db-name"
+    },
+    {
+      "name": "collection",
+      "value": "#SECURE.test-db-collection"
+    }
+  ]
+}
