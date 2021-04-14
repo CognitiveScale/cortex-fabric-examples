@@ -12,8 +12,8 @@ def run(req: dict):
     try:
         client = Cortex.client(api_endpoint=req["apiEndpoint"], project=req["projectId"], token=req["token"])
         connection = client.get_connection(payload["connection_name"])
-
         params = connection['params']
+
         mongo = MongoClient(params["uri"])
         database = params.get("database")
         collection = params.get("collection")
