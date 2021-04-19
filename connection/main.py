@@ -5,16 +5,24 @@ from cortex import Cortex
 
 app = FastAPI()
 
+connection_pool = {}
+
 
 @app.post('/invoke')
 def run(req: dict):
     payload = req['payload']
     try:
         client = Cortex.client(api_endpoint=req["apiEndpoint"], project=req["projectId"], token=req["token"])
-        connection = client.get_connection(payload["connection_name"])
-        params = connection['params']
+        # init - get or create connection
+        connection_name = payload["connection_name"]
+        mongo = connection_pool.get(connection_name)
+        if not mongo:
+            connection = client.get_connection(connection_name)
+            params = connection['params']
+            mongo = MongoClient(params["uri"])
+            connection_pool[connection_name] = mongo
 
-        mongo = MongoClient(params["uri"])
+        # use connection
         database = params.get("database")
         collection = params.get("collection")
         query = payload.get("query")
