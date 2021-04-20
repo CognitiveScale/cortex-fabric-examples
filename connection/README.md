@@ -5,7 +5,7 @@ Cortex Skill (daemon) example for Cortex Connections. This demonstrates:
     * In the Cortex project, create Secrets `test-db-uri`, `test-db-name` and `test-db-collection` as per MongoDB server details
     * Create Cortex Connection (of type MongoDB) from Connection definition (test-connection.json), using `cortex connections save test-connection.json` command
 * Use Connections in Skill
-    * See `main.py` for how to use Cortex Connections in a Skill. 
+    * See `main.py` for how to use Cortex Connections in a Skill. This will create a connection and pool it for serving subsequent queries.  
     * Create Secrets and run `make all` to save connection, build & deploy Action/Skill, and test the deployed Skill 
 
 #### Files to review

@@ -1,10 +1,12 @@
 ### Cortex Experiment Train SKill
 
-Cortex Skill to train save model in Experiment
+Cortex Skill to train and save model in Experiment. This is implemented as a background job (Cortex Action of type Job) that trains a model on specified dataset.
+For simplicity we selected scikit iris dataset and training a RandomForestClassifier on this dataset. In the end trained model is saved with metadata in Cortex Experiments to fetch and run predictions later.
+Every time we run this Job to train model, the model will be versioned and stored with its metadata. Later this metadata and version numbers will be used to select required model.
 
-#### Files generated
+#### Files to review
 * `skill.yaml` Skill definition
-* `main.py` Python3 code implementing job's business logic
+* `main.py` Model train code to be run as Cortex Job
 * `requirements.txt` Python3 libraries dependencies
 * `Dockerfile` to build Docker image for this skill
 

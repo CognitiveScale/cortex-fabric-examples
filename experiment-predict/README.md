@@ -1,6 +1,8 @@
 ### Daemon Skill type
 
-Long running Cortex skill serving REST API requests
+This Skill is to demonstrate fetching saved model from Cortex Experiment and running predictions on it. For simplicity, this skill is loading the latest trained model
+in the Cortex Experiment. In production environment, users can select a model at specific version or besed on metadata saved.
+This will load and cache the model in memory for subsequent prediction invocation.   
 
 Note:
 > This project assumes a `fast api server` with one endpoint `/invoke` that is run with the Uvicorn python3 binary; you may change to another framework or language.
