@@ -1,0 +1,26 @@
+camel: 1.0.0
+name: fabric-experiments-example
+title: fabric_experiments_example
+description: fabric_experiments_example
+inputs:
+  - name: train
+    title: trainRequest
+    parameters:
+      - name: connection_name
+        type: String
+        description: Train Request Parameters
+        required: true
+    routing:
+      all:
+        action  : model-train-example
+        runtime: cortex/functions
+        output: response_train
+
+outputs:
+  - name: response_train
+    title: trainResponse
+    parameters:
+      - name: result
+        type: object
+        description: Train Response
+        required: true
