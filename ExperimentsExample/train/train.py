@@ -32,14 +32,11 @@ def download_training_data(connection, client):
                 s3_key = param['value']
             elif param['name'] == 'secretKey':
                 s3_secret = client.get_secret(param['value'].split('.')[1])
-        print(s3_secret)
         s3_components = uri[5:].split('/')
         bucket = s3_components[0]
         file_name = ""
         if len(s3_components) > 1:
             file_name = '/'.join(s3_components[1:])
-        print(bucket)
-        print(file_name)
         s3_conn = boto3.client(
             's3',
             aws_access_key_id=s3_key,
@@ -67,13 +64,11 @@ def save_experiment(client, experiment_name, filename, algo):
         
 def train(params):
     
-    print(params)
     # create a Cortex client instance from the job's parameters
     client = Cortex.client(api_endpoint=params['apiEndpoint'], project=params['projectId'], token=params['token'])
     
     # Read connection
     connection_name = params['payload']['connection_name']
-    print(connection_name)
     connection = client.get_connection(connection_name)
     
     # Download training data using connection
