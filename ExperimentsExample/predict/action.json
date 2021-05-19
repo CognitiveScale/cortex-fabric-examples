@@ -1,6 +1,6 @@
 {
-    "name":"model-predict-example",
-    "actionType":"daemon",
-    "command": ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "5000", "--workers", "2"],
-    "port": "5000"
+  "name": "model-predict-example",
+  "actionType": "daemon",
+  "command": ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "5000", "--workers", "2"],
+  "port": "5000"
 }

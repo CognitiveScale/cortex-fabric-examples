@@ -68,19 +68,18 @@ def save_experiment(client, experiment_name, filename, algo):
 
 
 def train(params):
-    
     # create a Cortex client instance from the job's parameters
     client = Cortex.client(api_endpoint=params['apiEndpoint'], project=params['projectId'], token=params['token'])
-    
+
     # Read connection
     connection_name = params['payload']['connection_name']
     print(f'Reading connection {connection_name}')
     connection = client.get_connection(connection_name)
-    
+
     # Download training data using connection
     download_training_data(connection, client)
     print(f'Downloaded training data for {connection_name}')
-    
+
     random.seed(0)
     np.random.seed(0)
 
@@ -116,24 +115,24 @@ def train(params):
     encoded_x_test = encoder(x_test.values)
 
     # Train a decision tree model
-    dtree = DecisionTreeClassifier(criterion = 'entropy', random_state=0)
+    dtree = DecisionTreeClassifier(criterion='entropy', random_state=0)
     dtree.fit(encoded_x_train, y_train.values)
-    dtree_acc = dtree.score(encoded_x_test,y_test.values)
+    dtree_acc = dtree.score(encoded_x_test, y_test.values)
 
     # Train a multi-layer perceptron model
     mlp = MLPClassifier(hidden_layer_sizes=(20, 20), max_iter=2000)
     mlp.fit(encoded_x_train, y_train.values)
-    mlp_acc = mlp.score(encoded_x_test,y_test.values)
+    mlp_acc = mlp.score(encoded_x_test, y_test.values)
 
     # Train a support vector machine model
     SVM = svm.SVC(gamma='scale', probability=True)
     SVM.fit(encoded_x_train, y_train.values)
-    svm_acc = SVM.score(encoded_x_test,y_test.values)
+    svm_acc = SVM.score(encoded_x_test, y_test.values)
 
     # Train a logistic regression model
     logit = LogisticRegression(random_state=0, solver='lbfgs')
     logit.fit(encoded_x_train, y_train.values)
-    logit_acc = logit.score(encoded_x_test,y_test.values)
+    logit_acc = logit.score(encoded_x_test, y_test.values)
 
     # Save models as pickle files and Save experiments
     pickle_model(dtree, encoder, 'Decision Tree', dtree_acc, 'Basic Decision Tree model', 'german_credit_dtree.pkl')

@@ -1,4 +1,4 @@
 {
-    "name":"model-train-example",
-    "actionType":"job"
+  "name": "model-train-example",
+  "actionType": "job"
 }

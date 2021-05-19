@@ -2,7 +2,6 @@
 Copyright (c) 2021. Cognitive Scale Inc. All rights reserved.
 """
 
-
 from cortex import Cortex
 from fastapi import FastAPI
 
@@ -11,6 +10,7 @@ import numpy as np
 model_ctx = {}
 
 app = FastAPI()
+
 
 @app.post('/init')
 def load(req: dict):
@@ -21,7 +21,8 @@ def load(req: dict):
         model_ctx[exp_name] = init_model(exp_name, client)
     print("Loaded model : {}".format(exp_name))
     return {'payload': 'Loaded model'}
-    
+
+
 @app.post('/invoke')
 def run(req: dict):
     params = req["payload"]["params"]
@@ -50,6 +51,7 @@ def run(req: dict):
         "scores": scores.tolist(),
         "labels": labels.tolist()
     }
+
 
 def init_model(exp_name, client):
     experiment = client.experiment(exp_name)
