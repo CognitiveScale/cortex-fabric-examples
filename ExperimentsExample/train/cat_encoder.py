@@ -1,7 +1,6 @@
 """ 
-Copyright (c) 2020. Cognitive Scale Inc. All rights reserved.
+Copyright (c) 2021. Cognitive Scale Inc. All rights reserved.
 """
-# copy of cat_encoder.ipynb ; required for Azure Notebooks
 
 from sklearn import preprocessing
 from sklearn.preprocessing import StandardScaler
