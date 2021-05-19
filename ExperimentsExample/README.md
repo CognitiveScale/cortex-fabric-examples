@@ -1,14 +1,32 @@
-### Cortex Experiment Train Skill
+### Cortex Experiment Train and Predict Skill
 
-Cortex Skill to train and save model in Experiment. This is implemented as a background job (Cortex Action of type Job) that trains a model on specified connection.
-For simplicity we selected german credit dataset and training on this dataset. In the end trained model is saved with metadata in Cortex Experiments to fetch and run predictions later.
-Every time we run this Job to train model, the model will be versioned and stored with its metadata. Later this metadata and version numbers will be used to select required model.
+#### Train Action: 
+Cortex action to train and save model in Experiment. 
+This is implemented as a background job (Cortex Action of type Job) that trains a model on specified connection.
+For simplicity we selected german credit dataset and training on this dataset. 
+In the end trained model is saved with metadata in Cortex Experiments to fetch and run predictions later.
+Every time we run this Job to train model, the model will be versioned and stored with its metadata. 
+Later this metadata and version numbers will be used to select required model.
+
+#### Predict Action: 
+This Action demonstrates fetching saved model from Cortex Experiment and running predictions on it. 
+For simplicity, this skill is loading the latest trained model in the Cortex Experiment. 
+In production environment, users can select a model at specific version or based on metadata saved. 
+This will load and cache the model in memory for subsequent prediction invocation.
+
+Note:
+>This project assumes a fast api server with endpoints /invoke and /init that is run with the Uvicorn python3 binary; 
+you may change to another framework or language.
 
 #### Files to review
 * `skill.yaml` Skill definition
 * `train/train.py` Model train code to be run as Cortex Job
 * `train/requirements.txt` Python3 libraries dependencies
-* `train/Dockerfile` to build Docker image for this skill
+* `train/Dockerfile` to build Docker image for train action
+* `Makefile` Makefile to build and deploy skill and actions
+* `model/main.py` Predict code to be run as Cortex Daemon
+* `model/requirements.txt` Python3 libraries dependencies
+* `model/Dockerfile` to build Docker image for predict action
 
 #### Steps
 

@@ -52,7 +52,6 @@ def pickle_model(model, encoder, model_name, test_accuracy, description, filenam
                  'created': int(time.time())}
     with open(filename, 'wb') as file:
         pickle.dump(model_obj, file)
-    print(f"Saved: {model_name}")
 
 
 def save_experiment(client, experiment_name, filename, algo):
