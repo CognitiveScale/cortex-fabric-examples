@@ -23,8 +23,12 @@ import boto3
 # supress all warnings
 warnings.filterwarnings('ignore')
 
+
 def download_training_data(connection, client):
     if connection:
+        uri = ''
+        s3_key = ''
+        s3_secret = ''
         for param in connection['params']:
             if param['name'] == 'uri':
                 uri = param['value']
@@ -37,13 +41,10 @@ def download_training_data(connection, client):
         file_name = ""
         if len(s3_components) > 1:
             file_name = '/'.join(s3_components[1:])
-        s3_conn = boto3.client(
-            's3',
-            aws_access_key_id=s3_key,
-            aws_secret_access_key=s3_secret
-            )
+        s3_conn = boto3.client('s3', aws_access_key_id=s3_key, aws_secret_access_key=s3_secret)
         s3_conn.download_file(bucket, file_name, file_name)
-    
+
+
 # function to pickle our models for later access
 def pickle_model(model, encoder, model_name, test_accuracy, description, filename):
     model_obj = {'model': model, 'encoder': encoder, 'name': model_name,
@@ -53,15 +54,20 @@ def pickle_model(model, encoder, model_name, test_accuracy, description, filenam
         pickle.dump(model_obj, file)
     print(f"Saved: {model_name}")
 
+
 def save_experiment(client, experiment_name, filename, algo):
-    #create experiment
+    # create experiment
     experiment = client.experiment(experiment_name)
+    run_id = None
     with open(filename, "rb") as model:
         with experiment.start_run() as run:
             run.log_artifact_stream("model", model)  # save model
             run.set_meta("algo", algo)  # save meta data
-    print(f'Experiment saved {experiment_name}')
-        
+            run_id = run._id
+
+    print(f'Experiment saved, name: {experiment_name} run_id: {run_id}')
+
+
 def train(params):
     
     # create a Cortex client instance from the job's parameters
@@ -69,10 +75,12 @@ def train(params):
     
     # Read connection
     connection_name = params['payload']['connection_name']
+    print(f'Reading connection {connection_name}')
     connection = client.get_connection(connection_name)
     
     # Download training data using connection
     download_training_data(connection, client)
+    print(f'Downloaded training data for {connection_name}')
     
     random.seed(0)
     np.random.seed(0)
@@ -82,10 +90,10 @@ def train(params):
 
     # Separate outcome
     y = data['outcome']
-    x = data.drop('outcome',axis=1)
+    x = data.drop('outcome', axis=1)
 
     # Bring in test and training data
-    x_train, x_test, y_train, y_test = train_test_split(x, y, random_state = 0)
+    x_train, x_test, y_train, y_test = train_test_split(x, y, random_state=0)
 
     # Create an encoder
     cat_columns = [
@@ -109,17 +117,17 @@ def train(params):
     encoded_x_test = encoder(x_test.values)
 
     # Train a decision tree model
-    dtree = DecisionTreeClassifier(criterion = 'entropy', random_state = 0)
+    dtree = DecisionTreeClassifier(criterion = 'entropy', random_state=0)
     dtree.fit(encoded_x_train, y_train.values)
     dtree_acc = dtree.score(encoded_x_test,y_test.values)
 
     # Train a multi-layer perceptron model
-    mlp = MLPClassifier(hidden_layer_sizes=(20,20),max_iter=2000)
+    mlp = MLPClassifier(hidden_layer_sizes=(20, 20), max_iter=2000)
     mlp.fit(encoded_x_train, y_train.values)
     mlp_acc = mlp.score(encoded_x_test,y_test.values)
 
     # Train a support vector machine model
-    SVM = svm.SVC(gamma='scale')
+    SVM = svm.SVC(gamma='scale', probability=True)
     SVM.fit(encoded_x_train, y_train.values)
     svm_acc = SVM.score(encoded_x_test,y_test.values)
 
@@ -140,7 +148,7 @@ def train(params):
 
 
 if __name__ == "__main__":
-    if len(sys.argv)<2:
+    if len(sys.argv) < 2:
         print("Message/payload commandline is required")
         exit(1)
     # The last argument in sys.argv is the payload from cortex

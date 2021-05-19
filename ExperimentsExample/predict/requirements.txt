@@ -1,0 +1,6 @@
+pandas
+numpy
+cortex-python
+scikit-learn==0.23.2
+fastapi
+uvicorn

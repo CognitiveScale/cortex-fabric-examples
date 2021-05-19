@@ -1,16 +1,21 @@
 IMAGE_TAG=latest
-SKILL_NAME=$(notdir $(CURDIR))
-ACTION_NAME=model-train-example
-DOCKER_IMAGE_URL=${DOCKER_PREGISTRY_URL}/${ACTION_NAME}:${IMAGE_TAG}
+SKILL_NAME=fabric-experiments-example
+ACTION_NAME_TRAIN=model-train-example
+ACTION_NAME_PREDICT=model-predict-example
+DOCKER_IMAGE_URL_TRAIN=${DOCKER_PREGISTRY_URL}/${ACTION_NAME_TRAIN}:${IMAGE_TAG}
+DOCKER_IMAGE_URL_PREDICT=${DOCKER_PREGISTRY_URL}/${ACTION_NAME_PREDICT}:${IMAGE_TAG}
 
 build: check-env
-	docker build -t ${DOCKER_IMAGE_URL} -f train/Dockerfile train
+	docker build -t ${DOCKER_IMAGE_URL_TRAIN} -f train/Dockerfile train
+	docker build -t ${DOCKER_IMAGE_URL_PREDICT} -f predict/Dockerfile predict
 
 push: check-env
-	docker push ${DOCKER_IMAGE_URL}
+	docker push ${DOCKER_IMAGE_URL_TRAIN}
+	docker push ${DOCKER_IMAGE_URL_PREDICT}
 
 deploy: check-env
-	cortex actions deploy train/action.json --project ${PROJECT_NAME} --docker ${DOCKER_IMAGE_URL}
+	cortex actions deploy train/action.json --project ${PROJECT_NAME} --docker ${DOCKER_IMAGE_URL_TRAIN}
+	cortex actions deploy predict/action.json --project ${PROJECT_NAME} --docker ${DOCKER_IMAGE_URL_PREDICT}
 	cortex skills save -y skill.yaml --project ${PROJECT_NAME}
 	sleep 10s # wait for action containers to pull and deploy
 

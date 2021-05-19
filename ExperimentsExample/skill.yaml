@@ -4,7 +4,7 @@ title: fabric_experiments_example
 description: fabric_experiments_example
 inputs:
   - name: train
-    title: trainRequest
+    title: Train Request
     parameters:
       - name: connection_name
         type: String
@@ -16,11 +16,52 @@ inputs:
         runtime: cortex/functions
         output: response_train
 
+  - name: predict
+    title: Predict Request
+    parameters:
+      - name: params
+        type: object
+        description: Predict Request Parameters
+        required: true
+    routing:
+      all:
+        action  : model-predict-example
+        runtime: cortex/daemons
+        output: response_predict
+
 outputs:
   - name: response_train
-    title: trainResponse
+    title: Train Response
     parameters:
       - name: result
         type: object
         description: Train Response
         required: true
+        
+  - name: response_predict
+    title: Predict Response
+    parameters:
+      - name: result
+        type: object
+        description: Predict Response
+        required: true
+
+properties:
+  - name: daemon.method
+    title: Daemon method
+    description: Update default value to HTTP method supported by endpoint
+    required: true
+    type: String
+    defaultValue: POST
+  - name: daemon.path
+    title: Daemon path
+    description: Update default value to HTTP endpoint path in container
+    required: true
+    type: String
+    defaultValue: invoke
+  - name: daemon.port
+    title: Daemon Port
+    description: Update default value to port on which app will be running
+    required: true
+    type: String
+    defaultValue: 5000
