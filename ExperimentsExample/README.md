@@ -24,9 +24,9 @@ you may change to another framework or language.
 * `train/requirements.txt` Python3 libraries dependencies
 * `train/Dockerfile` to build Docker image for train action
 * `Makefile` Makefile to build and deploy skill and actions
-* `model/main.py` Predict code to be run as Cortex Daemon
-* `model/requirements.txt` Python3 libraries dependencies
-* `model/Dockerfile` to build Docker image for predict action
+* `predict/main.py` Predict code to be run as Cortex Daemon
+* `predict/requirements.txt` Python3 libraries dependencies
+* `predict/Dockerfile` to build Docker image for predict action
 
 #### Steps
 
