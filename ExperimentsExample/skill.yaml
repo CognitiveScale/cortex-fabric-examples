@@ -6,10 +6,7 @@ inputs:
   - name: train
     title: Train Request
     parameters:
-      - name: connection_name
-        type: String
-        description: Train Request Parameters
-        required: true
+      $ref: default/TrainRequest
     routing:
       all:
         action  : model-train-example
@@ -19,10 +16,7 @@ inputs:
   - name: predict
     title: Predict Request
     parameters:
-      - name: params
-        type: object
-        description: Predict Request Parameters
-        required: true
+      $ref: default/PredictRequest
     routing:
       all:
         action  : model-predict-example
@@ -33,18 +27,12 @@ outputs:
   - name: response_train
     title: Train Response
     parameters:
-      - name: result
-        type: object
-        description: Train Response
-        required: true
+      $ref: default/TrainResponse
         
   - name: response_predict
     title: Predict Response
     parameters:
-      - name: result
-        type: object
-        description: Predict Response
-        required: true
+      $ref: default/PredictResponse
 
 properties:
   - name: daemon.method

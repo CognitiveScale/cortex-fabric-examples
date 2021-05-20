@@ -25,9 +25,9 @@ def load(req: dict):
 
 @app.post('/invoke')
 def run(req: dict):
-    params = req["payload"]["params"]
-    instances = params["instances"]
-    exp_name = params["exp_name"]
+    payload = req["payload"]
+    instances = payload["instances"]
+    exp_name = payload["exp_name"]
 
     # if model is not loaded
     if exp_name not in model_ctx:

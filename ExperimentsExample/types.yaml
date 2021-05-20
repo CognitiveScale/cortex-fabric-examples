@@ -1,0 +1,35 @@
+camel: 1.0.0
+types:
+  - camel: 1.0.0
+    name: default/TrainRequest
+    title: ExperimentsTrainRequest
+    description: Parameters passed to Train Job
+    parameters:
+      - name: connection_name
+        type: string
+
+  - camel: 1.0.0
+    name: default/TrainResponse
+    title: ExperimentsTrainResponse
+    description: Train Response
+    parameters:
+      - name: response_train
+        type: object
+
+  - camel: 1.0.0
+    name: default/PredictRequest
+    title: ExperimentsPredictRequest
+    description: Parameters passed to Inference Daemon
+    parameters:
+      - name: exp_name
+        type: string
+      - name: instances
+        type: object
+
+  - camel: 1.0.0
+    name: default/PredictResponse
+    title: ExperimentsPredictResponse
+    description: Predict Response
+    parameters:
+      - name: response_predict
+        type: object

@@ -1,4 +1,4 @@
-IMAGE_TAG=latest
+IMAGE_TAG=latest10
 SKILL_NAME=fabric-experiments-example
 ACTION_NAME_TRAIN=model-train-example
 ACTION_NAME_PREDICT=model-predict-example
@@ -23,7 +23,10 @@ tests: check-env
 	cortex skills invoke --params-file ./test/payload.json ${SKILL_NAME} train --project ${PROJECT_NAME}
 	cortex skills invoke --params-file ./test/payload.json ${SKILL_NAME} predict --project ${PROJECT_NAME}
 
-all: build push deploy tests
+types:
+	cortex types save -y types.yaml
+
+all: build push types deploy tests
 
 get: check-env
 	cortex skills describe ${SKILL_NAME} --project ${PROJECT_NAME}
