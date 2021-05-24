@@ -40,8 +40,8 @@ public final class SparkWordCount {
         SparkSession spark = SparkSession
                 .builder()
                 .appName("JavaWordCount")
-                .config("fs.s3a.access.key", "AKIAWPZU5FVIUOHSWW5B")
-                .config("fs.s3a.secret.key", "")
+                .config("fs.s3a.access.key", "<AWS-ACCESS-KEY>")
+                .config("fs.s3a.secret.key", "<AWS-SECRET-KEY>")
                 .config("fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem")
                 .config("fs.s3a.fast.upload","true")
                 .config("fs.s3a.aws.credentials.provider", "org.apache.hadoop.fs.s3a.BasicAWSCredentialsProvider")
