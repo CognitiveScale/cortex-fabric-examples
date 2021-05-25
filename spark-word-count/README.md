@@ -15,12 +15,16 @@ java source code location `src/main/python`
 
 i. Build and package the project if it is a maven or gradle based using the respective build tool. I'm using maven to build the current project using the command as below. This step generates a jar file `spark-word-count-1.0-SNAPSHOT.jar` in the `target` folder of the project root dir.
 
-        mvn clean install
+        make mvn.build.package
   
 ii. Build the base docker image(spark-base:latest) of the spark distribution by running the below cmd from the project root directory.
 
-        sh spark-base/build-spark-image.sh
-iii. Modify the spark-submit command in the spark-submit.sh in the root dir as per your requirements. By default it submits the job to a local spark cluster when you invoke the skill. Examples of local and remote cluster spark job submissions:
+        make docker.build.spark-base
+iii. Build the spark container image which spark uses for spinning up the containers for drivers and executors when we submit a job to a k8s cluster.
+        
+        make docker.build.k8s.container
+
+iv. Modify the spark-submit command in the submit-spark-job.sh in the root dir as per your requirements. By default it submits the job to a local spark cluster when you invoke the skill. Examples of local and remote cluster spark job submissions:
 
         `Local`: spark-submit --class SparkWordCount --master local local:///${SPARK_HOME}/work-dir/target/spark-word-count-1.0-SNAPSHOT.jar s3a://test-mb/test/data.txt
 
@@ -29,7 +33,7 @@ iii. Modify the spark-submit command in the spark-submit.sh in the root dir as p
 #### 2. Submit Python based Spark job (Optional):
 i. Build the base docker image(spark-base:latest) of the spark distribution by running the below cmd from the project root directory.
 
-        sh spark-base/build-spark-image.sh
+        make docker.build.spark-base
 
 ii. Modify the spark-submit command in the spark-submit.sh in the root dir as per your requirements. By default it submits the job to a local spark cluster when you invoke the skill. Examples of local and remote cluster spark job submissions:
 
@@ -37,29 +41,19 @@ ii. Modify the spark-submit command in the spark-submit.sh in the root dir as pe
 
         `k8s`: spark-submit --master k8s://https://<remote_host>:<remote_port> --deploy-mode cluster --name spark-word-count --conf spark.executor.instances=2 --conf spark.kubernetes.container.image=svangapallycs/spark-word-count:latest --conf spark.kubernetes.authenticate.submission.caCertFile=selfsigned_certificate.pem word-count.py s3a://test-mb/test/data.txt
 
-iii. Modify the `requirements.txt` file to provide packages or libraries that the action requires.
+iii. Modify the `requirements.txt` file to add packages and libraries that are needed.
 
 #### 3. Build the docker image from project root directory
   
-        docker build -t <image-name>:<version> .
+        make docker.build.word-count
 
-#### 4. Push the docker image to a registry that is connected to your Kubernetes cluster.
+#### 4. Push the docker image to a registry that is connected to your Kubernetes cluster and deploy action.
 
-        docker tag <image-name>:<version> private-registry/<image-name>:<version>
-        docker push private-registry/<image-name>:<version>
+        make deploy.word-count
   
-
-#### 5. Deploy the action.
+#### 5. Save/deploy the Skill.
   
-        cortex actions deploy --actionName <SKILL_NAME> \
-        --actionType job \
-        --docker <DOCKER_IMAGE> \
-        --project <Project Name>
-  
-#### 6. Modify the `skill.yaml` file.
-#### 7. Save/deploy the Skill.
-  
-        cortex skills save -y skill.yaml --project <Project Name>
+        make skill.save
   
    The Skill is added to the Cortex Fabric catalog and is available for selection when building interventions or Agents.
 

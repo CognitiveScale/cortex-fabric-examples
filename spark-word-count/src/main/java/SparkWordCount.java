@@ -26,6 +26,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.UUID;  
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.*;
 
 public final class SparkWordCount {
     private static final Pattern SPACE = Pattern.compile(" ");
@@ -36,12 +39,18 @@ public final class SparkWordCount {
             System.err.println("Usage: JavaWordCount <file>");
             System.exit(1);
         }
+        System.out.println("Input Params: " + args[1]);
+        JSONObject obj = (JSONObject) new JSONParser().parse(args[1]);          
+        // getting properties
+        JSONObject properties = (JSONObject) obj.get("properties");
+        String awsKey = (String) properties.get("aws-key");
+        String awsSecret = (String) properties.get("aws-secret");
 
         SparkSession spark = SparkSession
                 .builder()
                 .appName("JavaWordCount")
-                .config("fs.s3a.access.key", "<AWS-ACCESS-KEY>")
-                .config("fs.s3a.secret.key", "<AWS-SECRET-KEY>")
+                .config("fs.s3a.access.key", awsKey)
+                .config("fs.s3a.secret.key", awsSecret)
                 .config("fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem")
                 .config("fs.s3a.fast.upload","true")
                 .config("fs.s3a.aws.credentials.provider", "org.apache.hadoop.fs.s3a.BasicAWSCredentialsProvider")
