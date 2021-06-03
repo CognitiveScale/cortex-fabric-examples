@@ -4,6 +4,7 @@ Copyright (c) 2021. Cognitive Scale Inc. All rights reserved.
 
 from cortex import Cortex
 from fastapi import FastAPI
+from cat_encoder import CatEncoder
 
 import numpy as np
 

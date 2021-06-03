@@ -1,7 +1,7 @@
 camel: 1.0.0
-name: fabric-experiments-example
-title: fabric_experiments_example
-description: fabric_experiments_example
+name: experiments
+title: fabric experiments example
+description: fabric experiments example
 inputs:
   - name: train
     title: Train Request
@@ -9,7 +9,7 @@ inputs:
       $ref: default/TrainRequest
     routing:
       all:
-        action  : model-train-example
+        action  : train-example
         runtime: cortex/functions
         output: response_train
 
@@ -19,7 +19,7 @@ inputs:
       $ref: default/PredictRequest
     routing:
       all:
-        action  : model-predict-example
+        action  : predict-example
         runtime: cortex/daemons
         output: response_predict
 
