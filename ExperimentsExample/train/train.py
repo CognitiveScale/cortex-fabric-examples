@@ -23,7 +23,7 @@ import boto3
 # supress all warnings
 warnings.filterwarnings('ignore')
 
-
+# download training data from s3 connection
 def download_training_data(connection, client):
     if connection:
         uri = ''
@@ -54,6 +54,7 @@ def pickle_model(model, encoder, model_name, test_accuracy, description, filenam
         pickle.dump(model_obj, file)
 
 
+# save experiment using model
 def save_experiment(client, experiment_name, filename, algo):
     # create experiment
     experiment = client.experiment(experiment_name)
@@ -67,6 +68,7 @@ def save_experiment(client, experiment_name, filename, algo):
     print(f'Experiment saved, name: {experiment_name} run_id: {run_id}')
 
 
+# train model using the connection
 def train(params):
     # create a Cortex client instance from the job's parameters
     client = Cortex.client(api_endpoint=params['apiEndpoint'], project=params['projectId'], token=params['token'])
