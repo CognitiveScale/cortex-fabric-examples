@@ -58,3 +58,9 @@ properties:
     required: false
     type: string
     secure: false
+  - name: outcome
+    title: Prediction class / label
+    description: Prediction class / label in the dataset
+    required: false
+    type: string
+    secure: false

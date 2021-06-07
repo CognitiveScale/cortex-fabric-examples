@@ -43,6 +43,7 @@ def make_batch_predictions(input_params):
     url = input_params["apiEndpoint"]
     token = input_params["token"]
     project = input_params["projectId"]
+    outcome = input_params["properties"]["outcome"]
 
     # Initialize Cortex Client
     client = Cortex.client(api_endpoint=url, token=token, project=project)
@@ -73,7 +74,7 @@ def make_batch_predictions(input_params):
 
         # Create spark data-frame for prediction
         df = spark.read.option("inferSchema", True).csv(file, header=True)
-        df = df.drop("quality")
+        df = df.drop(outcome)
         logging.info(df.printSchema())
 
         # Make predictions
@@ -94,6 +95,8 @@ def make_batch_predictions(input_params):
         df = spark.read().format("mongo").option("spark.mongodb.input.uri", mongo_uri) \
             .option("database", database) \
             .option("collection", collection).load()
+        df = df.drop(outcome)
+        logging.info(df.printSchema())
 
         # Make predictions
         df = score_predictions(df, model, sc)
@@ -103,6 +106,7 @@ def make_batch_predictions(input_params):
             .mode("append").option("spark.mongodb.input.uri", mongo_uri) \
             .option("database", database) \
             .option("collection", output_collection).save()
+        spark.stop()
 
 
 if __name__ == "__main__":
