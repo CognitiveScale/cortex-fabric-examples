@@ -20,9 +20,9 @@ def initialize_spark_session(conf):
     return builder.getOrCreate()
 
 
-def load_experiment(client, experiment_name):
+def load_model(client, experiment_name, run_id):
     experiment = client.experiment(experiment_name)
-    run = experiment.last_run()
+    run = experiment.get_run(run_id)
     return run.get_artifact('model')
 
 
@@ -49,16 +49,16 @@ def make_batch_predictions(input_params):
     client = Cortex.client(api_endpoint=url, token=token, project=project)
 
     # Read cortex connection details
-    connection = client.get_connection(input_params["properties"]["connection_name"])
+    connection = client.get_connection(input_params["properties"]["connection-name"])
     for p in connection['params']:
         conn_params.update({p['name']: p['value']})
     logging.info("connection params", conn_params)
 
-    # Load Experiment
-    model = load_experiment(client, input_params["properties"]["experiment_name"])
+    # Load Model from the experiment run
+    model = load_model(client, input_params["properties"]["experiment-name"], input_params["properties"]["run-id"])
 
     if connection.get("connectionType") == "s3":
-        output_path = input_params["properties"]["output_path"]
+        output_path = input_params["properties"]["output-path"]
         secret_key = input_params["properties"][conn_params["secretKey"].split("#SECURE.")[1]]
         conf = SparkConf().set("fs.s3a.access.key", conn_params.get('publicKey')) \
             .set("fs.s3a.secret.key", secret_key) \
@@ -85,7 +85,7 @@ def make_batch_predictions(input_params):
         spark.stop()
 
     if connection.get("connectionType") == "mongo":
-        output_collection = input_params["properties"]["output_collection"]
+        output_collection = input_params["properties"]["output-collection"]
         mongo_uri = input_params["properties"][conn_params["url"].split("#SECURE.")[1]]
         database = conn_params.get("database")
         collection = conn_params.get("collection")

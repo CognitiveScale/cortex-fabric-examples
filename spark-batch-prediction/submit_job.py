@@ -27,7 +27,7 @@ if __name__ == '__main__':
     url = input_params["apiEndpoint"]
     token = input_params["token"]
     project = input_params["projectId"]
-    experiment_name = input_params["properties"]["experiment_name"]
+    experiment_name = input_params["properties"]["experiment-name"]
     client = Cortex.client(api_endpoint=url, token=token, project=project)
     experiment = client.experiment(experiment_name)
     run = experiment.last_run()

@@ -26,20 +26,26 @@ outputs:
         required: true
 
 properties:
-  - name: connection_name
+  - name: connection-name
     title: Connection Name
     description: Connection is used to read and write files.
     required: false
     type: string
     secure: false
     defaultValue: spark-s3-conn
-  - name: experiment_name
+  - name: experiment-name
     title: Experiment Name
     description: Experiment name to retrieve experiment details
     required: false
     type: string
     secure: false
     defaultValue: sv_experiment
+  - name: run-id
+    title: Run ID
+    description: Run id of the experiment
+    required: true
+    type: string
+    secure: false
   - name: aws-secret
     title: AWS Secret
     description: AWS Secret
@@ -52,13 +58,13 @@ properties:
     required: false
     type: string
     secure: true
-  - name: output_path
+  - name: output-path
     title: S3 Output path
     description: Output S3 path to save the predictions
     required: false
     type: string
     secure: false
-  - name: output_collection
+  - name: output-collection
     title: Mongo Output collection
     description: Output collection to save the predictions
     required: false
