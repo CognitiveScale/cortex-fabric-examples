@@ -1,0 +1,24 @@
+{
+    "pyspark": {
+        "pyspark_bin": "bin/spark-submit",
+        "options": {
+            "--master": "k8s://master-host",
+            "--deploy-mode": "cluster",
+            "--name": "spark-batch-predict",
+            "--conf": {
+                "spark.executor.instances": 1,
+                "spark.kubernetes.authenticate.driver.serviceAccountName": "spark",
+                "spark.kubernetes.container.image": "svangapallycs/spark-container",
+                "spark.kubernetes.namespace": "cortex",
+                "spark.kubernetes.driver.master": "master-host",
+                "spark.executor.memory": "1g",
+                "spark.shuffle.service.enabled": "false",
+                "spark.dynamicAllocation.enabled": "false",
+                "spark.network.timeout": "300s",
+                "spark.executor.heartbeatInterval": "100s",
+                "spark.kubernetes.executor.annotation.traffic.sidecar.istio.io/excludeOutboundPorts": "7078,7079",
+                "spark.kubernetes.driver.annotation.traffic.sidecar.istio.io/excludeInboundPorts":"7078,7079"
+            }
+        }
+    }
+}
