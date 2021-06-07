@@ -46,6 +46,12 @@ properties:
     required: false
     type: string
     secure: true
+  - name: mongo-uri
+    title: Mongo URI
+    description: Mongo URI for Input dataset
+    required: false
+    type: string
+    secure: true
   - name: output_path
     title: S3 Output path
     description: Output S3 path to save the predictions
@@ -59,8 +65,8 @@ properties:
     type: string
     secure: false
   - name: outcome
-    title: Prediction class / label
-    description: Prediction class / label in the dataset
+    title: Prediction class or label
+    description: Prediction class or label in the dataset
     required: false
     type: string
     secure: false

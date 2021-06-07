@@ -66,7 +66,7 @@ def make_batch_predictions(input_params):
             .set("fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem")
 
         # Initialize spark session
-        spark = initialize_spark_session(conf)
+        spark = initialize_spark_session(conf=conf)
         sc = spark.sparkContext
 
         # Get S3 file path of the dataset
@@ -90,7 +90,7 @@ def make_batch_predictions(input_params):
         database = conn_params.get("database")
         collection = conn_params.get("collection")
 
-        spark = initialize_spark_session(None)
+        spark = initialize_spark_session(conf=None)
         sc = spark.sparkContext
         df = spark.read().format("mongo").option("spark.mongodb.input.uri", mongo_uri) \
             .option("database", database) \
