@@ -16,6 +16,7 @@
                 "spark.dynamicAllocation.enabled": "false",
                 "spark.network.timeout": "300s",
                 "spark.executor.heartbeatInterval": "100s",
+                "spark.jars.packages": "org.mongodb.spark:mongo-spark-connector_2.11:2.3.2",
                 "spark.kubernetes.executor.annotation.traffic.sidecar.istio.io/excludeOutboundPorts": "7078,7079",
                 "spark.kubernetes.driver.annotation.traffic.sidecar.istio.io/excludeInboundPorts":"7078,7079"
             }

@@ -1,5 +1,6 @@
 import sys
 from cortex import Cortex
+from cortex.run import Run
 import json
 import logging
 
@@ -22,7 +23,7 @@ def initialize_spark_session(conf):
 
 def load_model(client, experiment_name, run_id):
     experiment = client.experiment(experiment_name)
-    run = experiment.get_run(run_id)
+    run = Run.from_json(experiment.get_run(run_id), experiment)
     return run.get_artifact('model')
 
 
@@ -86,16 +87,16 @@ def make_batch_predictions(input_params):
 
     if connection.get("connectionType") == "mongo":
         output_collection = input_params["properties"]["output-collection"]
-        mongo_uri = input_params["properties"][conn_params["url"].split("#SECURE.")[1]]
+        mongo_uri = input_params["properties"][conn_params["uri"].split("#SECURE.")[1]]
         database = conn_params.get("database")
         collection = conn_params.get("collection")
 
         spark = initialize_spark_session(conf=None)
         sc = spark.sparkContext
-        df = spark.read().format("mongo").option("spark.mongodb.input.uri", mongo_uri) \
+        df = spark.read.format("com.mongodb.spark.sql.DefaultSource").option("uri", mongo_uri) \
             .option("database", database) \
             .option("collection", collection).load()
-        df = df.drop(outcome)
+        df = df.drop(outcome, "_id")
         logging.info(df.printSchema())
 
         # Make predictions
@@ -103,7 +104,7 @@ def make_batch_predictions(input_params):
 
         # Writing to output
         df.write.format("com.mongodb.spark.sql.DefaultSource") \
-            .mode("append").option("spark.mongodb.input.uri", mongo_uri) \
+            .mode("append").option("uri", mongo_uri) \
             .option("database", database) \
             .option("collection", output_collection).save()
         spark.stop()
