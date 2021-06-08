@@ -8,7 +8,7 @@
             "--conf": {
                 "spark.executor.instances": 1,
                 "spark.kubernetes.authenticate.driver.serviceAccountName": "spark",
-                "spark.kubernetes.container.image": "svangapallycs/spark-container",
+                "spark.kubernetes.container.image": "spark-container",
                 "spark.kubernetes.namespace": "cortex",
                 "spark.kubernetes.driver.master": "master-host",
                 "spark.executor.memory": "1g",
@@ -20,5 +20,6 @@
                 "spark.kubernetes.driver.annotation.traffic.sidecar.istio.io/excludeInboundPorts":"7078,7079"
             }
         }
-    }
+    },
+    "spark_base": "c12e/spark-template"
 }
