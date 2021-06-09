@@ -76,3 +76,7 @@ properties:
     required: false
     type: string
     secure: false
+
+tags:
+    - label: template
+      value: template

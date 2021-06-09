@@ -1,4 +1,4 @@
-FROM spark-container:latest
+FROM c12e/spark-template:spark-container-x7iJYc
 
 USER root
 
@@ -9,7 +9,6 @@ ENV ISTIO_QUIT_API=http://localhost:15020
 COPY src/ src/
 COPY target/*.jar target/
 COPY submit_job.py submit_job.py
-COPY ca.crt ca.crt
 
 RUN rm -f /usr/bin/python && ln -s /usr/bin/python3 /usr/bin/python
 

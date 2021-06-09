@@ -8,7 +8,7 @@ docker.build.spark-base:
 	sh spark-base/build-spark-image.sh
 
 docker.push.spark-base:
-	docker tag spark-base:latest $(SPARK_BASE_IMG):spark-base-$(TAG)
+	docker tag spark-base-python:latest $(SPARK_BASE_IMG):spark-base-$(TAG)
 	docker push $(SPARK_BASE_IMG):spark-base-$(TAG)
 
 docker.build.k8s.container:
