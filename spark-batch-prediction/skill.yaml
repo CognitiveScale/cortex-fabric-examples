@@ -6,10 +6,8 @@ inputs:
   - name: params
     title: input
     parameters:
-      - name: params
-        type: object
-        description: Input Params
-        required: true
+      $ref: BulkBatchRequest
+
     routing:
       all:
         action: spark-batch-predict
@@ -20,10 +18,7 @@ outputs:
   - name: response
     title: Job result
     parameters:
-      - name: result
-        type: object
-        description: Job Execution Logs
-        required: true
+      $ref: BulkBatchResponse
 
 properties:
   - name: connection-name
