@@ -35,60 +35,80 @@ java source code location `src/main/python`
 
 #### Steps 
 
+Build the base docker image(spark-base:latest) of the spark distribution by running the below cmd from the project root directory.
+
+        make docker.build.spark-base
+
 #### 1. Submit Java based Spark job (Optional):
 
 i. Build and package the project if it is a maven or gradle based using the respective build tool. I'm using maven to build the current project using the command as below. This step generates a jar file `spark-batch-predict-1.0-SNAPSHOT.jar` in the `target` folder of the project root dir.
 
         make mvn.build.package
-  
-ii. Build the base docker image(spark-base:latest) of the spark distribution by running the below cmd from the project root directory.
-
-        make docker.build.spark-base
-iii. Build the spark container image which spark uses for spinning up the containers for drivers and executors when we submit a job to a k8s cluster.
+   
+ii. Build the spark container image which spark uses for spinning up the containers for drivers and executors when we submit a job to a k8s cluster.
         
         make docker.build.k8s.container
         make docker.push.k8s.container
 
+Note: Above step is needed only if you modify the existing business logic and you need to update the base image of the spark-batch-predict Dockerfile
+
+iii. Build the spark-batch-predict docker image using the below cmd:
+        
+        make docker.build.spark-batch-predict
+
 iv. Modify the experiment metadata to update the config as below. By default it submits the job to a local spark cluster when you invoke the skill. Examples of local and remote cluster spark job submissions:
 
-        {
-        "pyspark": {
-        "pyspark_bin": "bin/spark-submit",
-        "options": {
-            "--master": "k8s://master-host",
-            "--deploy-mode": "cluster",
-            "--name": "spark-batch-predict",
-            "--conf": {
-                "spark.executor.instances": 2,
-                "spark.kubernetes.authenticate.driver.serviceAccountName": "spark",
-                "spark.kubernetes.container.image": "svangapallycs/spark-container:<TAG>",
-                "spark.kubernetes.namespace": "cortex",
-                "spark.kubernetes.driver.master": "master-host",
-                "spark.executor.memory": "1g",
-                "spark.shuffle.service.enabled": "false",
-                "spark.dynamicAllocation.enabled": "false",
-                "spark.network.timeout": "300s",
-                "spark.executor.heartbeatInterval": "100s",
-                "spark.kubernetes.executor.annotation.traffic.sidecar.istio.io/excludeOutboundPorts": "7078,7079",
-                "spark.kubernetes.driver.annotation.traffic.sidecar.istio.io/excludeInboundPorts":"7078,7079"
-            }
+        {     
+            "pyspark": {
+                "pyspark_bin": "bin/spark-submit",
+                "options": {
+                    "--master": "k8s://<master-ip>",
+                    "--deploy-mode": "cluster",
+                    "--name": "spark-batch-predict",
+                    "--conf": {
+                        "spark.executor.instances": 2,
+                        "spark.kubernetes.authenticate.driver.serviceAccountName": "default",
+                        "spark.kubernetes.container.image": "c12e/spark-template:spark-container-BiyRw4",
+                        "spark.kubernetes.container.image.pullSecrets": "docker-login",
+                        "spark.kubernetes.namespace": "cortex",
+                        "spark.kubernetes.driver.master": "master-ip",
+                        "spark.executor.memory": "1g",
+                        "spark.shuffle.service.enabled": "false",
+                        "spark.dynamicAllocation.enabled": "false",
+                        "spark.network.timeout": "300s",
+                        "spark.executor.heartbeatInterval": "100s",
+                        "spark.kubernetes.driver.annotation.traffic.sidecar.istio.io/inject": "false",
+                        "spark.kubernetes.executor.annotation.traffic.sidecar.istio.io/inject": "false",
+                        "spark.kubernetes.executor.annotation.traffic.sidecar.istio.io/excludeOutboundPorts": "7078,7079",
+                        "spark.kubernetes.driver.annotation.traffic.sidecar.istio.io/excludeInboundPorts": "7078,7079"
+                    }
+                }
+            },
+            "spark_base": "c12e/spark-template"
         }
-    }
-}
+        
+   ```run.log_param("config", config)```
 
 #### 2. Submit Python based Spark job (Optional):
 
 i. Add the python dependencies in `requirements.txt` file to add packages and libraries that are needed.
 
-#### 3. Build the docker image from project root directory
+ii. Build the spark container image which spark uses for spinning up the containers for drivers and executors when we submit a job to a k8s cluster.
+        
+        make docker.build.k8s.container
+        make docker.push.k8s.container
+
+Note: Above step is needed only if you modify the existing business logic and you need to update the base image of the spark-batch-predict Dockerfile
+
+iii. Build the docker image from project root directory
   
         make docker.build.spark-batch-predict
 
-#### 4. Push the docker image to a registry that is connected to your Kubernetes cluster and deploy action.
+#### 3. Push the docker image to a registry that is connected to your Kubernetes cluster and deploy action.
 
         make deploy.spark-batch-predict
   
-#### 5. Save/deploy the Skill.
+#### 4. Save/deploy the Skill.
   
         make skill.save
   
