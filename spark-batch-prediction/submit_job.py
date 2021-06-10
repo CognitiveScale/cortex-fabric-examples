@@ -2,6 +2,7 @@ import sys
 import os
 import json
 import subprocess
+import logging
 from cortex import Cortex
 
 
@@ -32,9 +33,8 @@ if __name__ == '__main__':
     experiment = client.experiment(experiment_name)
     run = experiment.last_run()
     spark_config = run.get_param('config')
-    print(spark_config)
+    logging.log("Spark Config: ", spark_config)
     run_args = get_runtime_args(spark_config)
     run_args.append("src/main/python/main.py")
     run_args.append(json.dumps(input_params))
-    print(run_args)
     subprocess.call(run_args)

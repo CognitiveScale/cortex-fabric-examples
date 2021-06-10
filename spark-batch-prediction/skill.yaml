@@ -26,21 +26,21 @@ properties:
     description: Connection is used to read and write files.
     required: false
     type: string
-    secure: false
+    secure: true
     defaultValue: spark-s3-conn
   - name: experiment-name
     title: Experiment Name
     description: Experiment name to retrieve experiment details
     required: false
     type: string
-    secure: false
+    secure: true
     defaultValue: sv_experiment
   - name: run-id
     title: Run ID
     description: Run id of the experiment
     required: true
     type: string
-    secure: false
+    secure: true
   - name: aws-secret
     title: AWS Secret
     description: AWS Secret
@@ -70,7 +70,7 @@ properties:
     description: Prediction class or label in the dataset
     required: false
     type: string
-    secure: false
+    secure: true
 
 tags:
     - label: template
