@@ -83,9 +83,8 @@ def make_batch_predictions(input_params):
 
         # Writing to output
         df.write.csv(output_path, mode='append', header=True)
-        spark.stop()
 
-    if connection.get("connectionType") == "mongo":
+    elif connection.get("connectionType") == "mongo":
         output_collection = input_params["properties"]["output-collection"]
         mongo_uri = input_params["properties"][conn_params["uri"].split("#SECURE.")[1]]
         database = conn_params.get("database")
@@ -107,7 +106,10 @@ def make_batch_predictions(input_params):
             .mode("append").option("uri", mongo_uri) \
             .option("database", database) \
             .option("collection", output_collection).save()
-        spark.stop()
+    else:
+        # Implement based on requirement
+        spark = initialize_spark_session(conf=None)
+    spark.stop()
 
 
 if __name__ == "__main__":
