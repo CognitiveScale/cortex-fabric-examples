@@ -27,7 +27,7 @@ def load_model(client, experiment_name, run_id):
     return run.get_artifact('model')
 
 
-def score_predictions(df, model, sc):
+def score_predictions(df, model, outcome, sc):
     global broadcast_ml_model
     # Broadcasting ML model across nodes for parallel prediction
     broadcast_ml_model = sc.broadcast(model)
@@ -35,7 +35,7 @@ def score_predictions(df, model, sc):
 
     # Scoring using the Model
     predict_udf = udf(predict, DoubleType())
-    df = df.withColumn("score", predict_udf(*df.columns))
+    df = df.withColumn(outcome, predict_udf(*df.columns))
     return df
 
 
@@ -79,7 +79,7 @@ def make_batch_predictions(input_params):
         logging.info(df.printSchema())
 
         # Make predictions
-        df = score_predictions(df, model, sc)
+        df = score_predictions(df, model, outcome, sc)
 
         # Writing to output
         df.write.csv(output_path, mode='append', header=True)
@@ -99,7 +99,7 @@ def make_batch_predictions(input_params):
         logging.info(df.printSchema())
 
         # Make predictions
-        df = score_predictions(df, model, sc)
+        df = score_predictions(df, model, outcome, sc)
 
         # Writing to output
         df.write.format("com.mongodb.spark.sql.DefaultSource") \
