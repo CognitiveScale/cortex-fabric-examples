@@ -9,8 +9,6 @@ curl https://archive.apache.org/dist/spark/spark-${spark_version}/spark-${spark_
 
 tar -xf spark.tgz && cd spark-${spark_version}-bin-hadoop${hadoop_version}
 
-cd spark-${spark_version}-bin-hadoop${hadoop_version}
-
 docker build -t spark-base -f kubernetes/dockerfiles/spark/Dockerfile .
 
 export base_img=spark-base:latest
