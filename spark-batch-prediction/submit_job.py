@@ -4,6 +4,7 @@ import json
 import subprocess
 import logging
 from cortex import Cortex
+from cortex.run import Run
 
 
 def get_runtime_args(config):
@@ -29,9 +30,10 @@ if __name__ == '__main__':
     token = input_params["token"]
     project = input_params["projectId"]
     experiment_name = input_params["properties"]["experiment-name"]
+    run_id = input_params["properties"]["run-id"]
     client = Cortex.client(api_endpoint=url, token=token, project=project)
     experiment = client.experiment(experiment_name)
-    run = experiment.last_run()
+    run = Run.from_json(experiment.get_run(run_id), experiment)
     spark_config = run.get_param('config')
     logging.log("Spark Config: ", spark_config)
     run_args = get_runtime_args(spark_config)
