@@ -34,7 +34,7 @@ if __name__ == '__main__':
     client = Cortex.client(api_endpoint=url, token=token, project=project)
     experiment = client.experiment(experiment_name)
     run = Run.from_json(experiment.get_run(run_id), experiment)
-    spark_config = run.get_param('config')
+    spark_config = run.get_artifact('spark-config')
     logging.info("Spark Config: {}".format(str(spark_config)))
     run_args = get_runtime_args(spark_config)
     run_args.append("src/main/python/main.py")

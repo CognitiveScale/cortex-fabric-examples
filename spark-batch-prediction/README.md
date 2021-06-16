@@ -102,7 +102,7 @@ iii. Build the spark-batch-predict docker image using the below cmd:
             "spark_base": "c12e/spark-template"
         }
         
-   ```run.log_param("config", config)```
+   ```run.log_artifact("spark-config", open('config.json', 'rb')})```
 
 
 
