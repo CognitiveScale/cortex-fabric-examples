@@ -25,4 +25,4 @@ deploy.spark-batch-predict:
 	sh deploy-job.sh
 
 skill.save:
-	cortex skills save -y skill.yaml --project spark-pred
+	cortex skills save -y skill.yaml --project shared
