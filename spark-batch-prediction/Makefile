@@ -1,9 +1,6 @@
 TAG := $(shell cat /dev/urandom | env LC_CTYPE=C tr -dc 'a-zA-Z0-9' | fold -w 6 | head -n 1)
 SPARK_BASE_IMG := $(shell cat config.json | jq '.spark_base' | sed -e 's/^"//' -e 's/"$///')
 
-mvn.build.package:
-	mvn clean install
-
 docker.build.spark-base:
 	sh spark-base/build-spark-image.sh
 

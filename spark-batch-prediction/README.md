@@ -30,8 +30,7 @@ Some of the commonly used options are:
     Maven/Gradle
 
 ### Project Structure
-java source code location `src/main/java`
-java source code location `src/main/python`
+python source code location `src/main/python`
 
 #### Steps 
 
@@ -54,24 +53,7 @@ iii. Build the docker image from project root directory
   
         make docker.build.spark-batch-predict
 
-##### 2. Submit Java based Spark job (Optional):
-
-i. Build and package the project if it is a maven or gradle based using the respective build tool. I'm using maven to build the current project using the command as below. This step generates a jar file `spark-batch-predict-1.0-SNAPSHOT.jar` in the `target` folder of the project root dir.
-
-        make mvn.build.package
-   
-ii. Build the spark container image which spark uses for spinning up the containers for drivers and executors when we submit a job to a k8s cluster.
-        
-        make docker.build.k8s.container
-        make docker.push.k8s.container
-
-Note: Above step is needed only if you modify the existing business logic and you need to update the base image of the spark-batch-predict Dockerfile
-
-iii. Build the spark-batch-predict docker image using the below cmd:
-        
-        make docker.build.spark-batch-predict
-
-##### 3. Modify the experiment metadata to update the config as below. By default it submits the job to a local spark cluster when you invoke the skill. Examples of local and remote cluster spark job submissions:
+##### 2. Modify the experiment metadata to update the config as below. By default it submits the job to a local spark cluster when you invoke the skill. Examples of local and remote cluster spark job submissions:
 
         {     
             "pyspark": {
