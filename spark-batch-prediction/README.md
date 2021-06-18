@@ -84,7 +84,11 @@ iii. Build the docker image from project root directory
             "spark_base": "c12e/spark-template"
         }
         
-   ```run.log_artifact("spark-config", open('config.json', 'rb')})```
+   ```
+      pickle.dump(config, open('config.pickle', 'wb'))
+      run.log_artifact('spark-config', 'config.pickle''})
+   ```
+   
 
 
 
