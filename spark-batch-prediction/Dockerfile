@@ -7,7 +7,6 @@ ENV ENVOY_ADMIN_API=http://localhost:15000
 ENV ISTIO_QUIT_API=http://localhost:15020
 
 COPY src/ src/
-COPY target/*.jar target/
 COPY submit_job.py submit_job.py
 
 RUN rm -f /usr/bin/python && ln -s /usr/bin/python3 /usr/bin/python
