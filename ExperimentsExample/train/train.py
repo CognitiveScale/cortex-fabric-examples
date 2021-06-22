@@ -162,15 +162,11 @@ def train(params):
     logit_acc = logit.score(encoded_x_test, y_test.values)
 
     # Save model meta-data
-    model_name = "german_credit_model"
-    tags = [
-        {
-            "label": "classification",
-            "value": "classification"
-        }
-    ]
-    save_model(client, project, model_name, "German Credit Model", "German Credit Model",
-               "source", "Classification", tags)
+    model_payload = params['payload']['model']
+    model_name = model_payload["name"]
+
+    save_model(client, project, model_name, model_payload["title"], model_payload["description"],
+               model_payload["source"], model_payload["type"], model_payload["tags"])
 
     # Save models as pickle files and Save experiments
     pickle_model(dtree, encoder, 'Decision Tree', dtree_acc, 'Basic Decision Tree model', 'german_credit_dtree.pkl')

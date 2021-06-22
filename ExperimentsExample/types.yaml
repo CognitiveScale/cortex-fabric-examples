@@ -7,6 +7,8 @@ types:
     parameters:
       - name: connection_name
         type: string
+      - name: model
+        type: object
 
   - camel: 1.0.0
     name: default/TrainResponse
@@ -22,6 +24,8 @@ types:
     description: Parameters passed to Inference Daemon
     parameters:
       - name: exp_name
+        type: string
+      - name: run_id
         type: string
       - name: instances
         type: object

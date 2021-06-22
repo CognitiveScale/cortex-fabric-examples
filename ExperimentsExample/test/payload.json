@@ -1,6 +1,19 @@
 {
   "payload": {
     "connection_name": "german-credit-e9cef",
+    "model": {
+      "name": "german_credit_model",
+      "title": "German Credit Model",
+      "description": "German Credit Model",
+      "source": "source",
+      "type": "Classification",
+      "tags" : [
+        {
+            "label": "classification",
+            "value": "classification"
+        }
+      ]
+    },
     "instances": [
       [
         "... < 0 DM",
