@@ -14,6 +14,8 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from cat_encoder import CatEncoder
 from cortex import Cortex
+from cortex.model import Model, ModelClient
+from cortex.experiment import Experiment, ExperimentClient
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.neural_network import MLPClassifier
 from sklearn import svm
@@ -23,8 +25,9 @@ import boto3
 # supress all warnings
 warnings.filterwarnings('ignore')
 
+
 # download training data from s3 connection
-def download_training_data(connection, client):
+def download_training_data(connection):
     if connection:
         uri = ''
         s3_key = ''
@@ -35,7 +38,7 @@ def download_training_data(connection, client):
             elif param['name'] == 'publicKey':
                 s3_key = param['value']
             elif param['name'] == 'secretKey':
-                s3_secret = client.get_secret(param['value'].split('.')[1])
+                s3_secret = param['value']
         s3_components = uri[5:].split('/')
         bucket = s3_components[0]
         file_name = ""
@@ -54,10 +57,31 @@ def pickle_model(model, encoder, model_name, test_accuracy, description, filenam
         pickle.dump(model_obj, file)
 
 
+# save model metadata
+def save_model(client, project, name, title, description, source, model_type, tags):
+    # create model
+    model_obj = {
+        "name": name,
+        "title": title,
+        "description": description,
+        "source": source,
+        "type": model_type,
+        "tags": tags
+    }
+    model_client = ModelClient(project, client)
+    result = model_client.save_model(model_obj)
+    print(result)
+
+    print(f'Model saved, name: {name}')
+
+
 # save experiment using model
-def save_experiment(client, experiment_name, filename, algo):
+def save_experiment(client, experiment_name, filename, algo, modelId, project):
     # create experiment
-    experiment = client.experiment(experiment_name)
+    experiment_client = ExperimentClient(client)
+    result = experiment_client.save_experiment(experiment_name, project, title=experiment_name, modelId=modelId)
+    print(result)
+    experiment = Experiment.get_experiment(experiment_name, project, experiment_client)
     run_id = None
     with open(filename, "rb") as model:
         with experiment.start_run() as run:
@@ -70,8 +94,9 @@ def save_experiment(client, experiment_name, filename, algo):
 
 # train model using the connection
 def train(params):
+    project = params['projectId']
     # create a Cortex client instance from the job's parameters
-    client = Cortex.client(api_endpoint=params['apiEndpoint'], project=params['projectId'], token=params['token'])
+    client = Cortex.client(api_endpoint=params['apiEndpoint'], project=project, token=params['token'])
 
     # Read connection
     connection_name = params['payload']['connection_name']
@@ -79,7 +104,7 @@ def train(params):
     connection = client.get_connection(connection_name)
 
     # Download training data using connection
-    download_training_data(connection, client)
+    download_training_data(connection)
     print(f'Downloaded training data for {connection_name}')
 
     random.seed(0)
@@ -136,15 +161,27 @@ def train(params):
     logit.fit(encoded_x_train, y_train.values)
     logit_acc = logit.score(encoded_x_test, y_test.values)
 
+    # Save model meta-data
+    model_name = "german_credit_model"
+    tags = [
+        {
+            "label": "classification",
+            "value": "classification"
+        }
+    ]
+    save_model(client, project, model_name, "German Credit Model", "German Credit Model",
+               "source", "Classification", tags)
+
     # Save models as pickle files and Save experiments
     pickle_model(dtree, encoder, 'Decision Tree', dtree_acc, 'Basic Decision Tree model', 'german_credit_dtree.pkl')
-    save_experiment(client, 'gc_dtree_exp', 'german_credit_dtree.pkl', 'DecisionTreeClassifier')
     pickle_model(logit, encoder, 'LOGIT', logit_acc, 'Basic LOGIT model', 'german_credit_logit.pkl')
-    save_experiment(client, 'gc_logit_exp', 'german_credit_logit.pkl', 'LogisticRegression')
     pickle_model(mlp, encoder, 'MLP', mlp_acc, 'Basic MLP model', 'german_credit_mlp.pkl')
-    save_experiment(client, 'gc_mlp_exp', 'german_credit_mlp.pkl', 'MLPClassifier')
     pickle_model(SVM, encoder, 'SVM', svm_acc, 'Basic SVM model', 'german_credit_svm.pkl')
-    save_experiment(client, 'gc_svm_exp', 'german_credit_svm.pkl', 'SVM')
+
+    save_experiment(client, 'gc_dtree_exp', 'german_credit_dtree.pkl', 'DecisionTreeClassifier', model_name, project)
+    save_experiment(client, 'gc_logit_exp', 'german_credit_logit.pkl', 'LogisticRegression', model_name, project)
+    save_experiment(client, 'gc_mlp_exp', 'german_credit_mlp.pkl', 'MLPClassifier', model_name, project)
+    save_experiment(client, 'gc_svm_exp', 'german_credit_svm.pkl', 'SVM', model_name, project)
 
 
 if __name__ == "__main__":
