@@ -3,6 +3,7 @@ Copyright (c) 2021. Cognitive Scale Inc. All rights reserved.
 """
 
 from cortex import Cortex
+from cortex.experiment import Experiment, ExperimentClient
 from fastapi import FastAPI
 from cat_encoder import CatEncoder
 
@@ -14,31 +15,19 @@ model_ctx = {}
 app = FastAPI()
 
 
-# load latest model by experiment name
-@app.post('/init')
-def load(req: dict):
-    params = req["payload"]["params"]
-    client = Cortex.client(api_endpoint=req["apiEndpoint"], project=req["projectId"], token=req["token"])
-    exp_name = params["exp_name"]
-    run_id = params["run_id"]
-    if not exp_name in model_ctx:
-        model_ctx[exp_name] = init_model(exp_name, run_id, client)
-    print("Loaded model : {}".format(exp_name))
-    return {'payload': 'Loaded model'}
-
-
 # predict
 @app.post('/invoke')
 def run(req: dict):
     payload = req["payload"]
     instances = payload["instances"]
     exp_name = payload["exp_name"]
-    run_id = payload["run_id"]
+    run_id = None
+    if "run_id" in payload:
+        run_id = payload["run_id"]
 
     # if model is not loaded
-    if exp_name not in model_ctx:
-        client = Cortex.client(api_endpoint=req["apiEndpoint"], project=req["projectId"], token=req["token"])
-        model_ctx[exp_name] = init_model(exp_name, run_id, client)
+    client = Cortex.client(api_endpoint=req["apiEndpoint"], project=req["projectId"], token=req["token"])
+    model_ctx[exp_name] = init_model(exp_name, run_id, client, req["projectId"])
 
     # retrieve model from the context
     model_obj = model_ctx[exp_name]
@@ -63,8 +52,9 @@ def run(req: dict):
 
 
 # initialize model using experiment name
-def init_model(exp_name, run_id, client):
-    experiment = client.experiment(exp_name)
+def init_model(exp_name, run_id, client, project):
+    experiment_client = ExperimentClient(client)
+    experiment = Experiment.get_experiment(exp_name, project, experiment_client)
     if not run_id:
         exp_run = experiment.last_run()
     else:
