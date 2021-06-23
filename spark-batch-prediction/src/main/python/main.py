@@ -2,17 +2,66 @@ import sys
 from cortex import Cortex
 from cortex.run import Run
 import json
+import numpy as np
 import logging
+import pandas as pd
 
 from pyspark import SparkConf
-from pyspark.sql import SparkSession
-from pyspark.sql.functions import pandas_udf, udf
-from pyspark.sql.types import DoubleType
+from pyspark.sql import SparkSession, Row
 
 
-def predict(*cols):
-    prediction = broadcast_ml_model.value.predict([cols])
-    return float(prediction)
+def predict_partition(rows):
+    """ Calls a vectorized prediction by loading the partition into memory.
+
+        Parameters
+        ----------
+        rows : List[pyspark.sql.Row]
+            The rows of the partition.
+
+        Returns
+        -------
+        List[pyspark.sql.Row]
+            The predictions.
+    """
+    # Load the input rows into a data frame.
+    # It's safer to rely on the Row object's key-based
+    # lookup.
+    rows_df = pd.DataFrame.from_records(
+        # For each row, convert to a dict mapping the column name to the features.
+        [row.asDict() for row in rows]
+    )
+    # It's possible the partition could be empty as an edge case.
+    if rows_df.empty:
+        return []
+    model_artifact = broadcast_ml_model.value
+
+    # If the model artifact is of type __dict__
+    if isinstance(model_artifact, dict):
+        rows_df.columns = model_artifact["columns"]
+        cat_cols = model_artifact["cat_columns"] if "cat_columns" in model_artifact else []
+        num_cols = [x for x in rows_df.columns if x not in cat_cols]
+        # Transforming the input data-frame using encoder & normalizer from the experiment artifact
+        x_encoded = model_artifact["encoder"].transform(rows_df[cat_cols]).toarray() if "encoder" in model_artifact and cat_cols else []
+        x_normalized = model_artifact["normalizer"].transform(rows_df[num_cols]) if "normalizer" in model_artifact and num_cols else []
+        if np.any(x_encoded) and np.any(x_normalized):
+            x_transform = np.concatenate((x_encoded, x_normalized), axis=1)
+        elif np.any(x_encoded):
+            x_transform = np.concatenate((x_encoded, rows_df[num_cols]), axis=1)
+        elif np.any(x_normalized):
+            x_transform = x_normalized
+        else:
+            x_transform = rows_df
+        df = pd.DataFrame(x_transform)
+        rows_df.loc[:, 'prediction'] = broadcast_ml_model.value["model"].predict(df.values)
+    else:
+        # If the model object is the trained model itself
+        rows_df.loc[:, 'prediction'] = broadcast_ml_model.value.predict(rows_df.values)
+    rows_df = rows_df.apply(lambda x: x.astype(str) if x.dtype == 'float64' else x)
+
+    # Now we need to turn the predictions (a numpy array) into Rows again.
+    # This form assigns each column (plus "prediction") as a keyword argument.
+    make_row = lambda row: Row(**{col: row[1][col] for col in rows_df.columns})
+    return map(make_row, rows_df.iterrows())
 
 
 def initialize_spark_session(conf):
@@ -34,9 +83,7 @@ def score_predictions(df, model, outcome, sc):
     logging.info("Model Object:", broadcast_ml_model.value)
 
     # Scoring using the Model
-    predict_udf = udf(predict, DoubleType())
-    df = df.withColumn(outcome, predict_udf(*df.columns))
-    return df
+    return df.rdd.mapPartitions(predict_partition).toDF().withColumnRenamed("prediction", outcome)
 
 
 def make_batch_predictions(input_params):

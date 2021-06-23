@@ -1,4 +1,4 @@
-FROM c12e/spark-template:spark-container-5TwPM1
+FROM c12e/spark-template:spark-container-YcWC7w
 
 USER root
 

@@ -9,7 +9,7 @@
                 "spark.executor.instances": 2,
                 "spark.executor.cores": 2,
                 "spark.kubernetes.authenticate.driver.serviceAccountName": "default",
-                "spark.kubernetes.container.image": "c12e/spark-template:spark-container-5TwPM1",
+                "spark.kubernetes.container.image": "c12e/spark-template:spark-container-YcWC7w",
                 "spark.kubernetes.container.image.pullSecrets": "docker-login",
                 "spark.kubernetes.namespace": "cortex",
                 "spark.kubernetes.driver.master": "<master-ip>",

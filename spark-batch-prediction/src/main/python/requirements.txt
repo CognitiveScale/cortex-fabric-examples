@@ -1,3 +1,4 @@
 pandas==1.0.5
 cortex-python==6.0.1
 catboost==0.25.1
+scikit-learn==0.22.1
