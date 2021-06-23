@@ -70,7 +70,6 @@ def save_model(client, project, name, title, description, source, model_type, ta
     }
     model_client = ModelClient(project, client)
     result = model_client.save_model(model_obj)
-    print(result)
 
     print(f'Model saved, name: {name}')
 
@@ -80,7 +79,6 @@ def save_experiment(client, experiment_name, filename, algo, modelId, project):
     # create experiment
     experiment_client = ExperimentClient(client)
     result = experiment_client.save_experiment(experiment_name, project, title=experiment_name, modelId=modelId)
-    print(result)
     experiment = Experiment.get_experiment(experiment_name, project, experiment_client)
     run_id = None
     with open(filename, "rb") as model:

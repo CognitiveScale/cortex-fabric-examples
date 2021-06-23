@@ -45,9 +45,11 @@ def run(req: dict):
     scores = model_obj["model"].predict_proba(instances)
     labels = model_obj["model"].classes_
     return {
-        "predictions": predictions.tolist(),
-        "scores": scores.tolist(),
-        "labels": labels.tolist()
+        "payload": {
+            "predictions": predictions.tolist(),
+            "scores": scores.tolist(),
+            "labels": labels.tolist()
+        }
     }
 
 
