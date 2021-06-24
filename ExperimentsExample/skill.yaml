@@ -1,0 +1,55 @@
+camel: 1.0.0
+name: experiments
+title: fabric experiments example
+description: fabric experiments example
+inputs:
+  - name: train
+    title: Train Request
+    parameters:
+      $ref: default/TrainRequest
+    routing:
+      all:
+        action  : train-example
+        runtime: cortex/functions
+        output: response_train
+
+  - name: predict
+    title: Predict Request
+    parameters:
+      $ref: default/PredictRequest
+    routing:
+      all:
+        action  : predict-example
+        runtime: cortex/daemons
+        output: response_predict
+
+outputs:
+  - name: response_train
+    title: Train Response
+    parameters:
+      $ref: default/TrainResponse
+        
+  - name: response_predict
+    title: Predict Response
+    parameters:
+      $ref: default/PredictResponse
+
+properties:
+  - name: daemon.method
+    title: Daemon method
+    description: Update default value to HTTP method supported by endpoint
+    required: true
+    type: String
+    defaultValue: POST
+  - name: daemon.path
+    title: Daemon path
+    description: Update default value to HTTP endpoint path in container
+    required: true
+    type: String
+    defaultValue: invoke
+  - name: daemon.port
+    title: Daemon Port
+    description: Update default value to port on which app will be running
+    required: true
+    type: String
+    defaultValue: 5000
