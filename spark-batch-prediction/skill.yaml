@@ -1,0 +1,77 @@
+camel: 1.0.0
+name: spark-batch-predict
+title: Spark Batch Predict
+description: Spark bulk batch prediction skill
+inputs:
+  - name: params
+    title: input
+    parameters:
+      $ref: BulkBatchRequest
+
+    routing:
+      all:
+        action: spark-batch-predict
+        runtime: cortex/jobs
+        output: response
+
+outputs:
+  - name: response
+    title: Job result
+    parameters:
+      $ref: BulkBatchResponse
+
+properties:
+  - name: connection-name
+    title: Connection Name
+    description: Connection is used to read and write files.
+    required: false
+    type: string
+    secure: false
+    defaultValue: spark-s3-conn
+  - name: experiment-name
+    title: Experiment Name
+    description: Experiment name to retrieve experiment details
+    required: false
+    type: string
+    secure: false
+    defaultValue: sv_experiment
+  - name: run-id
+    title: Run ID
+    description: Run id of the experiment
+    required: true
+    type: string
+    secure: false
+  - name: aws-secret
+    title: AWS Secret
+    description: AWS Secret
+    required: false
+    type: string
+    secure: true
+  - name: mongo-uri
+    title: Mongo URI
+    description: Mongo URI for Input dataset
+    required: false
+    type: string
+    secure: true
+  - name: output-path
+    title: S3 Output path
+    description: Output S3 path to save the predictions
+    required: false
+    type: string
+    secure: false
+  - name: output-collection
+    title: Mongo Output collection
+    description: Output collection to save the predictions
+    required: false
+    type: string
+    secure: false
+  - name: outcome
+    title: Prediction class or label
+    description: Prediction class or label in the dataset
+    required: false
+    type: string
+    secure: false
+
+tags:
+    - label: template
+      value: template
