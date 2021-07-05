@@ -1,0 +1,23 @@
+camel: 1.0.0
+types:
+  - camel: 1.0.0
+    name: default/SessionRequest
+    title: SessionRequest
+    description: Parameters passed to Sessions Example
+    parameters:
+      - name: data
+        type: object
+      - name: session_id
+        type: string
+      - name: key
+        type: string
+      - name: ttl
+        type: number
+
+  - camel: 1.0.0
+    name: default/SessionResponse
+    title: SessionResponse
+    description: Session Response
+    parameters:
+      - name: result
+        type: object
