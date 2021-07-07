@@ -96,8 +96,9 @@ def train(params):
     # create a Cortex client instance from the job's parameters
     client = Cortex.client(api_endpoint=params['apiEndpoint'], project=project, token=params['token'])
 
+    payload = params['payload']
     # Read connection
-    connection_name = params['payload']['connection_name']
+    connection_name = payload['connection_name']
     print(f'Reading connection {connection_name}')
     connection = client.get_connection(connection_name)
 
@@ -160,11 +161,11 @@ def train(params):
     logit_acc = logit.score(encoded_x_test, y_test.values)
 
     # Save model meta-data
-    model_payload = params['payload']['model']
-    model_name = model_payload["name"]
 
-    save_model(client, project, model_name, model_payload["title"], model_payload["description"],
-               model_payload["source"], model_payload["type"], model_payload["tags"])
+    model_name = payload["model_name"]
+
+    save_model(client, project, model_name, payload.get("model_title", ""), payload.get("model_description", ""),
+               payload.get("model_source", ""), payload.get("model_type", ""), payload.get("model_tags", []))
 
     # Save models as pickle files and Save experiments
     pickle_model(dtree, encoder, 'Decision Tree', dtree_acc, 'Basic Decision Tree model', 'german_credit_dtree.pkl')

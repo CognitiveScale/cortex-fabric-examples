@@ -1,19 +1,17 @@
 {
   "payload": {
     "connection_name": "german-credit-e9cef",
-    "model": {
-      "name": "german_credit_model",
-      "title": "German Credit Model",
-      "description": "German Credit Model",
-      "source": "source",
-      "type": "Classification",
-      "tags" : [
-        {
-            "label": "classification",
-            "value": "classification"
-        }
-      ]
-    },
+    "model_name": "german_credit_model",
+    "model_title": "German Credit Model",
+    "model_description": "German Credit Model",
+    "model_source": "source",
+    "model_type": "Classification",
+    "model_tags": [
+      {
+        "label": "classification",
+        "value": "classification"
+      }
+    ],
     "instances": [
       [
         "... < 0 DM",
@@ -38,7 +36,7 @@
         "foreign - yes"
       ]
     ],
-    "exp_name": "gc_svm_exp",
-    "run_id": "zqa0khy"
+    "exp_name": "gc_dtree_exp",
+    "run_id": "gl103av"
   }
 }
