@@ -7,8 +7,20 @@ types:
     parameters:
       - name: connection_name
         type: string
-      - name: model
-        type: object
+        required: true
+      - name: model_name
+        type: string
+        required: true
+      - name: model_source
+        type: string
+      - name: model_tags
+        type: array
+      - name: model_title
+        type: string
+      - name: model_type
+        type: string
+      - name: model_mode
+        type: string
 
   - camel: 1.0.0
     name: default/TrainResponse
@@ -25,10 +37,12 @@ types:
     parameters:
       - name: exp_name
         type: string
+        required: true
       - name: run_id
         type: string
       - name: instances
         type: object
+        required: true
 
   - camel: 1.0.0
     name: default/PredictResponse
