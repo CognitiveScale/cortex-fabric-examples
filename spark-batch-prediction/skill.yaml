@@ -27,7 +27,6 @@ properties:
     required: false
     type: string
     secure: false
-    defaultValue: spark-s3-conn
   - name: experiment-name
     title: Experiment Name
     description: Experiment name to retrieve experiment details

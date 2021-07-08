@@ -21,5 +21,8 @@ docker.build.spark-batch-predict:
 deploy.spark-batch-predict:
 	sh deploy-job.sh
 
+types.save:
+	 cortex types save -y types/types.yaml --project shared
+
 skill.save:
 	cortex skills save -y skill.yaml --project shared

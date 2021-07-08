@@ -100,7 +100,14 @@ iii. Build the docker image from project root directory
   
         make skill.save
   
+##### 5. Save the types for input/output.
   
+        make types.save
+   
+   Note: K8s cluster admin needs to provide access to spark to create pods for executors when running on k8s.
+        
+        kubectl apply -f spark-rbac.yaml
+   
    The Skill is added to the Cortex Fabric catalog and is available for selection when building interventions or Agents.
 
    Skills that are deployed may be invoked (run) either independently or within an agent.
