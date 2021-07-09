@@ -1,4 +1,4 @@
-TAG := $(shell cat /dev/urandom | env LC_CTYPE=C tr -dc 'a-zA-Z0-9' | fold -w 6 | head -n 1)
+TAG := $(shell git describe --long --always --match='v*.*' | sed 's/v//; s/-/./')
 SPARK_BASE_IMG := $(shell cat config.json | jq '.spark_base' | sed -e 's/^"//' -e 's/"$///')
 
 docker.build.spark-base:
