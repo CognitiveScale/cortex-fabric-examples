@@ -65,4 +65,44 @@ A Makefile is provided to do these steps. Set environment variables `DOCKER_PREG
 
    Skills that are deployed may be invoked (run) either independently or within an agent.
 
+### Steps to Test
+
+Steps to test
+
+1. Save Connection for s3 file(training data)
+
+2. Deploy actions and skill
+
+3. Run train job, payload:
+    ```
+    {"connection_name": "connection_name",
+    "model_name": "german-credit-model",
+    "model_source": "CS", //optional
+    "model_tags": [
+    {
+    "label": "german-credit",
+    "value": "german-credit"
+    },
+    {
+    "label": "classification",
+    "value": "classification"
+    }
+    ], //optional
+    "model_title": "German Credit Model", //optional
+    "model_type": "Classification", //optional
+    "model_mode": "Single" //optional
+    }
+    ```
+4. Note experiment names and run id from train job output
+
+5. Run predict payload:
+    ```
+    {
+    "exp_name": "exp_name",
+    "runId": "", //optional
+    "instances": []
+    }
+    ```
+
+
 For more details about how to build skills go to [Cortex Fabric Documentation - Development - Develop Skills](https://cognitivescale.github.io/cortex-fabric/docs/development/define-skills)
