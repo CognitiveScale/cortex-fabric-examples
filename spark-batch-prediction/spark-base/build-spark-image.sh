@@ -11,6 +11,4 @@ tar -xf spark.tgz && cd spark-${spark_version}-bin-hadoop${hadoop_version}
 
 docker build -t spark-base -f kubernetes/dockerfiles/spark/Dockerfile .
 
-export base_img=spark-base:latest
-
 docker build --build-arg base_img=spark-base:latest -t spark-base-python -f kubernetes/dockerfiles/spark/bindings/python/Dockerfile .
