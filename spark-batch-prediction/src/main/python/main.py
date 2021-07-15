@@ -103,7 +103,7 @@ def make_batch_predictions(input_params):
 
     if connection.get("connectionType") == "s3":
         output_path = input_params["properties"]["output-path"]
-        secret_key = input_params["properties"][conn_params["secretKey"].split("#SECURE.")[1]]
+        secret_key = input_params["properties"]["aws-secret"]
         conf = SparkConf().set("fs.s3a.access.key", conn_params.get('publicKey')) \
             .set("fs.s3a.secret.key", secret_key) \
             .set("fs.s3a.endpoint", conn_params.get("s3Endpoint")) \
@@ -133,7 +133,7 @@ def make_batch_predictions(input_params):
 
     elif connection.get("connectionType") == "mongo":
         output_collection = input_params["properties"]["output-collection"]
-        mongo_uri = input_params["properties"][conn_params["uri"].split("#SECURE.")[1]]
+        mongo_uri = input_params["properties"]["mongo-uri"]
         database = conn_params.get("database")
         collection = conn_params.get("collection")
 

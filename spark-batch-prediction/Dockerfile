@@ -1,4 +1,5 @@
-FROM c12e/spark-template:spark-container-YcWC7w
+ARG base_img
+FROM $base_img
 
 USER root
 
