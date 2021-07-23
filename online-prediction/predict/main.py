@@ -36,14 +36,18 @@ async def run(request: dict):
         if isinstance(model, dict):
             cat_cols = model["categorical_columns"] if "categorical_columns" in model else []
             num_cols = [x for x in df.columns if x not in cat_cols]
-
             # Transforming the input data-frame using encoder & normalizer from the experiment artifact
-            x_encoded = model["encoder"].transform(df[cat_cols]).toarray() if "encoder" in model and cat_cols else []
-            x_normalized = model["normalizer"].transform(df[num_cols]) if "normalizer" in model and num_cols else []
-            if np.any(x_encoded) and np.any(x_normalized):
-                x_transformed = np.concatenate((x_encoded, x_normalized), axis=1)
+            if ("encoder" in model) or ("normalizer" in model):
+                x_encoded = model["encoder"].transform(
+                    df[cat_cols]).toarray() if "encoder" in model and cat_cols else []
+                x_normalized = model["normalizer"].transform(df[num_cols]) if "normalizer" in model else df[
+                    num_cols].values
+                if np.any(x_encoded) and np.any(x_normalized):
+                    x_transformed = np.concatenate((x_encoded, x_normalized), axis=1)
+                else:
+                    x_transformed = x_encoded if np.any(x_encoded) else x_normalized
             else:
-                x_transformed = x_encoded if np.any(x_encoded) else x_normalized
+                x_transformed = df.values
             predictions = model["model"].predict(x_transformed)
         else:
             # If the model object is an instance of model itself
