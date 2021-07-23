@@ -1,3 +1,8 @@
+"""
+Copyright (c) 2021. Cognitive Scale Inc. All rights reserved.
+
+Licensed under CognitiveScale Example Code [License](https://cognitivescale.github.io/cortex-fabric-examples/LICENSE.md)
+"""
 import logging
 import uvicorn
 import numpy as np
