@@ -1,0 +1,24 @@
+types:
+  - camel: 1.0.0
+    name: OnlinePredictRequest
+    title: Online Predict Request
+    description: Represents a request of online prediction input
+    parameters:
+      - name: columns
+        type: array
+        description: Columns
+        required: true
+      - name: instances
+        type: array
+        description: Instances(2D array)
+        required: true
+
+  - camel: 1.0.0
+    name: OnlinePredictResponse
+    title: Online Predict Response
+    description: Represents a response of online prediction
+    parameters:
+      - name: predictions
+        type: object
+        description: Prediction Results
+        required: false
