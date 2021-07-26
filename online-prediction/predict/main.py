@@ -10,7 +10,6 @@ import pandas as pd
 
 # cortex
 from cortex import Cortex
-from cortex.run import Run
 
 # fastapi
 from fastapi import FastAPI
@@ -60,7 +59,7 @@ async def run(request: dict):
 async def load_model(client, experiment_name, run_id):
     try:
         experiment = client.experiment(experiment_name)
-        run = Run.from_json(experiment.get_run(run_id), experiment)
+        run = experiment.get_run(run_id)
         return run.get_artifact('model')
     except Exception as e:
         logging.error("Error: Failed to load model: {}".format(e))
