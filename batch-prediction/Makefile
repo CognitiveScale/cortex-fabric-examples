@@ -9,14 +9,14 @@ push: check-env
 	docker push ${DOCKER_IMAGE_URL}
 
 deploy: check-env
-	cortex actions deploy --actionName batch-predict --actionType job --docker ${DOCKER_IMAGE_URL} --project ${PROJECT_NAME} --cmd '["scuttle", "python3", "predict/main.py"]'
-	cortex types save -y types/types.yaml --project ${PROJECT_NAME}
-	cortex skills save -y skill.yaml --project ${PROJECT_NAME}
+	cortex actions deploy --actionName batch-predict --actionType job --docker ${DOCKER_IMAGE_URL} --project shared --cmd '["scuttle", "python3", "predict/main.py"]'
+	cortex types save -y types/types.yaml --project shared
+	cortex skills save -y skill.yaml --project shared
 
 tests: check-env
 	cortex skills invoke --params-file ./test/payload.json ${SKILL_NAME} params --project ${PROJECT_NAME}
 
-all: build push deploy tests
+all: build push deploy
 
 get: check-env
 	cortex skills describe ${SKILL_NAME} --project ${PROJECT_NAME}
@@ -24,7 +24,4 @@ get: check-env
 check-env:
 ifndef DOCKER_PREGISTRY_URL
 	$(error environment variable DOCKER_PREGISTRY_URL is not set. Set it like <docker-registry-url>/<namespace-org>)
-endif
-ifndef PROJECT_NAME
-	$(error environment variable PROJECT_NAME is not set. Set this to Cortex project name.)
 endif

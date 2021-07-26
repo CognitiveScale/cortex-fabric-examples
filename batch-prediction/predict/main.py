@@ -14,7 +14,6 @@ import pymongo
 
 # cortex
 from cortex import Cortex
-# from cortex.run import Run
 
 
 def load_model(client, experiment_name, run_id):
@@ -133,7 +132,6 @@ def make_batch_predictions(input_params):
 
         if connection.get("connectionType") == "s3":
             s3_output_path = input_params["properties"]["output-path"]
-            # secret_key = input_params["properties"]["aws-secret"]
             # Get S3 file path of the dataset
             uri = conn_params["uri"]
             s3_client = init_s3_client(conn_params.get('publicKey'), conn_params.get('secretKey'))
