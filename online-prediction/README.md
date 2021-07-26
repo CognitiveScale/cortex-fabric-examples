@@ -13,7 +13,11 @@ Note:
 * `requirements.txt` Python3 libraries dependencies
 * `Dockerfile` to build Docker image for this skill
 
-#### Steps
+Upload a model file to the cortex experiment from cortex cli before invoking the skill.
+
+        cortex experiments upload-artifact <experiment-name> <run-id> pickle_file artifact-name --project <PROJECT>
+
+#### Deployment Steps
 
 A Makefile is provided to do these steps. Set environment variables `DOCKER_PREGISTRY_URL` (like <docker-registry-url>/<namespace-org>) and use Makefile to deploy Skill.<br>
 * Build and push Docker image, deploy Cortex Action and Skill.
