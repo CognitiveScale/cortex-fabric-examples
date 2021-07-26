@@ -9,7 +9,7 @@ Note:
 #### Files
 * `skill.yaml` Skill definition
 * `predict/main.py` Python3 code serving the daemon API
-* `predict/main.py` Example Python3 code for training the model
+* `train/main.py` Example Python3 code for training the model
 * `requirements.txt` Python3 libraries dependencies
 * `Dockerfile` to build Docker image for this skill
 
