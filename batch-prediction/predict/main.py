@@ -140,7 +140,7 @@ def make_batch_predictions(input_params):
             for chunked_df in pd.read_csv(local_path, header=0, sep=",", chunksize=batch_size):
                 if outcome in chunked_df.columns.tolist():
                     chunked_df = chunked_df.drop(outcome, axis=1)
-                logging.info("Processing records of size: ", chunked_df.shape[0])
+                logging.info("Processing records of size: {}".format(chunked_df.shape[0]))
 
                 # Score Predictions for a Batch
                 predicted_df = score_predictions(chunked_df, model=model)
@@ -153,7 +153,7 @@ def make_batch_predictions(input_params):
 
         elif connection.get("connectionType") == "mongo":
             output_collection = input_params["properties"]["output-collection"]
-            mongo_uri = input_params["properties"]["mongo-uri"]
+            mongo_uri = conn_params.get("uri")
             database = conn_params.get("database")
             collection = conn_params.get("collection")
             client = pymongo.MongoClient(mongo_uri)
@@ -164,8 +164,8 @@ def make_batch_predictions(input_params):
                 # Expand the cursor and construct the DataFrame
                 chunked_df = pd.DataFrame(list(cursor))
                 if outcome in chunked_df.columns.tolist():
-                    chunked_df = chunked_df.drop(outcome, axis=1)
-                logging.info("Processing records of size: ", chunked_df.shape[0])
+                    chunked_df = chunked_df.drop([outcome, "_id"], axis=1)
+                logging.info("Processing records of size: {}".format(chunked_df.shape[0]))
 
                 # Score Predictions for a Batch
                 predicted_df = score_predictions(chunked_df, model=model)
