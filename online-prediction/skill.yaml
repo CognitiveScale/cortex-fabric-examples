@@ -1,6 +1,6 @@
 camel: 1.0.0
 name: online-prediction
-title: Online Prediction
+title: Online Prediction Skill Template
 description: Online Prediction Skill Template
 inputs:
   - name: request
