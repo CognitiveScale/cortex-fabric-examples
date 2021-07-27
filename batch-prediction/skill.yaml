@@ -1,7 +1,7 @@
 camel: 1.0.0
 name: batch-prediction
-title: Batch Prediction Skill
-description: Batch Prediction Skill
+title: Batch Prediction Skill Template
+description: Batch Prediction Skill Template
 inputs:
   - name: params
     title: input
