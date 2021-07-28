@@ -55,7 +55,7 @@ def train_with_encoder(X):
     accuracy = d_tree_model.score(test_df, y_test.values)
     print("Model Accuracy: ", accuracy)
 
-    model_obj = {"model": d_tree_model, "categorical_columns": categorical_columns, "encoder": encoder, "normalizer": normalizer}
+    model_obj = {"model": d_tree_model, "cat_columns": categorical_columns, "encoder": encoder, "normalizer": normalizer}
 
     return model_obj
 
