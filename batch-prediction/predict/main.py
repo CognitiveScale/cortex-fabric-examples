@@ -45,7 +45,7 @@ def score_predictions(df, model):
     try:
         # If the model artifact is of type `dict`
         if isinstance(model, dict):
-            cat_cols = model["categorical_columns"] if "categorical_columns" in model else []
+            cat_cols = model["cat_columns"] if "cat_columns" in model else []
             num_cols = [x for x in df.columns if x not in cat_cols]
             # Transforming the input data-frame using encoder & normalizer from the experiment artifact
             if ("encoder" in model) or ("normalizer" in model):

@@ -19,6 +19,20 @@ Cortex Batch Prediction Skill that runs a background job which makes predictions
 * `output-path`: Output S3 path to save the predictions
 * `output-collection`: Output Mongo collection to save the predictions
 
+Model Pickle Structure with encoder:
+    
+        {"model": d_tree_model, "cat_columns": categorical_columns, "encoder": encoder, "normalizer": normalizer}
+
+Model Pickle Structure without encoder: 
+                    
+        We directly pass the trained model object here after model.fit()
+        example: DecisionTreeClassifier()
+
+#### Prerequisite:        
+Upload a model file to the cortex experiment from cortex cli before invoking the skill.
+
+        cortex experiments upload-artifact <experiment-name> <run-id> pickle_file artifact-name --project <PROJECT>
+
 #### Steps:
 
 A Makefile is provided to do these steps. Set environment variables `DOCKER_PREGISTRY_URL` (like <docker-registry-url>/<namespace-org>) and use Makefile to deploy Skill.<br>
