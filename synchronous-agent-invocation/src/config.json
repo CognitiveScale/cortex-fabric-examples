@@ -1,0 +1,6 @@
+{
+  "agent": "agent-invoke-t-38336",
+  "service": "invoke",
+  "invoke_endpoint": "{}/fabric/v4/projects/{}/agentinvoke/{}/services/{}",
+  "activation_endpoint": "{}/fabric/v4/projects/{}/activations/{}"
+}
