@@ -1,0 +1,69 @@
+camel: 1.0.0
+name: batch-prediction
+title: Batch Prediction Skill Template
+description: Batch Prediction Skill Template
+inputs:
+  - name: params
+    title: input
+    parameters:
+      $ref: BatchPredictRequest
+    routing:
+      all:
+        action: batch-predict
+        runtime: cortex/jobs
+        output: response
+
+outputs:
+  - name: response
+    title: Job result
+    parameters:
+      $ref: BatchPredictResponse
+
+properties:
+  - name: batch-size
+    title: Batch Size
+    description: Number of Records to process in one batch
+    required: true
+    type: number
+    secure: false
+  - name: connection-name
+    title: Connection Name
+    description: Connection is used to read and write files.
+    required: false
+    type: string
+    secure: false
+  - name: experiment-name
+    title: Experiment Name
+    description: Experiment name to retrieve experiment details
+    required: false
+    type: string
+    secure: false
+  - name: run-id
+    title: Run ID
+    description: Run id of the experiment
+    required: true
+    type: string
+    secure: false
+  - name: outcome
+    title: Prediction class or label
+    description: Prediction class or label in the dataset
+    required: false
+    type: string
+    secure: false
+  - name: output-path
+    title: S3 Output path
+    description: Output S3 path to save the predictions
+    required: false
+    type: string
+    secure: false
+  - name: output-collection
+    title: Mongo Output collection
+    description: Output collection to save the predictions
+    required: false
+    type: string
+    secure: false
+
+
+tags:
+  - label: template
+    value: template
