@@ -30,8 +30,7 @@ def normalize(numeric_columns):
 
 # Training German Credit Model using Decision Tree Classifier
 def train_with_encoder(X):
-    categorical_columns = ['checkingstatus', 'history', 'purpose', 'savings', 'employ', 'status', 'others',
-                           'property', 'age', 'otherplans', 'housing', 'job', 'telephone', 'foreign']
+    categorical_columns = ['checkingstatus', 'history', 'purpose', 'savings', 'employ', 'status', 'others', 'property', 'age', 'otherplans', 'housing', 'job', 'telephone', 'foreign']
     numerical_columns = [idx for idx in X.columns if idx not in categorical_columns]
     # encode categorical features
     encoded_train_df, encoded_test_df, encoder = encode(categorical_columns)

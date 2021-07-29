@@ -158,22 +158,25 @@ def make_batch_predictions(input_params):
             collection = conn_params.get("collection")
             client = pymongo.MongoClient(mongo_uri)
             total_records = client[database][collection].count({})
-            skip = 0
-            while skip <= total_records:
-                cursor = client[database][collection].find({}).limit(batch_size).skip(skip)
+            skip_records = 0
+            while skip_records < total_records:
+                cursor = client[database][collection].find({}).limit(batch_size).skip(skip_records)
                 # Expand the cursor and construct the DataFrame
                 chunked_df = pd.DataFrame(list(cursor))
-                if outcome in chunked_df.columns.tolist():
-                    chunked_df = chunked_df.drop([outcome, "_id"], axis=1)
-                logging.info("Processing records of size: {}".format(chunked_df.shape[0]))
+                if not chunked_df.empty:
+                    if outcome in chunked_df.columns.tolist():
+                        chunked_df = chunked_df.drop([outcome, "_id"], axis=1)
+                    logging.info("Processing records of size: {}".format(chunked_df.shape[0]))
 
-                # Score Predictions for a Batch
-                predicted_df = score_predictions(chunked_df, model=model)
-                predicted_df.reset_index(inplace=True)
-                data_dict = predicted_df.to_dict("records")
-                # Insert collection
-                client[database][output_collection].insert_many(data_dict)
-                skip += batch_size
+                    # Score Predictions for a Batch
+                    predicted_df = score_predictions(chunked_df, model=model)
+                    predicted_df.reset_index(inplace=True, drop=True)
+                    data_dict = predicted_df.to_dict("records")
+                    # Insert collection
+                    client[database][output_collection].insert_many(data_dict)
+                    skip_records += batch_size
+                else:
+                    break
             client.close()
         logging.info("Prediction Job Completed!")
     except Exception as e:

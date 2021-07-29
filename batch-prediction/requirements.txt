@@ -4,3 +4,4 @@ catboost==0.25.1
 scikit-learn==0.23.1
 pymongo==3.10.1
 boto3==1.17.13
+dnspython==2.0.0
