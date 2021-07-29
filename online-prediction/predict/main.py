@@ -33,14 +33,14 @@ async def run(request: dict):
     try:
         # If the model artifact is of type `dict`
         if isinstance(model, dict):
-            cat_cols = model["cat_columns"] if "cat_columns" in model else []
-            num_cols = [x for x in df.columns if x not in cat_cols]
+            categorical_cols = model["cat_columns"] if "cat_columns" in model else []
+            numerical_cols = [x for x in df.columns if x not in categorical_cols]
             # Transforming the input data-frame using encoder & normalizer from the experiment artifact
             if ("encoder" in model) or ("normalizer" in model):
                 x_encoded = model["encoder"].transform(
-                    df[cat_cols]).toarray() if "encoder" in model and cat_cols else []
-                x_normalized = model["normalizer"].transform(df[num_cols]) if "normalizer" in model else df[
-                    num_cols].values
+                    df[categorical_cols]).toarray() if "encoder" in model and categorical_cols else []
+                x_normalized = model["normalizer"].transform(df[numerical_cols]) if "normalizer" in model else df[
+                    numerical_cols].values
                 if np.any(x_encoded) and np.any(x_normalized):
                     x_transformed = np.concatenate((x_encoded, x_normalized), axis=1)
                 else:
