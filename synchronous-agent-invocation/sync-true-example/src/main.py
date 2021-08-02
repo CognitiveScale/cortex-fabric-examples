@@ -6,6 +6,7 @@ Licensed under CognitiveScale Example Code [License](https://cognitivescale.gith
 import sys
 import json
 import requests
+import os.path
 
 from cortex.utils import generate_token
 from cortex.env import CortexEnv
@@ -16,7 +17,7 @@ def read_config() -> dict:
     Read Config as Dictionary
     :return: Config
     """
-    return json.load(open('config.json', 'r'))
+    return json.load(open(os.path.abspath(os.getcwd()) + '/../../config.json', 'r'))
 
 
 # Get Environment details from local configuration
@@ -50,7 +51,6 @@ def invoke_agent(api_endpoint, project, token, payload):
                                 params={"sync": True})
     if response.headers.get('Content-Type') == 'application/json':
         agent_res = json.loads(response.text)
-        print(f"Agent Response: {agent_res}")
         activation_id = agent_res['activationId']
     else:
         raise ValueError(
@@ -98,4 +98,5 @@ if __name__ == '__main__':
     payload = {"text": "Hello, World!"}
     if len(sys.argv) > 1:
         payload = sys.argv[1]
-    print(main(payload))
+    response = main(payload)
+    print({"Agent Invoke response": response})
