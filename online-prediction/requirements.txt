@@ -1,0 +1,6 @@
+pandas==1.0.5
+cortex-python==6.0.3
+fastapi==0.66.0
+uvicorn==0.14.0
+catboost==0.25.1
+scikit-learn==0.23.1
