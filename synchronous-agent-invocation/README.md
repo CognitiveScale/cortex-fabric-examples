@@ -5,6 +5,7 @@ Examples to demonstrate the synchronous agent invoke capabilities
 ##### Prerequisites:
 * Python 3.7
 * Cortex Python SDK v6
+* Cortex CLI configured with env details
 
 ##### File Structure:
 
@@ -51,7 +52,8 @@ Adding `callbackUrl` to the properties and passing them in request body along wi
                     "text": "Hello, World!"
                  },
                 "properties": {
-                    "callbackUrl": "http://778621b0a55d.ngrok.io/hello"
+                # TODO: Update the host to your callback server IP
+                    "callbackUrl": "http://callback.host.ip:8000/invoke"
                  }
              }
 Note: The server used for getting callback should be accessible to cortex.

@@ -15,4 +15,5 @@ def run(request: dict):
 
 
 if __name__ == "__main__":
+    # TODO: Update the host to your callback server IP
     uvicorn.run(app, host="0.0.0.0", port=8000)
