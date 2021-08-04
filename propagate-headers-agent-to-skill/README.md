@@ -9,18 +9,10 @@ The `cortex/propogate_headers_to_skill_on_agent_invoke` agent consists of a sing
 - Cortex client
 - URL/Credentials for a cortex instance
 
-## Deploying
-First sign into cortex
-```
-cortex configure
-```
 
-Then build the docker containers and deploy the agent, skills, and actions to cortex.
-```
-./deploy.sh
-```
 ## Whitelisting the headers
-Using the cli, add a new property, with the name: 'allowed-headers' and values with the header names to be whitelisted(comma-separated)
+Using the cli, add a new property in the agent definition, with the name: 'allowed-headers' and values with the header names to be whitelisted(comma-separated)
+Example:
 ```{         
 "name" : "allowedHeaders",
 "value" : "test-header,meta-transid,meta-src-envrmt"
@@ -29,7 +21,8 @@ Using the cli, add a new property, with the name: 'allowed-headers' and values w
 
 ## Adding headers in the skill.yaml
 The headers added in the skill.yaml need not be whitelisted and will be appended to the request headers for agent invoke.
-A sample skill.yaml header would look like:
+Add a header property in skill.yaml with name starting with 'headers.'
+Example:
 ```
 - name: headers.skill-yaml-header
     title: skill header
