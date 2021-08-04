@@ -13,7 +13,7 @@ push: check-env
 	docker push ${DOCKER_IMAGE_URL}
 
 deploy: check-env
-	cortex actions deploy --actionName propagate-header-skill --actionType daemon --project ${PROJECT_NAME} --docker ${DOCKER_IMAGE_URL} --cmd '["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "5000", "--workers", "2"]' --port 5000
+	cortex actions deploy --actionName ${SKILL_NAME} --actionType daemon --project ${PROJECT_NAME} --docker ${DOCKER_IMAGE_URL} --cmd '["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "5000", "--workers", "2"]' --port 5000
 	cortex skills save -y skill.yaml --project ${PROJECT_NAME}
 	sleep 10s # wait for action containers to pull and deploy
 

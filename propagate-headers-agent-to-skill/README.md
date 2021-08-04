@@ -68,7 +68,7 @@ Use cortex's cli to get the activation
 ```
 cortex agents get-activation d14bae04-2817-4f68-84a7-b71d56129d71
 ```
-The activation response will include the headers job.
+The activation response will include the headers.
 ```
 {
   "success": true,
