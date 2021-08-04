@@ -1,6 +1,6 @@
 # Propagate header from agent to skill example (cortex/propagate_headers_to_skill_on_agent_invoke)
-The `cortex/propogate_headers_to_skill_on_agent_invoke` agent consists of a single skill `cortex/header-daemon-skill`.
-- `cortex/header-daemon-skill` responds back with the whitelisted request headers.  
+The `cortex/propogate_headers_to_skill_on_agent_invoke` agent consists of a single skill `cortex/propagate-header-skill`.
+- `cortex/propagate-header-skill` responds back with the whitelisted request headers.  
 
 ## Requirements
 - Python 3.x
