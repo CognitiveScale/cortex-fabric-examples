@@ -1,6 +1,6 @@
 camel: 1.0.0
-name: cortex/propogate_headers_to_skill_on_agent_invoke
-title: propogate_headers_to_skill_on_agent_invoke example
+name: cortex/propogate_headers_agent_to_skill
+title: propogate_headers_agent_to_skill example
 inputs:
   - name: serv11
     output: serv11
@@ -38,6 +38,6 @@ properties:
 publish: false
 skills:
   - refId: f2b9155d-a352-42a1-aded-77c9456bb408
-    skillName: skill-w-header2
-    title: skill-w-header2
+    skillName: propogate-header-skill
+    title: propogate-header-skill
 snapshotId: tip-snapshot
