@@ -1,5 +1,5 @@
 camel: 1.0.0
-name: propagate-header-skill-job
+name: header-job
 title: propogate-header-skill job
 description: propogate-header-skill job desc
 inputs:
@@ -12,7 +12,7 @@ inputs:
         required: true
     routing:
       all:
-        action: propagate-header-skill-job
+        action: header-job
         runtime: cortex/jobs
         output: result
 

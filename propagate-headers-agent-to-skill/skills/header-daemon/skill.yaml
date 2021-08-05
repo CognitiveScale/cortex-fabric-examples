@@ -1,5 +1,5 @@
 camel: 1.0.0
-name: propagate-header-skill-daemon
+name: header-daemon
 title: propagateHeaderSkill Daemon
 description: propagateHeaderSkill Daemon
 inputs:
@@ -12,7 +12,7 @@ inputs:
         required: true
     routing:
       all:
-        action: propagate-header-skill-daemon
+        action: header-daemon
         runtime: cortex/daemons
         output: response
 

@@ -1,5 +1,5 @@
 camel: 1.0.0
-name: propagate-header-skill-ext-api
+name: header-ext-api
 title: propagate-header-skill-ext-api skill
 description: propagate-header-skill-ext-api skill
 properties:
