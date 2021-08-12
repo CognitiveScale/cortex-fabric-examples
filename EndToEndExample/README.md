@@ -1,4 +1,4 @@
-### Cortex End to End Example Demonstratind cortex-python SDK (Train and Predict Skill)
+### Cortex End to End Example Demonstrating cortex-python SDK (Train and Predict Skill)
 
 #### Connections and Data Set
 For simplicity we selected german credit dataset and training on this dataset. 
