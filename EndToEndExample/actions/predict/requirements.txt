@@ -1,0 +1,7 @@
+pandas
+numpy
+cortex-python==6.0.2a3
+scikit-learn==0.23.2
+fastapi
+uvicorn
+boto3
