@@ -26,17 +26,17 @@ you may change to another framework or language.
 
 #### Files to review
 * `skill.json` Skill definition and action mapping
-* `train/train.py` Model train code to be run as Cortex Job
-* `train/requirements.txt` Python3 libraries dependencies
-* `train/Dockerfile` to build Docker image for train action
+* `actions/train/train.py` Model train code to be run as Cortex Job
+* `actions/train/requirements.txt` Python3 libraries dependencies
+* `actions/train/Dockerfile` to build Docker image for train action
 * `Makefile` Makefile to build and push Train and Predict Action Docker images to the specified `DOCKER_PREGISTRY_URL`
-* `predict/main.py` Predict code to be run as Cortex Daemon
-* `predict/requirements.txt` Python3 libraries dependencies
-* `predict/Dockerfile` to build Docker image for predict action
+* `actions/predict/main.py` Predict code to be run as Cortex Daemon
+* `actions/predict/requirements.txt` Python3 libraries dependencies
+* `actions/predict/Dockerfile` to build Docker image for predict action
 
 #### Steps
 
-A Makefile is provided to do these steps. Set environment variables `DOCKER_PREGISTRY_URL` (like <docker-registry-url>/<namespace-org>) and `PROJECT_NAME` (Cortex Project Name) and use Makefile to build and push docker images of Train and Predict Actions.
+A Makefile is provided to do these steps. Set environment variables `DOCKER_PREGISTRY_URL` (like `<docker-registry-url>/<namespace-org>`) and `PROJECT_NAME` (Cortex Project Name) and use Makefile to build and push docker images of Train and Predict Actions.
 `make all` will build & push Docker images for Train and Predict Actions.  
 
 The [cortex-python_v6_example.ipynb](cortex-python_v6_example.ipynb) contains the steps to create a connection (which is used in the actions) using the cortex-python SDK and deploy the skill and 
