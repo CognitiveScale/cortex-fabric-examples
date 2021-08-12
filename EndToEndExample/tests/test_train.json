@@ -1,6 +1,6 @@
 {
     "payload": {
-        "connection_name": "exp-Example5",
+        "connection_name": "exp-connection",
         "model_name": "german-credit-model",
         "model_source": "CS",
         "model_tags": [
