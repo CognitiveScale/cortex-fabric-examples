@@ -2,7 +2,6 @@
 Copyright (c) 2021. Cognitive Scale Inc. All rights reserved.
 """
 
-import boto3
 from cortex import Cortex
 from cortex.experiment import Experiment, ExperimentClient
 from fastapi import FastAPI
@@ -14,32 +13,6 @@ from cat_encoder import CatEncoder
 model_ctx = {}
 
 app = FastAPI()
-
-def init_s3_client(s3_key, s3_secret):
-    """
-    Initialize S3 Client
-    :param s3_key: S3 Access Key
-    :param s3_secret: S3 Secret Key
-    :return: S3 Client Object
-    """
-    return boto3.client('s3', aws_access_key_id=s3_key, aws_secret_access_key=s3_secret)
-
-
-def download_file(s3_client, path):
-    """
-    Download file from S3
-    :param s3_client: S3 Client Object
-    :param path: S3 Filepath from connection
-    :return: Local downloaded filepath
-    """
-    s3_components = path.split('/')
-    bucket = s3_components[2]
-    file_name = ""
-    if len(s3_components) > 1:
-        file_name = '/'.join(s3_components[3:])
-    out_path = s3_components[-1]
-    s3_client.download_file(bucket, file_name, out_path)
-    return out_path
 
 # predict
 @app.post('/invoke')
