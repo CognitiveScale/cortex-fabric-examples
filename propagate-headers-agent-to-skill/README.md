@@ -14,7 +14,8 @@ The `cortex/propogate_headers_to_skill_on_agent_invoke` agent consists of a sing
 Using the cli, add a new property in the agent definition, with the name: 'allowed-headers' and values with the header names to be whitelisted(comma-separated)
 
 Example:
-```{         
+```
+{         
 "name" : "allowedHeaders",
 "value" : "test-header,meta-transid,meta-src-envrmt"
 }
