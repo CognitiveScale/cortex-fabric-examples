@@ -13,10 +13,23 @@ The `agent-chained-skills` agent consists of three skills in the skills folder `
 - URL/Credentials for a cortex instance
 - jq (tool for parsing/scripting with JSON files)
 
-## Whitelisting the headers
-Using the cli, add a new property in the agent definition, with the name: 'allowed-headers' and values with the header names to be whitelisted(comma-separated)
+## Steps
+### Login into docker cortex
+- login into docker from cli: `docker login`
+- After successful docker login  use the docker login in cortex: `cortex docker login`
+    
+    
+### Deploying the skill
+- A `Makefile` is provided in every skill to deploy a skill.
 
-Example:
+- Set environment variables `DOCKER_PREGISTRY_URL` (like /) and `PROJECT_NAME` (Cortex Project Name) and use Makefile to deploy Skill.
+
+- `make all` will build and push Docker image, deploy Cortex Action and Skill, and then invoke Skill to test.
+
+### Whitelisting the headers
+- Using the cli, add a new property in the agent definition, with the name: 'allowed-headers' and values with the header names to be whitelisted(comma-separated)
+
+- Example:
 ```
 {         
 "name" : "allowedHeaders",
@@ -24,9 +37,9 @@ Example:
 }
 ```
 
-## Adding headers in the skill.yaml
-The headers added in the skill.yaml need not be whitelisted and will be appended to the request headers for agent invoke.
-Add a header property in skill.yaml with name starting with 'headers.'
+### Adding headers in the skill.yaml (Will be accessible only in the respective skill)
+- The headers added in the skill.yaml need not be whitelisted and will be appended to the request headers for agent invoke.
+- Add a header property in skill.yaml with name starting with 'headers.'
 
 Example:
 ```
@@ -37,12 +50,12 @@ Example:
     type: String
     defaultValue: skill-yaml-header-val
 ```
-In case of a name match between skill.yaml header and agent invoke request header, the agent invoke header takes precedence.
+- In case of a name match between skill.yaml header and agent invoke request header, the agent invoke header takes precedence.
 
-## Invoking the agent
-After deploying the agent and skills you can invoke the agent using any external system with the whitelisted headers. 
-Headers in the http request not whitelisted will be ignored.
-Here is a curl request for a sample agent invoke
+### Invoking the agent
+- After deploying the agent and skills you can invoke the agent using any external system with the whitelisted headers. 
+- Headers in the http request not whitelisted will be ignored.
+- Here is a curl request for a sample agent invoke:
 ```
 curl --location --request POST 'https://${baseUrl}/fabric/v4/projects/:projectName/agentinvoke/:agentName/services/:serviceName' \
 --header 'Authorization: Bearer ${authToken}' \
@@ -62,7 +75,6 @@ You'll get a response with an `activationId` like below:
   "activationId": "d14bae04-2817-4f68-84a7-b71d56129d71"
 }
 ```
-
 Use cortex's cli to get the activation
 ```
 cortex agents get-activation d14bae04-2817-4f68-84a7-b71d56129d71
