@@ -1,0 +1,77 @@
+camel: 1.0.0
+name: agent-chain-sk-32a10
+title: agent-chain-skills
+inputs:
+  - name: serv-chain
+    output: serv-chain
+    parameters:
+      - name: params
+        required: false
+        title: params
+        type: object
+    signalId: 149d0f73-4cbd-4840-af50-4338e384795c
+    signalType: Service
+    title: params
+mappings:
+  - from:
+      input:
+        signalId: 149d0f73-4cbd-4840-af50-4338e384795c
+    rules: []
+    to:
+      skill:
+        input: request
+        refId: d3410c3a-e9d8-409e-b78b-79660862a1f9
+  - from:
+      skill:
+        output: response
+        refId: d3410c3a-e9d8-409e-b78b-79660862a1f9
+    rules: []
+    to:
+      skill:
+        input: request
+        refId: 03fadd0c-3f14-49b1-8a27-7b4e2f584590
+  - from:
+      skill:
+        output: response
+        refId: 03fadd0c-3f14-49b1-8a27-7b4e2f584590
+    rules: []
+    to:
+      skill:
+        input: request
+        refId: 71163421-99d4-4df7-b766-bcdebccb1681
+  - from:
+      skill:
+        output: response
+        refId: 71163421-99d4-4df7-b766-bcdebccb1681
+    rules: []
+    to:
+      output:
+        signalId: 5205de10-cb48-4e37-bd40-a599e234afcd
+outputs:
+  - name: serv-chain
+    parameters:
+      - name: result
+        required: false
+        title: result
+        type: object
+    signalId: 5205de10-cb48-4e37-bd40-a599e234afcd
+    signalType: Service
+    title: result
+properties:
+  - name: allowedHeaders
+    value: 'test-header,meta-transid,meta-src-envrmt,skill3-yaml-header'
+publish: false
+skills:
+  - properties: []
+    refId: d3410c3a-e9d8-409e-b78b-79660862a1f9
+    skillName: skill-1
+    title: skill-1
+  - properties: []
+    refId: 03fadd0c-3f14-49b1-8a27-7b4e2f584590
+    skillName: skill-2
+    title: skill-2
+  - properties: []
+    refId: 71163421-99d4-4df7-b766-bcdebccb1681
+    skillName: skill-3
+    title: skill-3
+snapshotId: tip-snapshot

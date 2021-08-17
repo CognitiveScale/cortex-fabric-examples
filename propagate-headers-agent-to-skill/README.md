@@ -1,6 +1,9 @@
-# Propagate header from agent to skill example (cortex/propagate_headers_to_skill_on_agent_invoke)
-The `cortex/propogate_headers_to_skill_on_agent_invoke` agent consists of a single skill `cortex/propagate-header-skill`.
-- `cortex/propagate-header-skill` responds back with the whitelisted request headers.  
+# Propagate header from agent to skill example (propagate_headers_to_skill_on_agent_invoke)
+The `propogate_headers_to_skill_on_agent_invoke` agent consists of a single skill `propagate-header-skill`.
+- `propagate-header-skill` responds back with the whitelisted request headers.
+
+The `agent-chained-skills` agent consists of three skills in the skills folder `skill-1`, `skill-2` and `skill-3`.
+- The agent has the skills are chained together from `skill-1 -> skill-2 -> skill-3`, and they demonstrate the headers used in the agent invoke are passed down to skill-3.
 
 ## Requirements
 - Python 3.x
@@ -8,7 +11,7 @@ The `cortex/propogate_headers_to_skill_on_agent_invoke` agent consists of a sing
 - Bash shell ( Power shell TBA )
 - Cortex client
 - URL/Credentials for a cortex instance
-
+- jq (tool for parsing/scripting with JSON files)
 
 ## Whitelisting the headers
 Using the cli, add a new property in the agent definition, with the name: 'allowed-headers' and values with the header names to be whitelisted(comma-separated)
