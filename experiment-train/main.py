@@ -7,8 +7,7 @@ from sklearn.ensemble import RandomForestClassifier
 
 if __name__ == '__main__':
     import os
-    job_data = json.loads(os.environ["CORTEX_PAYLOAD"])
-    params = json.loads(job_data)
+    params = json.loads(os.environ["CORTEX_PAYLOAD"])
 
     # Train model
     iris = datasets.load_iris()
