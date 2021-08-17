@@ -1,5 +1,4 @@
-#IMAGE_TAG=$(shell #git describe --long --always --match='v*.*' | sed 's/v//; s/-/./')
-IMAGE_TAG=latest4
+IMAGE_TAG=$(shell git describe --long --always --match='v*.*' | sed 's/v//; s/-/./')
 SKILL_NAME=$(notdir $(CURDIR))
 DOCKER_IMAGE_URL=${DOCKER_PREGISTRY_URL}/${SKILL_NAME}:${IMAGE_TAG}
 URL=$(shell cat ~/.cortex/config | jq .profiles[.currentProfile].url)
