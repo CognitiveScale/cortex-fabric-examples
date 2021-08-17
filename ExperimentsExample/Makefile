@@ -1,4 +1,4 @@
-IMAGE_TAG=latest1
+IMAGE_TAG=latest
 SKILL_NAME=exp-example
 ACTION_NAME_TRAIN=train-example
 ACTION_NAME_PREDICT=predict-example

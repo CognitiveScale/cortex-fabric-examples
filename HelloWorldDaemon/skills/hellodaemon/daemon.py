@@ -13,7 +13,7 @@ app.debug = True
 @app.route('/v1/hello', methods = ['GET','POST'])
 def hello_world():
     if request.method == 'GET':
-      return json.dumps({'message': 'Hello from cortex/hellodaemon GET'})
+      return json.dumps({'message': 'Hello from cortex/hellodaemon GET'});
     if request.method == 'POST':
       reqBody = request.get_json(force=True)
       app.logger.info(f'Request: {json.dumps(reqBody)}')

@@ -16,7 +16,7 @@ deploy: check-env
 tests: check-env
 	cortex skills invoke --params-file ./test/payload.json ${SKILL_NAME} params --project ${PROJECT_NAME}
 
-all: build push deploy tests
+all: build push deploy
 
 get: check-env
 	cortex skills describe ${SKILL_NAME} --project ${PROJECT_NAME}
