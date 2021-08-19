@@ -38,6 +38,8 @@ you may change to another framework or language.
 
 A Makefile is provided to do these steps. Set environment variables `DOCKER_PREGISTRY_URL` (like `<docker-registry-url>/<namespace-org>`) and `PROJECT_NAME` (Cortex Project Name) and use Makefile to build and push docker images of Train and Predict Actions.
 `make deploy` will build & push Docker images for Train and Predict Actions and then deploy the skill(wrapping the actions).  
+Alternatively running the cells in [cortex-python_v6_example.ipynb](cortex-python_v6_example.ipynb)
+will also deploy the skills and the actions.
 
 In order to modify the actions follow the steps below: 
 
