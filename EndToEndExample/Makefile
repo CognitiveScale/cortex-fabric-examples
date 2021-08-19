@@ -14,11 +14,15 @@ push: check-env
 	docker push ${DOCKER_IMAGE_URL_TRAIN}
 	docker push ${DOCKER_IMAGE_URL_PREDICT}
 
+deploy: install build push 
+	python deploy_skill.py
+
+install: 
+	pip install -r requirements.txt
+
 tests: check-env
 	cortex skills invoke --params-file ./tests/test_train.json ${SKILL_NAME} train --project ${PROJECT_NAME}
 	cortex skills invoke --params-file ./tests/test_predict.json ${SKILL_NAME} predict --project ${PROJECT_NAME}
-
-all: build push
 
 check-env:
 ifndef DOCKER_PREGISTRY_URL
