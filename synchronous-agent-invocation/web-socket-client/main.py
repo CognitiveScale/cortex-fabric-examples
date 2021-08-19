@@ -64,7 +64,7 @@ def on_open(ws, message):
 
     def run(*args):
         ws.send(json.dumps(message))
-        time.sleep(20)
+        time.sleep(30)
         ws.close()
         print("Thread terminating...")
 
@@ -80,7 +80,7 @@ def get_env_details():
     env = CortexEnv()
     token = generate_token(env.config)
     host = env.api_endpoint
-    project = "sumanth-hello-world"
+    project = env.project
     return host, token, project
 
 
@@ -104,7 +104,7 @@ def invoke_agent(host, project, token, payload):
     host = config.get("event_endpoint").format(host, project, config.get("agent"))
     headers = {'Authorization': 'Bearer {}'.format(token)}
     ws = websocket.WebSocketApp(url=host, header=headers, on_open=lambda *x: on_open(
-        message={"action": "InvokeAgent", "payload": payload, "serviceName": config.get("service")}, *x),
+        message={"action": "invokeAgent", "payload": payload, "serviceName": config.get("service")}, *x),
                                 on_message=on_message, on_error=on_error,
                                 on_close=on_close)
     ws.run_forever()
