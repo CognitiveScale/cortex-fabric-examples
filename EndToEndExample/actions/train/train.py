@@ -64,7 +64,7 @@ def pickle_model(model, encoder, model_name, test_accuracy, description, filenam
 
 
 # save model metadata
-def save_model(client, project, name, title, description, source, model_type, tags):
+def save_model(client, project, name, title, description, source, model_type, status, tags):
     # create model
     model_obj = {
         "name": name,
@@ -72,6 +72,7 @@ def save_model(client, project, name, title, description, source, model_type, ta
         "description": description,
         "source": source,
         "type": model_type,
+        "status": status,
         "tags": tags
     }
     model_client = ModelClient(project, client)
@@ -178,7 +179,7 @@ def train(params):
     model_name = payload["model_name"]
 
     save_model(client, project, model_name, payload.get("model_title", ""), payload.get("model_description", ""),
-               payload.get("model_source", ""), payload.get("model_type", ""), payload.get("model_tags", []))
+               payload.get("model_source", ""), payload.get("model_type", ""), payload.get("model_status", ""), payload.get("model_tags", []))
 
     # Save models as pickle files and Save experiments
     pickle_model(dtree, encoder, 'Decision Tree', dtree_acc, 'Basic Decision Tree model', 'german_credit_dtree.pkl')
