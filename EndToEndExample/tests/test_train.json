@@ -1,0 +1,20 @@
+{
+    "payload": {
+        "connection_name": "exp-connection",
+        "model_name": "german-credit-model",
+        "model_source": "CS",
+        "model_tags": [
+            {
+                "label": "german-credit",
+                "value": "german-credit"
+            },
+            {
+                "label": "classification",
+                "value": "classification"
+            }
+        ],
+        "model_title": "German Credit Model",
+        "model_type": "Classification",
+        "model_mode": "Single"
+    }
+}
