@@ -1,0 +1,9 @@
+{
+    "name": "exp-connection",
+    "title": "S3 Conn for fabric examples - German Credit Data",
+    "description": "S3 Conn",
+    "connectionType": "s3",
+    "allowWrite": false,
+    "allowRead": true,
+    "contentType": "csv"
+}
