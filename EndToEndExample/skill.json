@@ -32,7 +32,13 @@
                 },
                 {
                     "name": "model_type",
-                    "type": "string"
+                    "type": "string",
+                    "required": "true"
+                },
+                {
+                    "name": "model_status",
+                    "type": "string",
+                    "required": "true"
                 },
                 {
                     "name": "model_mode",

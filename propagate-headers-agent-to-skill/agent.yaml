@@ -1,5 +1,5 @@
 camel: 1.0.0
-name: cortex/propogate_headers_agent_to_skill
+name: propogate_headers_agent_to_skill
 title: propogate_headers_agent_to_skill example
 inputs:
   - name: serv11

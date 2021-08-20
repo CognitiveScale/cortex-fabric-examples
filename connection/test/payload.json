@@ -1,0 +1,6 @@
+{
+  "payload": {
+    "connection_name": "test-connection",
+    "query": {"_id": "missing"}
+  }
+}

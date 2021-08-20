@@ -6,6 +6,7 @@
     "model_description": "German Credit Model",
     "model_source": "source",
     "model_type": "Classification",
+    "model_status": "In development",
     "model_tags": [
       {
         "label": "classification",

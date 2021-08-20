@@ -15,6 +15,7 @@
         ],
         "model_title": "German Credit Model",
         "model_type": "Classification",
+        "model_status": "In development",
         "model_mode": "Single"
     }
 }
