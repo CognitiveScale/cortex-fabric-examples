@@ -1,9 +1,14 @@
 ### Cortex End to End Example Demonstrating cortex-python SDK (Train and Predict Skill)
 
 #### Connections and Data Set
-For simplicity we selected german credit dataset and training on this dataset. 
+For simplicity we selected german credit dataset(find it in [data](data)) and training on this dataset. 
 We have this dataset(csv file) in a S3 bucket.
 We create a connection using the cortex-sdk and use that connection for Train Action
+##### Secrets 
+There are certain configs and secrets like AWS Public key and Private Key we need to create and set in the Project to successfully create the connections. [Configs](https://github.com/CognitiveScale/cortex-fabric-examples/blob/5cd95021cc6ba62315e3ee23756cb3e5a98fe301/EndToEndExample/deploy_skill.py#L31-L35)
+[secrets](https://github.com/CognitiveScale/cortex-fabric-examples/blob/5cd95021cc6ba62315e3ee23756cb3e5a98fe301/EndToEndExample/deploy_skill.py#L66)
+
+Example: If you have a secret key called `awssecret` set in your project you can use it to create connections by Using `#SECURE.awssecret` as the value to one of the parameters in the Connections Object.
 
 #### Train Action: 
 Cortex action to train and save model in Experiment. 
