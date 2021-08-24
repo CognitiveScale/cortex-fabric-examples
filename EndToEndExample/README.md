@@ -66,5 +66,13 @@ Steps to test
 
 ```make tests```
 
+On successfull invocation of the skills the output should look something like this
+```
+{
+  "success": true,
+  "activationId": "e1fb856d-944f-42b2-a54e-84bdf0dfd630"
+}
+```
+
 
 For more details about how to build skills go to [Cortex Fabric Documentation - Development - Develop Skills](https://cognitivescale.github.io/cortex-fabric/docs/build-skills/define-skills)
