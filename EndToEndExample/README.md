@@ -113,11 +113,11 @@ The train action output would look something like this
   "end": 1629876323368,
   "response": "2021-08-25T07:25:04Z scuttle: Scuttle 1.3.5 starting up, pid 1\n2021-08-25T07:25:04Z scuttle: Logging is now enabled\n2021-08-25T07:25:04Z scuttle: Blocking until Envoy starts\n2021-08-25T07:25:04Z scuttle: Polling Envoy (1), error: internal_service: dial tcp 127.0.0.1:15000: connect: connection refused\n2021-08-25T07:25:05Z scuttle: Polling Envoy (2), status: Not ready yet\n2021-08-25T07:25:06Z scuttle: Blocking finished, Envoy has started\nReading connection exp-connection\n{'s3Endpoint': '', 'bucket': 'cortex-fabric-examples', 'publicKey': '', 'secretKey': '', 'uri': ''}\ngerman_credit_eval.csv\nDownloaded training data for exp-connection\nModel saved, name: german-credit-model\n<cortex.experiment.Experiment object at 0x7fd557ae2f50> dev-bikash-bdaaa\nExperiment saved, name: gc_dtree_exp run_id: a9a03kl\n<cortex.experiment.Experiment object at 0x7fd55787e050> dev-bikash-bdaaa\nExperiment saved, name: gc_logit_exp run_id: xpb03b0\n<cortex.experiment.Experiment object at 0x7fd55787e190> dev-bikash-bdaaa\nExperiment saved, name: gc_mlp_exp run_id: jn202ms\n<cortex.experiment.Experiment object at 0x7fd557bdeb90> dev-bikash-bdaaa\nExperiment saved, name: gc_svm_exp run_id: 6l108bw\n2021-08-25T07:25:18Z scuttle: Kill received: (Action: Stopping Istio with API, Reason: ISTIO_QUIT_API is set, Exit Code: 0)\n2021-08-25T07:25:18Z scuttle: Stopping Istio using Istio API 'http://localhost:15020' (intended for Istio >v1.2)\n2021-08-25T07:25:18Z scuttle: Received signal 'child exited', passing to child\n2021-08-25T07:25:18Z scuttle: Received signal 'urgent I/O condition', ignoring\n2021-08-25T07:25:18Z scuttle: Sent quitquitquit to Istio, status code: 200\n"
 }
+```
 
 Note:
 >Anything printed in the terminal of a job type action will be passed as a response string.
 
-```
 And the Predict action output will look something like this
 ```
 {
