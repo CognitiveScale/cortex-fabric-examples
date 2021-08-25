@@ -31,6 +31,8 @@ you may change to another framework or language.
 
 #### Files to review
 * `skill.json` Skill definition and action mapping
+* `conn.json` Connection definition
+* `config.py` Configuration file to update connection and project configurations and secrets
 * `actions/train/train.py` Model train code to be run as Cortex Job
 * `actions/train/requirements.txt` Python3 libraries dependencies
 * `actions/train/Dockerfile` to build Docker image for train action
@@ -38,6 +40,7 @@ you may change to another framework or language.
 * `actions/predict/main.py` Predict code to be run as Cortex Daemon
 * `actions/predict/requirements.txt` Python3 libraries dependencies
 * `actions/predict/Dockerfile` to build Docker image for predict action
+* `deploy_skill.py` Uses cortex-python SDK to deploy skill and actions
 
 #### Steps
 
@@ -48,17 +51,18 @@ will also deploy the skills and the actions.
 
 In order to modify the actions follow the steps below: 
 
-1. Modify the main executable (`main.py` by default) run by the action image's entrypoint/command to handle the action's custom logic.
-2. Modify the `requirements.txt` file to provide packages or libraries that the action requires.
-3. Build the docker image (uses the `main.py` file)
+1. Stat by modifying the `conn.json` file and `skill.json` file updating the connection and skill definition
+2. Make sure the secrets are updated int he `config.py` file
+3. Modify the main executable (`main.py` by default) run by the action image's entrypoint/command to handle the action's custom logic.
+4. Modify the `requirements.txt` file to provide packages or libraries that the action requires.
+5. Build the docker image (uses the `main.py` file)
   ```
   make build
   ```
-4. Push the docker image to a registry that is connected to your Kubernetes cluster.
+6. Push the docker image to a registry that is connected to your Kubernetes cluster.
   ```
   make push
   ```
-6. Modify the `skill.json` file.
 
 ### Steps to Test
 
@@ -73,6 +77,104 @@ On successfull invocation of the skills the output should look something like th
   "activationId": "e1fb856d-944f-42b2-a54e-84bdf0dfd630"
 }
 ```
+we can use the activation id to get more info into the execution using the command `cortex agents get-activation <activationId>`
+
+The train action output would look something like this
+```
+{
+  "success": true,
+  "requestId": "bbb413d0-93dd-460d-81fe-385b23b6d2e9",
+  "skillName": "e2e-example",
+  "inputName": "train",
+  "projectId": "dev-bikash-bdaaa",
+  "username": "cortex@example.com",
+  "payload": {
+    "connection_name": "exp-connection",
+    "model_name": "german-credit-model",
+    "model_source": "CS",
+    "model_tags": [
+      {
+        "label": "german-credit",
+        "value": "german-credit"
+      },
+      {
+        "label": "classification",
+        "value": "classification"
+      }
+    ],
+    "model_title": "German Credit Model",
+    "model_type": "Classification",
+    "model_status": "In development",
+    "model_mode": "Single"
+  },
+  "sessionId": "bbb413d0-93dd-460d-81fe-385b23b6d2e9",
+  "start": 1629876303108,
+  "status": "COMPLETED",
+  "end": 1629876323368,
+  "response": "2021-08-25T07:25:04Z scuttle: Scuttle 1.3.5 starting up, pid 1\n2021-08-25T07:25:04Z scuttle: Logging is now enabled\n2021-08-25T07:25:04Z scuttle: Blocking until Envoy starts\n2021-08-25T07:25:04Z scuttle: Polling Envoy (1), error: internal_service: dial tcp 127.0.0.1:15000: connect: connection refused\n2021-08-25T07:25:05Z scuttle: Polling Envoy (2), status: Not ready yet\n2021-08-25T07:25:06Z scuttle: Blocking finished, Envoy has started\nReading connection exp-connection\n{'s3Endpoint': '', 'bucket': 'cortex-fabric-examples', 'publicKey': '', 'secretKey': '', 'uri': ''}\ngerman_credit_eval.csv\nDownloaded training data for exp-connection\nModel saved, name: german-credit-model\n<cortex.experiment.Experiment object at 0x7fd557ae2f50> dev-bikash-bdaaa\nExperiment saved, name: gc_dtree_exp run_id: a9a03kl\n<cortex.experiment.Experiment object at 0x7fd55787e050> dev-bikash-bdaaa\nExperiment saved, name: gc_logit_exp run_id: xpb03b0\n<cortex.experiment.Experiment object at 0x7fd55787e190> dev-bikash-bdaaa\nExperiment saved, name: gc_mlp_exp run_id: jn202ms\n<cortex.experiment.Experiment object at 0x7fd557bdeb90> dev-bikash-bdaaa\nExperiment saved, name: gc_svm_exp run_id: 6l108bw\n2021-08-25T07:25:18Z scuttle: Kill received: (Action: Stopping Istio with API, Reason: ISTIO_QUIT_API is set, Exit Code: 0)\n2021-08-25T07:25:18Z scuttle: Stopping Istio using Istio API 'http://localhost:15020' (intended for Istio >v1.2)\n2021-08-25T07:25:18Z scuttle: Received signal 'child exited', passing to child\n2021-08-25T07:25:18Z scuttle: Received signal 'urgent I/O condition', ignoring\n2021-08-25T07:25:18Z scuttle: Sent quitquitquit to Istio, status code: 200\n"
+}
+Note:
+> Anything printed in the terminal of a job type action will be passed as a response string.
+```
+And the Predict action output will look something like this
+```
+{
+  "success": true,
+  "requestId": "3281f0b1-5d1e-40f1-b6b5-7d46f6e21149",
+  "skillName": "e2e-example",
+  "inputName": "predict",
+  "projectId": "dev-bikash-bdaaa",
+  "username": "cortex@example.com",
+  "payload": {
+    "instances": [
+      [
+        "... < 0 DM",
+        6,
+        "critical account/ other credits existing (not at this bank)",
+        "radio/television",
+        1169,
+        "unknown/ no savings account",
+        ".. >= 7 years",
+        4,
+        "male : single",
+        "others - none",
+        4,
+        "real estate",
+        "> 25 years",
+        "none",
+        "own",
+        2,
+        "skilled employee / official",
+        1,
+        "phone - yes, registered under the customers name",
+        "foreign - yes"
+      ]
+    ],
+    "exp_name": "gc_dtree_exp",
+    "run_id": ""
+  },
+  "sessionId": "3281f0b1-5d1e-40f1-b6b5-7d46f6e21149",
+  "start": 1629876304703,
+  "status": "COMPLETE",
+  "end": 1629876306252,
+  "response": {
+    "predictions": [
+      1
+    ],
+    "scores": [
+      [
+        1,
+        0
+      ]
+    ],
+    "labels": [
+      1,
+      2
+    ]
+  }
+}
+```
+
 
 
 For more details about how to build skills go to [Cortex Fabric Documentation - Development - Develop Skills](https://cognitivescale.github.io/cortex-fabric/docs/build-skills/define-skills)
