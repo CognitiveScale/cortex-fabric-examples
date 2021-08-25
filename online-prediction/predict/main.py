@@ -33,7 +33,7 @@ def init(request: InitializeRequest):
         raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
         logging.error(traceback.format_exc())
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=412, detail=str(e))
 
     return {
         "payload": "model loaded successfully"
@@ -50,7 +50,7 @@ async def run(request: InvokeRequest):
         raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
         logging.error(traceback.format_exc())
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=412, detail=str(e))
 
     return {
         "payload": predictions.tolist()
