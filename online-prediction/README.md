@@ -13,9 +13,26 @@ Note:
 * `requirements.txt` Python3 libraries dependencies
 * `Dockerfile` to build Docker image for this skill
 
-Upload a model file to the cortex experiment from cortex cli before invoking the skill.
+### Steps to Run
+1. Update `model.json`, `experiment.json`, `run.json` files in `model` folder. 
+2. Make sure `german_credit_model.pickle` file exists in `model` folder. 
+If not create one by invoking 
 
-        cortex experiments upload-artifact <experiment-name> <run-id> pickle_file artifact-name --project <PROJECT>
+       cd train
+       python main.py
+       cd ..
+       
+3. Create Model and Experiment:
+            
+       ./model/init.sh <PROJECT_NAME> 
+        
+4. Upload a model file to the cortex experiment from cortex cli before invoking the skill.
+
+       cortex experiments upload-artifact <experiment-name> <run-id> model/german_credit_model.pickle <artifact-name> --project <PROJECT_NAME>
+       
+5. Publish model:
+
+       cortex models publish <model-name> --project <PROJECT_NAME>
 
 #### Deployment Steps
 
@@ -42,16 +59,19 @@ Follow the below steps for deploying the skill manually.
 5. Sample Skill Invocation Input
     
        {
-          "payload": {
-            "columns": [
-              "fixed acidity", "volatile acidity", "citric acid", "residual sugar", "chlorides", "free sulfur dioxide", "total sulfur dioxide","density", "pH", "sulphates", "alcohol"
-            ],
-            "instances": [
-              [8.5,0.28,0.56, 1.8, 0.092, 35, 103, 0.9969, 3.3, 0.75, 10.5],
-              [8.5, 0.49, 0.11, 2.3, 0.084, 9, 67, 0.9968, 3.17, 0.53,9.4]
-            ]
-          }
+          "columns": ["checkingstatus", "duration", "history", "purpose", "amount", "savings", "employ", "installment", "status", "others", "residence", "property", "age", "otherplans", "housing", "cards", "job", "liable", "telephone", "foreign"],
+          "instances": [
+               ["... >= 200 DM / salary assignments for at least 1 year", 6,"critical account/ other credits existing (not at this bank)", "car (new)", 1343, "... < 100 DM", ".. >= 7 years", 1, "male : single", "others - none", 4, "real estate", "> 25 years", "none", "own", 2, "skilled employee / official", 2, "phone - none", "foreign - no"],
+               ["... < 0 DM", 28, "existing credits paid back duly till now", "car (new)", 4006, "... < 100 DM", "1 <= ... < 4 years", 3, "male : single", "others - none", 2, "car or other, not in attribute 6", "> 25 years", "none", "own", 1, "unskilled - resident", 1, "phone - none", "foreign - yes"]]
+          
        }
+       
+6. Sample Output
+
+       [
+        1,
+        2
+       ]
 
 * Note: Refer to `train/main.py`  for training example used for this skill.
    
@@ -59,4 +79,4 @@ Follow the below steps for deploying the skill manually.
 
    Skills that are deployed may be invoked (run) either independently or within an agent.
 
-For more details about how to build skills go to [Cortex Fabric Documentation - Development - Develop Skills](https://cognitivescale.github.io/cortex-fabric/docs/development/define-skills)
+For more details about how to build skills go to [Cortex Fabric Documentation - Development - Develop Skills](https://cognitivescale.github.io/cortex-fabric/docs/models/mlops#skill-builder)
