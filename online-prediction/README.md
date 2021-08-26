@@ -13,11 +13,14 @@ Note:
 * `requirements.txt` Python3 libraries dependencies
 * `Dockerfile` to build Docker image for this skill
 
+### Steps to Run
 1. Update `model.json`, `experiment.json`, `run.json` files in `model` folder. 
 2. Make sure `german_credit_model.pickle` file exists in `model` folder. 
 If not create one by invoking 
 
-       python train/main.py
+       cd train
+       python main.py
+       cd ..
        
 3. Create Model and Experiment:
             

@@ -100,7 +100,7 @@ def train(filepath, is_encoded):
 
 
 def save_model(model):
-    pickle.dump(model, open("german_credit_model.pickle", "wb"))
+    pickle.dump(model, open("../model/german_credit_model.pickle", "wb"))
 
 
 if __name__ == '__main__':
