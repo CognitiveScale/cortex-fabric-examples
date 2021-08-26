@@ -1,5 +1,12 @@
 ### Cortex End to End Example Demonstrating cortex-python SDK (Train and Predict Skill)
 
+### Prerequisites
+- Python 3.x
+- Docker client
+- Bash shell ( Power shell TBA )
+- Cortex client ( installed )
+- URL/Credentials for a cortex instance
+
 #### Connections and Data Set
 For simplicity we selected german credit dataset(find it in [data](data)) and training on this dataset. 
 We have this dataset(csv file) in a S3 bucket.
@@ -41,6 +48,8 @@ you may change to another framework or language.
 * `actions/predict/requirements.txt` Python3 libraries dependencies
 * `actions/predict/Dockerfile` to build Docker image for predict action
 * `deploy_skill.py` Uses cortex-python SDK to deploy skill and actions
+* `tests/test_train.json` Sample Payload for Train Skill
+* `tests/test_predict.json` Sample Payload for Predict Skill
 
 #### Steps
 
@@ -69,6 +78,8 @@ In order to modify the actions follow the steps below:
 Steps to test
 
 ```make tests```
+
+The sample payloads are here for [Train](tests/test_train.json) action and [Predict](tests/test_predict.json) action
 
 On successfull invocation of the skills the output should look something like this
 ```
