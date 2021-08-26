@@ -65,6 +65,13 @@ Follow the below steps for deploying the skill manually.
                ["... < 0 DM", 28, "existing credits paid back duly till now", "car (new)", 4006, "... < 100 DM", "1 <= ... < 4 years", 3, "male : single", "others - none", 2, "car or other, not in attribute 6", "> 25 years", "none", "own", 1, "unskilled - resident", 1, "phone - none", "foreign - yes"]]
           
        }
+       
+6. Sample Output
+
+       [
+        1,
+        2
+       ]
 
 * Note: Refer to `train/main.py`  for training example used for this skill.
    
