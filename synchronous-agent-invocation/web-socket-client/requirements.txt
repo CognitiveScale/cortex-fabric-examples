@@ -1,0 +1,2 @@
+websocket-client==1.2.1
+cortex-python==6.0.3
