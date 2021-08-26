@@ -24,6 +24,9 @@ tests: check-env
 	cortex skills invoke --params-file ./tests/test_train.json ${SKILL_NAME} train --project ${PROJECT_NAME}
 	cortex skills invoke --params-file ./tests/test_predict.json ${SKILL_NAME} predict --project ${PROJECT_NAME}
 
+save-skill: check-env
+	python deploy_skill.py
+
 check-env:
 ifndef DOCKER_PREGISTRY_URL
 	$(error environment variable DOCKER_PREGISTRY_URL is not set. Set it like <docker-registry-url>/<namespace-org>)

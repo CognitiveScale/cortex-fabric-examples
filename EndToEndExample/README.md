@@ -6,16 +6,18 @@
 - Bash shell ( Power shell TBA )
 - Cortex client ( installed )
 - URL/Credentials for a cortex instance
+- Use `make install` to install the cortex-python SDK
 
 #### Connections and Data Set
 For simplicity we selected german credit dataset(find it in [data](data)) and training on this dataset. 
 We have this dataset(csv file) in a S3 bucket.
 We create a connection using the cortex-sdk and use that connection for Train Action
+We are using files such as [conn.json](conn.json) to define the connection definition and [config.py](config.py) for defining the secrets like AWS_PUBLIC_KEY, S3_BUCKET, FILE_NAME etc
 ##### Secrets 
 There are certain configs and secrets like AWS Public key and Private Key we need to create and set in the Project to successfully create the connections. [Configs](https://github.com/CognitiveScale/cortex-fabric-examples/blob/5cd95021cc6ba62315e3ee23756cb3e5a98fe301/EndToEndExample/deploy_skill.py#L31-L35)
 [secrets](https://github.com/CognitiveScale/cortex-fabric-examples/blob/5cd95021cc6ba62315e3ee23756cb3e5a98fe301/EndToEndExample/deploy_skill.py#L66)
 
-Example: If you have a secret key called `awssecret` set in your project you can use it to create connections by Using `#SECURE.awssecret` as the value to one of the parameters in the Connections Object.
+Example: If you have a secret key called `awssecret` set in your project you can use it to create connections by Using `#SECURE.awssecret` as the value to one of the parameters in the Connections Object. Similary any secret key set such as `<secret_name>` can be used as `#SECURE.<secret_name>`. This needs to be updated in [config.py](config.py) 
 
 #### Train Action: 
 Cortex action to train and save model in Experiment. 
@@ -60,8 +62,8 @@ will also deploy the skills and the actions.
 
 In order to modify the actions follow the steps below: 
 
-1. Stat by modifying the `conn.json` file and `skill.json` file updating the connection and skill definition
-2. Make sure the secrets are updated int he `config.py` file
+1. Start by modifying the `conn.json` file updating the connection definition
+2. Make sure the secrets such as API_ENDPOINT and CORTEX_TOKEN  are updated in the `config.py` file
 3. Modify the main executable (`main.py` by default) run by the action image's entrypoint/command to handle the action's custom logic.
 4. Modify the `requirements.txt` file to provide packages or libraries that the action requires.
 5. Build the docker image (uses the `main.py` file)
@@ -72,6 +74,7 @@ In order to modify the actions follow the steps below:
   ```
   make push
   ```
+7. Update the docker image mapped to the action in [skill definition](skill.json) and save the skill using `make save-skill`
 
 ### Steps to Test
 
