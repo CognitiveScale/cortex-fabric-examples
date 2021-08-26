@@ -28,7 +28,7 @@ If not create one by invoking
         
 4. Upload a model file to the cortex experiment from cortex cli before invoking the skill.
 
-       cortex experiments upload-artifact <experiment-name> <run-id> model/german_credit_model.pickle <artifact-name> --project <PROJECT_NAME>
+       cortex experiments upload-artifact <experiment-name> <run-id> model/german_credit_model.pickle model --project <PROJECT_NAME>
        
 5. Publish model:
 
