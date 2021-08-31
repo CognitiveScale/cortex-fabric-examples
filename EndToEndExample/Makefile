@@ -22,6 +22,7 @@ install:
 
 tests: check-env
 	cortex skills invoke --params-file ./tests/test_train.json ${SKILL_NAME} train --project ${PROJECT_NAME}
+	sleep 10
 	cortex skills invoke --params-file ./tests/test_predict.json ${SKILL_NAME} predict --project ${PROJECT_NAME}
 
 save-skill: check-env
