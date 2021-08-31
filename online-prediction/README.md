@@ -44,7 +44,12 @@ If not create one by invoking
 
 #### Deployment Steps
 
-A Makefile is provided to do these steps. Set environment variables `DOCKER_PREGISTRY_URL` (like <docker-registry-url>/<namespace-org>) and use Makefile to deploy Skill.<br>
+A Makefile is provided to do these steps. Set environment variables `DOCKER_PREGISTRY_URL` (like <docker-registry-url>/<namespace-org>), `PROJECT_NAME` and use Makefile to deploy Skill.<br>
+        
+        export DOCKER_PREGISTRY_URL=<private-registry-url> (Don't export this if you want to use the default environment specific cortex-private-registry)
+        export PROJECT_NAME=shared  #Templates will be deployed to Shared Project
+        
+* `Note`: Models & artifacts should be created/uploaded to current project and templates should be deployed to shared project
 * Build and push Docker image, deploy Cortex Action and Skill.
         
         make all 
