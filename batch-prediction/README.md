@@ -11,7 +11,7 @@ Cortex Batch Prediction Skill that runs a background job which makes predictions
 * `Dockerfile` to build Docker image for this skill
 
 ### Skill Properties:
-* `batch-size`: Number of Records to process in one batch
+* `batch-size`: Number of Records to be processed in one batch
 * `connection-name`: Connection used to read and write data
 * `experiment-name`: Experiment name to retrieve Models
 * `run-id`: Run id of the experiment
@@ -19,23 +19,45 @@ Cortex Batch Prediction Skill that runs a background job which makes predictions
 * `output-path`: Output S3 path to save the predictions
 * `output-collection`: Output Mongo collection to save the predictions
 
-Model Pickle Structure with encoder:
+### Steps to Run
+1. Update `model.json`, `experiment.json`, `run.json` files in `model` folder. 
+2. Make sure `german_credit_model.pickle` file exists in `model` folder. 
+If not create one by invoking 
+
+       cd train
+       python main.py
+       cd ..
+       
+3. Create Model and Experiment:
+            
+       ./model/init.sh <PROJECT_NAME> 
+        
+4. Upload a model file to the cortex experiment from cortex cli before invoking the skill.
+
+       cortex experiments upload-artifact <experiment-name> <run-id> model/german_credit_model.pickle <artifact-key> --project <PROJECT_NAME>
+       
+5. Publish model:
+
+       cortex models publish <model-name> --project <PROJECT_NAME>
+
+* Model Pickle Structure with encoder:
     
         {"model": d_tree_model, "cat_columns": categorical_columns, "encoder": encoder, "normalizer": normalizer}
 
-Model Pickle Structure without encoder: 
+* Model Pickle Structure w/o encoder: 
                     
         We directly pass the trained model object here after model.fit()
         example: DecisionTreeClassifier()
+        
+#### Deployment Steps
 
-#### Prerequisite:        
-Upload a model file to the cortex experiment from cortex cli before invoking the skill.
+A Makefile is provided to do these steps. Set environment variables `DOCKER_PREGISTRY_URL` (like <docker-registry-url>/<namespace-org>), `PROJECT_NAME` and use Makefile to deploy Skill.<br>
+        
+        export DOCKER_PREGISTRY_URL=<private-registry-url> (Don't export this if you want to use the default environment specific cortex-private-registry)
+        export PROJECT_NAME=shared  #Templates will be deployed to Shared Project
+        
+* `Note`: Models & artifacts should be created/uploaded to current project and templates should be deployed to shared project
 
-        cortex experiments upload-artifact <experiment-name> <run-id> pickle_file artifact-name --project <PROJECT>
-
-#### Steps:
-
-A Makefile is provided to do these steps. Set environment variables `DOCKER_PREGISTRY_URL` (like <docker-registry-url>/<namespace-org>) and use Makefile to deploy Skill.<br>
 * Build and push Docker image, deploy Cortex Action and Skill.
         
         make all 
@@ -56,6 +78,8 @@ Follow the below steps for deploying the skill manually.
         make deploy
   
 5. Sample Skill Invocation Input: `{}`
+
+6. An output file will be generated at the output path provided in properties once the predictions are done.
 
 * Note: Refer to `train/main.py`  for training example used for this skill.
    
