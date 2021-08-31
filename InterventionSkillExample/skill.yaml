@@ -1,0 +1,46 @@
+camel: 1.0.0
+name: intervention-example
+title: Intervention Example
+description: Intervention Skill Example
+inputs:
+  - name: request
+    title: request
+    parameters:
+      - name: payload
+        type: object
+        description: payload
+        required: false
+    routing:
+      all:
+        action: intervention-example
+        runtime: cortex/daemons
+        output: response
+
+outputs:
+  - name: response
+    title: response
+    parameters:
+      - name: message
+        type: object
+        description: payload
+        required: false
+
+properties:
+  - name: daemon.method
+    title: Daemon method
+    description: Update default value to HTTP method supported by endpoint
+    required: true
+    type: String
+    defaultValue: POST
+  - name: daemon.path
+    title: Daemon path
+    description: Update default value to HTTP endpoint path in container
+    required: true
+    type: String
+    defaultValue: invoke
+  - name: daemon.port
+    title: Daemon Port
+    description: Update default value to port on which app will be running
+    required: true
+    type: String
+    defaultValue: 5000
