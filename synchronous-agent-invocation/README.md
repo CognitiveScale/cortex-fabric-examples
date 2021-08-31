@@ -11,9 +11,14 @@ Examples to demonstrate the synchronous agent invoke capabilities
 
 * `sync-true-example/src/main.py` Python code that invokes the Agent using Sync=True
 * `client-callback-example/src/main.py` Python code that invokes the Agent using callbacks
+* `client-callback-example/server/server.py` Python code that starts a server for receiving callbacks
 * `web-socket-client/main.py` Python code that invokes the Agent using web sockets.
 * `config.json` Configuration file
 * `requirements.txt` Python libraries
+
+##### Install Requirements:
+    
+        pip install -r requirements.txt
 
 #### Examples:
 #####1. Using `sync=true` flag while invoking the Agent service endpoint:
@@ -28,6 +33,11 @@ Invoke Endpoint: https://api.cortex.insights.ai/fabric/v4/projects/project-name/
             }
             requests.request("POST", url, data=json.dumps({"payload": payload}), headers=headers,
                                         params={"sync": True})
+                                        
+  > Invocation: Run `main.py` after updating the `config.json` with agent & service details
+    
+            cd sync-true-example/src
+            python main.py
     
   > Sample Payload:
         
@@ -45,6 +55,17 @@ Adding `callbackUrl` to the properties and passing them in request body along wi
             }
             requests.request("POST", url, data=json.dumps({"payload": params["payload"],
                 "properties": params["properties"]}), headers=headers)
+   
+   > Invocation: Run `server.py` & `main.py` after updating the `config.json` with agent & service details
+            
+            # Start callback server and keep it running
+            cd client-callback-example/server 
+            python server.py
+            
+            
+            # Invoke Agent with callbackUrl in a different tab
+            cd client-callback-example/src
+            python main.py
    
    > Sample Payload:
         
@@ -79,8 +100,11 @@ Update `config.json` with `Agent` & `Service` details before running this exampl
             payload = {"text": "Hello, World!"}
             
 Run `main.py` from `web-socket-client/main.py` and you should see events from websocket server & client.
-
-Sample Event:
+            
+            cd web-socket-client
+            python main.py
+        
+Sample Websocket Event:
         
         {"eventType":"agent.input","requestId":"6ada0b84-c6fd-4fdf-a1af-680ad747ccdf","agentName":"test-agent-4f2ac",
         "serviceName":"input","channelId":"4dda2512-55d8-4ebd-aea5-d419c7de6cdc","sessionId":"6ada0b84-c6fd-4fdf-a1af-680ad747ccdf",
