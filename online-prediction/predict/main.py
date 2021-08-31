@@ -29,7 +29,7 @@ async def run(request: dict):
     # Load Model from the experiment run
     logging.info("Loading model artifacts from experiment run...")
     model = await load_model(client, request["properties"]["experiment-name"],
-                             request["properties"].get("run-id", None), request["properties"]["artifact-key"])
+                             request["properties"].get("run-id", None), request["properties"]["model-artifact"])
     logging.info("Model Loaded!")
     try:
         # If the model artifact is of type `dict`

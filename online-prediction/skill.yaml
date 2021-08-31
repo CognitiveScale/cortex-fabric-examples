@@ -52,7 +52,7 @@ properties:
     type: string
     secure: false
   - name: model-artifact
-    title: Model Artifact
+    title: Model Artifact Key
     description: Artifact key of the model uploaded
     required: true
     type: string
