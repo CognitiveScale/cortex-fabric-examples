@@ -2,7 +2,8 @@ import os
 
 PROJECT_ID = os.environ["PROJECT_NAME"]
 API_ENDPOINT =  ""
-CORTEX_TOKEN = "" # use `cortex configure token` to get token
+# use `cortex configure token` to get token
+CORTEX_TOKEN = ""
 
 AWS_PUBLIC_KEY = ""
 S3_BUCKET = "cortex-fabric-examples"
@@ -14,6 +15,6 @@ CONN_PARAMS = {
     "s3Endpoint": S3_ENDPOINT,
     "bucket": S3_BUCKET,
     "publicKey": AWS_PUBLIC_KEY,
-    "secretKey": "#SECURE.awssecretadmin""",
+    "secretKey": "#SECURE.awssecretadmin",
     "uri": URI
 }

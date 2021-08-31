@@ -62,19 +62,15 @@ will also deploy the skills and the actions.
 
 In order to modify the actions follow the steps below: 
 
-1. Start by modifying the `conn.json` file updating the connection definition
-2. Make sure the secrets such as API_ENDPOINT and CORTEX_TOKEN  are updated in the `config.py` file
-3. Modify the main executable (`main.py` by default) run by the action image's entrypoint/command to handle the action's custom logic.
-4. Modify the `requirements.txt` file to provide packages or libraries that the action requires.
-5. Build the docker image (uses the `main.py` file)
-  ```
-  make build
-  ```
-6. Push the docker image to a registry that is connected to your Kubernetes cluster.
-  ```
-  make push
-  ```
-7. Update the docker image mapped to the action in [skill definition](skill.json) and save the skill using `make save-skill`
+
+1. Set environment variables `DOCKER_PREGISTRY_URL` (like `<docker-registry-url>/<namespace-org>`) and `PROJECT_NAME` (Cortex Project Name)
+2. Start by modifying the `conn.json` file updating the connection definition
+3. Make sure the secrets such as AWS_PUBLIC_KEY, S3_BUCKET, FILE_NAME, API_ENDPOINT and CORTEX_TOKEN  are updated in the `config.py` file
+4. Modify the main executable (`main.py` by default) run by the action image's entrypoint/command to handle the action's custom logic.
+5. Modify the `requirements.txt` file to provide packages or libraries that the action requires.
+6. Build the docker image (uses the `main.py` file) using `make build`
+7. Push the docker image to a registry that is connected to your Kubernetes cluster using `make push`
+8. Update the docker image mapped to the action in [skill definition](skill.json) and save the skill using using `make save-skill`
 
 ### Steps to Test
 
