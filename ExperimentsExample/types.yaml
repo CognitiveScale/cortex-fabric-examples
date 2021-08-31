@@ -19,8 +19,12 @@ types:
         type: string
       - name: model_type
         type: string
+        required: true
       - name: model_mode
         type: string
+      - name: model_status
+        type: string
+        required: true
 
   - camel: 1.0.0
     name: default/TrainResponse

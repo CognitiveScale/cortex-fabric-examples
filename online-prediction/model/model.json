@@ -1,0 +1,19 @@
+{
+  "name": "german-credit-model",
+  "source": "CS",
+  "tags": [
+    {
+      "label": "german-credit",
+      "value": "german-credit"
+    },
+    {
+      "label": "classification",
+      "value": "classification"
+    }
+  ],
+  "title": "German Credit Model",
+  "type": "Classification",
+  "mode": "Single",
+  "status": "In development",
+  "properties": []
+}

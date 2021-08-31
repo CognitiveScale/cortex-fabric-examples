@@ -45,7 +45,7 @@ Invoke Endpoint: https://api.cortex.insights.ai/fabric/v4/projects/project-name/
      
 * Note: This may not work always as it depends on the type of Skill used downstream (like Merge)
 
-#####2. Using `callback` functionality of processor gateway:
+#####2. Using `Callback` functionality of processor gateway to invoke agent:
 
 Adding `callbackUrl` to the properties and passing them in request body along with payload enables us to get the results of agent invocation directly without polling the get activation function. Once the request is processed, the `callbackUrl` endpoint will get a callback from processor gateway with results. 
 

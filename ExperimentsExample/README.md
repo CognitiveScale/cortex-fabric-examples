@@ -89,7 +89,8 @@ Steps to test
     }
     ], //optional
     "model_title": "German Credit Model", //optional
-    "model_type": "Classification", //optional
+    "model_type": "Classification", //required
+    "model_status": "In development", //required
     "model_mode": "Single" //optional
     }
     ```

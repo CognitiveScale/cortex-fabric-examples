@@ -1,0 +1,20 @@
+types:
+  - camel: 1.0.0
+    name: BatchPredictRequest
+    title: Batch Predict Request
+    description: Represents a request of batch prediction input
+    parameters:
+      - name: input
+        type: object
+        description: Input Params
+        required: false
+
+  - camel: 1.0.0
+    name: BatchPredictResponse
+    title: Batch Predict Response
+    description: Represents a response of batch prediction input
+    parameters:
+      - name: output
+        type: object
+        description: Job Execution Logs
+        required: false

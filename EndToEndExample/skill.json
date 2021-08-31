@@ -1,0 +1,174 @@
+{
+    "name": "e2e-example",
+    "camel": "1.0.0",
+    "title": "End to End example with cortex-python v6 SDK",
+    "description": "Training multiple models and using them to predict",
+    "inputs": [
+        {
+            "name": "train",
+            "title": "Train Request",
+            "parameters": [
+                {
+                    "name": "connection_name",
+                    "type": "string",
+                    "required": "true"
+                },
+                {
+                    "name": "model_name",
+                    "type": "string",
+                    "required": "true"
+                },
+                {
+                    "name": "model_source",
+                    "type": "string"
+                },
+                {
+                    "name": "model_tags",
+                    "type": "array"
+                },
+                {
+                    "name": "model_title",
+                    "type": "string"
+                },
+                {
+                    "name": "model_type",
+                    "type": "string",
+                    "required": "true"
+                },
+                {
+                    "name": "model_status",
+                    "type": "string",
+                    "required": "true"
+                },
+                {
+                    "name": "model_mode",
+                    "type": "string"
+                }
+            ],
+            "routing": {
+                "all": {
+                    "action": "train-example",
+                    "runtime": "cortex/jobs",
+                    "output": "response_train"
+                }
+            }
+        },
+        {
+            "name": "predict",
+            "title": "Predict Request", 
+            "parameters":[
+                {
+                    "name": "exp_name",
+                    "type": "string",
+                    "required": "true"
+                }, 
+                {
+                    "name": "run_id",
+                    "type": "string"
+                },
+                {
+                    "name": "instances",
+                    "type": "object",
+                    "required": "true"
+                }
+            ],
+            "routing": {
+                "all": {
+                    "action": "predict-example",
+                    "runtime": "cortex/daemons",
+                    "output": "response_predict"
+                }
+            }
+        }
+    ],
+    "outputs": [
+        {
+            "name": "response_train",
+            "title": "Train response",
+            "parameters": [
+                {
+                    "name": "response_train",
+                    "type": "object"
+                }
+            ]
+        },
+        {
+            "name": "response_predict",
+            "title": "Predict response",
+            "parameters": [
+                {
+                    "name": "response_predict",
+                    "type": "object"
+                }
+            ]
+        }
+    ],
+    "properties": [
+        {
+            "validValues": [],
+            "name": "daemon.method",
+            "title": "Daemon method",
+            "description": "Update default value to HTTP method supported by endpoint",
+            "required": true,
+            "type": "string",
+            "defaultValue": "POST",
+            "secure": false
+        },
+        {
+            "validValues": [],
+            "name": "daemon.path",
+            "title": "Daemon path",
+            "description": "Update default value to HTTP endpoint path in container",
+            "required": true,
+            "type": "string",
+            "defaultValue": "invoke",
+            "secure": false
+        },
+        {
+            "validValues": [],
+            "name": "daemon.port",
+            "title": "Daemon Port",
+            "description": "Update default value to port on which app will be running",
+            "required": true,
+            "type": "string",
+            "defaultValue": "5000",
+            "secure": false
+        }
+    ],
+    "actions": [
+        {
+            "command": [
+                "scuttle",
+                "python",
+                "/app/train.py"
+            ],
+            "name": "train-example",
+            "description": "Experimnent Train Example",
+            "image": "private-registry.dci-dev.dev-eks.insights.ai/train-example:latest",
+            "type": "job",
+            "scaleCount": 1,
+            "environmentVariables": null,
+            "podSpec": ""
+        },
+        {
+            "command": [
+                "uvicorn",
+                "main:app",
+                "--host",
+                "0.0.0.0",
+                "--port",
+                "5000",
+                "--workers",
+                "2"
+            ],
+            "port": "5000",
+            "name": "predict-example",
+            "description": "Experimnent Predict Example",
+            "image": "private-registry.dci-dev.dev-eks.insights.ai/predict-example:latest",
+            "type": "daemon",
+            "scaleCount": 1,
+            "environmentVariables": null,
+            "podSpec": ""
+        }
+    ]
+}

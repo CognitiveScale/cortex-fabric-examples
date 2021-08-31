@@ -1,0 +1,57 @@
+camel: 1.0.0
+name: online-prediction
+title: Online Prediction Skill Template
+description: Online Prediction Skill Template
+inputs:
+  - name: request
+    title: Predict Request
+    parameters:
+      $ref: OnlinePredictRequest
+
+    routing:
+      all:
+        action: online-prediction
+        runtime: cortex/jobs
+        output: response
+
+outputs:
+  - name: response
+    title: Predict Response
+    parameters:
+      $ref: OnlinePredictResponse
+
+properties:
+  - name: daemon.method
+    title: Daemon method
+    description: Update default value to HTTP method supported by endpoint
+    required: true
+    type: String
+    defaultValue: POST
+  - name: daemon.path
+    title: Daemon path
+    description: Update default value to HTTP endpoint path in container
+    required: true
+    type: String
+    defaultValue: invoke
+  - name: daemon.port
+    title: Daemon Port
+    description: Update default value to port on which app will be running
+    required: true
+    type: String
+    defaultValue: 5000
+  - name: experiment-name
+    title: Experiment Name
+    description: Experiment name to retrieve experiment details
+    required: false
+    type: string
+    secure: false
+  - name: run-id
+    title: Run ID
+    description: Run id of the experiment
+    required: false
+    type: string
+    secure: false
+
+tags:
+    - label: template
+      value: template
