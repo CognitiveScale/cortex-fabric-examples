@@ -13,6 +13,14 @@ Note:
 * `requirements.txt` Python3 libraries dependencies
 * `Dockerfile` to build Docker image for this skill
 
+#### Skill Properties
+* `daemon.method` HTTP method supported by endpoint
+* `daemon.path` HTTP endpoint path in container
+* `daemon.port` port on which app will be running
+* `experiment-name` Experiment name to retrieve experiment data
+* `run-id` ID of the experiment run
+*  `model-artifact` Artifact key of the uploaded model
+
 ### Steps to Run
 1. Update `model.json`, `experiment.json`, `run.json` files in `model` folder. 
 2. Make sure `german_credit_model.pickle` file exists in `model` folder. 
@@ -28,7 +36,7 @@ If not create one by invoking
         
 4. Upload a model file to the cortex experiment from cortex cli before invoking the skill.
 
-       cortex experiments upload-artifact <experiment-name> <run-id> model/german_credit_model.pickle <artifact-name> --project <PROJECT_NAME>
+       cortex experiments upload-artifact <experiment-name> <run-id> model/german_credit_model.pickle <artifact-key> --project <PROJECT_NAME>
        
 5. Publish model:
 
