@@ -1,4 +1,4 @@
-IMAGE_TAG=latest
+IMAGE_TAG=$(shell git describe --long --always --match='v*.*' | sed 's/v//; s/-/./')
 SKILL_NAME=exp-example
 ACTION_NAME_TRAIN=train-example
 ACTION_NAME_PREDICT=predict-example
