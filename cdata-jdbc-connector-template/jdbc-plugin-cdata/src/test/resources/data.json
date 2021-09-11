@@ -1,0 +1,102 @@
+{
+  "people": [
+    {
+      "personal": {
+        "age": 20,
+        "gender": "M",
+        "name": {
+          "first": "John",
+          "last": "Doe"
+        }
+      },
+      "vehicles": [
+        {
+          "type": "car",
+          "model": "Honda Civic",
+          "insurance": {
+            "company": "ABC Insurance",
+            "policy_num": "12345"
+          },
+          "maintenance": [
+            {
+              "date": "07-17-2017",
+              "desc": "oil change"
+            },
+            {
+              "date": "01-03-2018",
+              "desc": "new tires"
+            }
+          ]
+        },
+        {
+          "type": "truck",
+          "model": "Dodge Ram",
+          "insurance": {
+            "company": "ABC Insurance",
+            "policy_num": "12345"
+          },
+          "maintenance": [
+            {
+              "date": "08-27-2017",
+              "desc": "new tires"
+            },
+            {
+              "date": "01-08-2018",
+              "desc": "oil change"
+            }
+          ]
+        }
+      ],
+      "source": "internet"
+    },
+    {
+      "personal": {
+        "age": 24,
+        "gender": "F",
+        "name": {
+          "first": "Jane",
+          "last": "Roberts"
+        }
+      },
+      "vehicles": [
+        {
+          "type": "car",
+          "model": "Toyota Camry",
+          "insurance": {
+            "company": "Car Insurance",
+            "policy_num": "98765"
+          },
+          "maintenance": [
+            {
+              "date": "05-11-2017",
+              "desc": "tires rotated"
+            },
+            {
+              "date": "11-03-2017",
+              "desc": "oil change"
+            }
+          ]
+        },
+        {
+          "type": "car",
+          "model": "Honda Accord",
+          "insurance": {
+            "company": "Car Insurance",
+            "policy_num": "98765"
+          },
+          "maintenance": [
+            {
+              "date": "10-07-2017",
+              "desc": "new air filter"
+            },
+            {
+              "date": "01-13-2018",
+              "desc": "new brakes"
+            }
+          ]
+        }
+      ],
+      "source": "phone"
+    }
+  ]
+}
