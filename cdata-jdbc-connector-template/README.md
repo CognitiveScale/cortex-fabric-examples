@@ -76,13 +76,13 @@ Properties:
 
   * `managed_content_key`: Managed Content Key where the driver jar is uploaded. Project to Upload should be Shared for driver reusability.
     
-  * `class_name`: Driver Class Name
+  * `classname`: Driver Class Name
   
   * `uri`: JDBC URI Ex: jdbc:mysql://sql6.freesqldatabase.com:3306/sql6434964 
     
-  * `user`: Database User
+  * `username`: Database User
     
-  * `pass`: Database Password
+  * `password`: Database Password
   
 * Select the Skill Properties `ConnectionType` Dropdown to respective Connection Type to use based on connection created.
 * Update connectionName in Skill Properties

@@ -14,10 +14,10 @@ package com.c12e.cortex5;
 public class JdbcRequestConstants {
 
     public static final String DRIVER = "managed_content_key";
-    public static final String DRIVER_CLASSNAME = "class_name";
+    public static final String DRIVER_CLASSNAME = "classname";
     public static final String CONNECTION_URI = "uri";
-    public static final String CONNECTION_USER = "user";
-    public static final String CONNECTION_PASSWORD = "pass";
+    public static final String CONNECTION_USER = "username";
+    public static final String CONNECTION_PASSWORD = "password";
     public static final String STATEMENT_QUERY = "query";
     public static final String STATEMENT_QUERIES = "queries";
     public static final String PLUGIN_PROPERTIES = "plugin_properties";
