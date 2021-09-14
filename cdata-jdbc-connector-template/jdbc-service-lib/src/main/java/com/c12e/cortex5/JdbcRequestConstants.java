@@ -21,4 +21,8 @@ public class JdbcRequestConstants {
     public static final String STATEMENT_QUERY = "query";
     public static final String STATEMENT_QUERIES = "queries";
     public static final String PLUGIN_PROPERTIES = "plugin_properties";
+    public static final String RTK = "RTK";
+    public static final String RUN_TIME_KEY = "run_time_key";
+
+
 }

@@ -27,8 +27,6 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.mockito.Mockito.*;
-
 @RunWith(MockitoJUnitRunner.class)
 public class CDataJdbcRequestHandlerTest {
     private CDataTestHandlerHelper helper = new CDataTestHandlerHelper();

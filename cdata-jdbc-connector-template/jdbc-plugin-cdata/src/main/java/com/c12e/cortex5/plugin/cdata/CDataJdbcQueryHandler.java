@@ -36,6 +36,7 @@ import java.sql.DriverManager;
 import java.sql.Statement;
 import java.util.*;
 
+import static com.c12e.cortex5.CortexRequestConstants.*;
 import static com.c12e.cortex5.JdbcRequestConstants.*;
 
 /**
@@ -64,36 +65,52 @@ public class CDataJdbcQueryHandler implements JdbcRequestHandler {
     public JsonNode handleRequest(Map<String, Object> requestBody, PluginHelper helper) throws Throwable {
         mapper = helper.getJsonObjectMapper();
         ObjectNode response = mapper.createObjectNode();
-        Map<String, Object> skillProperties = (Map) requestBody.get("properties");
-        String connectionName = skillProperties.get("connectionName").toString();
-        String connectionType = skillProperties.get("connectionType").toString();
-        String apiEndpoint = requestBody.get("apiEndpoint").toString();
-        String project = requestBody.get("projectId").toString();
-        String token = requestBody.get("token").toString();
+        Map<String, Object> skillProperties = (Map) requestBody.get(PROPERTIES);
+        String connectionName = skillProperties.get(CONNECTION_NAME).toString();
+        String skillConnectionType = skillProperties.get(CONNECTION_TYPE).toString();
+        String apiEndpoint = requestBody.get(API_ENDPOINT).toString();
+        String project = requestBody.get(PROJECT).toString();
+        String token = requestBody.get(JWT_TOKEN).toString();
         helper.getLogger(this.getClass()).info("Fetching Connection Metadata for connection: {}", connectionName);
         JsonNode connMeta = getConnection(connectionName, apiEndpoint, project, token);
-        if (connMeta != null && connMeta.has("params")) {
-            ArrayNode params = (ArrayNode) connMeta.get("params");
-            Map<String, String> connectionParamMap = new HashMap<>();
-            for (JsonNode param : params) {
-                connectionParamMap.put(param.get("name").textValue(), param.get("value").textValue());
-            }
-//            String connectionType = connMeta.get("connectionType").textValue();
+        if (connMeta != null && connMeta.has(CONNECTION_PARAMS)) {
+            String connectionType = connMeta.get(CONNECTION_TYPE).textValue();
             ObjectNode payload = mapper.createObjectNode();
             // Adding Request to Output Payload
             payload.set("request", mapper.valueToTree(requestBody));
+            if (!skillConnectionType.equals(connectionType)) {
+                helper.getLogger(this.getClass()).error("Mismatch between Cortex Connection Type and Skill" +
+                        " Connection Type. Please update your connectionType in skill properties or Connection with Name: {}", connectionName);
+                payload.put("message", "Mismatch between Cortex Connection Type and Skill" +
+                        " Connection Type. Please update your connectionType in skill properties or Connection");
+                payload.put("success", false);
+                response.set("payload", payload);
+                return response;
+            }
+            ArrayNode params = (ArrayNode) connMeta.get(CONNECTION_PARAMS);
+            Map<String, String> connectionParamMap = new HashMap<>();
+            for (JsonNode param : params) {
+                connectionParamMap.put(param.get(NAME).textValue(), param.get(VALUE).textValue());
+            }
             JsonNode resp;
-            if (connectionType.equals("jdbc_generic")) {
+            if (skillConnectionType.equals(JDBC_GENERIC)) {
                 //Handle Generic JDBC Connection Query
                 helper.getLogger(this.getClass()).info("Received call for generic jdbc connection");
                 resp = handleJdbcRequest(requestBody, connectionParamMap, helper);
-            } else {
+            } else if(skillConnectionType.equals(JDBC_CDATA)){
                 //Handle CDATA JDBC Connection Query
                 helper.getLogger(this.getClass()).info("Received call for cdata jdbc connection");
                 resp = handleCdataRequest(requestBody, connectionParamMap, helper);
+            }else {
+                helper.getLogger(this.getClass()).error("Unsupported JDBC Connection Type for Connection: {}", connectionName);
+                payload.put("message", "Unsupported JDBC Connection Type.");
+                payload.put("success", false);
+                response.set("payload", payload);
+                return response;
             }
             // Adding Response to Output Payload
             payload.set("response", resp);
+            payload.put("message", OK);
             response.set("payload", payload);
         }
         return response;
@@ -109,7 +126,8 @@ public class CDataJdbcQueryHandler implements JdbcRequestHandler {
         HashMap<String, String> map = null;
         try {
             //convert JSON string to Map
-            map = mapper.readValue(t, new TypeReference<HashMap<String, String>>() {});
+            map = mapper.readValue(t, new TypeReference<HashMap<String, String>>() {
+            });
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -126,7 +144,7 @@ public class CDataJdbcQueryHandler implements JdbcRequestHandler {
      * @throws Exception
      */
     public JsonNode handleCdataRequest(Map<String, Object> requestBody, Map<String, String> connectionParamMap,
-                                        PluginHelper helper) throws Exception {
+                                       PluginHelper helper) throws Exception {
         JsonNode response;
         synchronized (this) {
             if (Objects.isNull(helper.getConnectionManager(Driver.class))) {
@@ -135,12 +153,12 @@ public class CDataJdbcQueryHandler implements JdbcRequestHandler {
                 helper.setConnectionManager(ServiceLoader.load(Driver.class).iterator().next());
             }
         }
-        rtk = connectionParamMap.get("run_time_key");
+        rtk = connectionParamMap.get(RUN_TIME_KEY);
         Driver driver = helper.getConnectionManager(Driver.class);
         String driverClassName = driver.getClass().getName();
         Properties connectionProperties = getConnectionProperties(jsonToMap(connectionParamMap.get(PLUGIN_PROPERTIES)));
         helper.getLogger(this.getClass()).info("Received plugin properties: {}", connectionProperties);
-        connectionProperties.setProperty("RTK", rtk);
+        connectionProperties.setProperty(RTK, rtk);
         String[] classParts = StringUtils.split(driverClassName, ".");
         String connectionProtocol = classParts[1] + ":" + classParts[2] + ":";
 
@@ -253,6 +271,7 @@ public class CDataJdbcQueryHandler implements JdbcRequestHandler {
     protected Properties getConnectionProperties(Map<String, String> pluginProperties) {
         Properties properties = new Properties();
         pluginProperties.keySet().forEach(key -> properties.setProperty(key, pluginProperties.get(key)));
+        System.out.println(properties);
         return properties;
     }
 }
