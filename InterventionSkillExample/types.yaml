@@ -1,0 +1,26 @@
+camel: 1.0.0
+types:
+  - camel: 1.0.0
+    name: InterventionRequest
+    title: InterventionSkillRequest
+    description: Parameters passed to Online learner job
+    parameters:
+      - name: profileId
+        type: string
+        required: true
+      - name: intervention_id
+        type: string
+        required: true
+      - name: campaign
+        type: string
+        required: true
+      - name: mission
+        type: string
+        required: true
+  - camel: 1.0.0
+    name: InterventionResponse
+    title: InterventionSkillResponse
+    description: Intervention Skill Response
+    parameters:
+      - name: message
+        type: object

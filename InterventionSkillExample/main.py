@@ -1,29 +1,29 @@
-import datetime
-from fastapi import FastAPI
+import logging
+import json
+import flask
 
-app = FastAPI()
+webserver_app = flask.Flask(__name__)
 
-model = None
-
-@app.post('/invoke')
-def run(params: dict):
+@webserver_app.route("/invoke", methods=["POST"])
+def run():
 
     try:
-        payload = params["payload"]
-        profile = payload["profiles"]
+        payload = flask.request.json['payload']
+        profileId = payload["profileId"]
         intervention = payload["intervention_id"]
-        message = ""
-        try:
-            message = "Successfully invoked action for given profile ID "+str(profile)+"for intervention "+str(intervention)
-        except Exception as e:
-            print("Error in invoking action")
+        campaign_name = payload["campaign"]
+        mission_name = payload["mission"]
+        #Add logic for action here
+        message = "Action being invoked for Campaign "+str(campaign_name)+" and Mission: "+str(mission_name)+"\n"
+        message += " Successfully invoked action for given profile ID "+str(profileId)+" for intervention "+str(intervention)
+        return flask.Response(response=json.dumps({"payload":{"message":message}}), status=200, mimetype='application/json')
 
-        print(datetime.datetime.now())
-        return {"response": {'message': message}}
     except Exception as e:
-        print(e)
-        raise
+        return flask.Response(response=json.dumps({"payload":{"message":"Exception occurred " + str(e)}}), status=500, mimetype='application/json')
 
+
+if __name__ == '__main__':
+    webserver_app.run(host='0.0.0.0', debug=True, port=5000, use_reloader=False)
 
 
 

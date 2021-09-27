@@ -1,5 +1,2 @@
-pandas==1.0.3
 cortex-python
-uvicorn==0.12.1
-fastapi==0.61.1
-
+flask

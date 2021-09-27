@@ -1,29 +1,23 @@
 camel: 1.0.0
 name: intervention-example
-title: Intervention Example
-description: Intervention Skill Example
+title: Intervention Skill Example
+description: Intevention Skills are used at Mission Deployment. These are invoked by skill router. It takes a single profileId and intervention_id as input and returns a message upon successful invocation.
 inputs:
-  - name: request
-    title: request
+  - name: InterventionSkillRequest
+    title: Intervention Skill Request
     parameters:
-      - name: payload
-        type: object
-        description: payload
-        required: false
+        $ref: InterventionRequest
     routing:
       all:
         action: intervention-example
         runtime: cortex/daemons
-        output: response
+        output: InterventionSkillResponse
 
 outputs:
-  - name: response
-    title: response
+  - name: InterventionSkillResponse
+    title: Intervention Skill Response
     parameters:
-      - name: message
-        type: object
-        description: payload
-        required: false
+        $ref: InterventionResponse
 
 properties:
   - name: daemon.method
