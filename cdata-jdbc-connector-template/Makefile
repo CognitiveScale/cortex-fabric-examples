@@ -1,4 +1,5 @@
-IMAGE_TAG=$(shell git describe --long --always --match='v*.*' | sed 's/v//; s/-/./')
+# IMAGE_TAG=$(shell git describe --long --always --match='v*.*' | sed 's/v//; s/-/./')
+IMAGE_TAG=52e978a
 SKILL_NAME=$(notdir $(CURDIR))
 DOCKER_IMAGE_URL=${DOCKER_PREGISTRY_URL}/${SKILL_NAME}:${IMAGE_TAG}
 URL=$(shell cat ~/.cortex/config | jq .profiles[.currentProfile].url)
@@ -20,7 +21,7 @@ push: check-env
 
 deploy: check-env
 	cortex actions deploy --actionName cdata-jdbc-connector --actionType daemon --cmd '["/bin/sh","-c","java -jar /server.jar"]' --project ${PROJECT_NAME} --docker ${DOCKER_IMAGE_URL}
-	cortex actions deploy --actionName generic-jdbc-connector --actionType daemon --cmd '["/bin/sh","-c","java -jar /server.jar"]' --project ${PROJECT_NAME} --docker ${DOCKER_IMAGE_URL}
+	cortex actions deploy --actionName grc-jdbc-connector --actionType daemon --cmd '["/bin/sh","-c","java -jar /server.jar"]' --project ${PROJECT_NAME} --docker ${DOCKER_IMAGE_URL}
 	cortex skills save -y skill.yaml --project ${PROJECT_NAME}
 
 tests: check-env

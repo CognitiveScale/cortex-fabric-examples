@@ -12,7 +12,7 @@ inputs:
         required: true
     routing:
       default:
-        action: generic-jdbc-connector
+        action: grc-jdbc-connector
         runtime: cortex/daemons
         output: generic_response
       rules:
@@ -20,7 +20,7 @@ inputs:
           runtime: cortex/daemons
           output: cdata_response
           match: jdbc_cdata
-        - action: generic-jdbc-connector
+        - action: grc-jdbc-connector
           runtime: cortex/daemons
           output: generic_response
           match: jdbc_generic
