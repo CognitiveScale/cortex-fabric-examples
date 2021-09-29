@@ -1,0 +1,2 @@
+rootProject.name = 'cdata-jdbc-connector-template'
+include 'jdbc-service-lib', 'jdbc-plugin-cdata','jdbc-service-harness'
