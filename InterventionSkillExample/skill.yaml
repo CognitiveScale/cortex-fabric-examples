@@ -1,0 +1,40 @@
+camel: 1.0.0
+name: intervention-example
+title: Intervention Skill Example
+description: Intevention Skills are used at Mission Deployment. These are invoked by skill router. It takes a single profileId and intervention_id as input and returns a message upon successful invocation.
+inputs:
+  - name: InterventionSkillRequest
+    title: Intervention Skill Request
+    parameters:
+        $ref: InterventionRequest
+    routing:
+      all:
+        action: intervention-example
+        runtime: cortex/daemons
+        output: InterventionSkillResponse
+
+outputs:
+  - name: InterventionSkillResponse
+    title: Intervention Skill Response
+    parameters:
+        $ref: InterventionResponse
+
+properties:
+  - name: daemon.method
+    title: Daemon method
+    description: Update default value to HTTP method supported by endpoint
+    required: true
+    type: String
+    defaultValue: POST
+  - name: daemon.path
+    title: Daemon path
+    description: Update default value to HTTP endpoint path in container
+    required: true
+    type: String
+    defaultValue: invoke
+  - name: daemon.port
+    title: Daemon Port
+    description: Update default value to port on which app will be running
+    required: true
+    type: String
+    defaultValue: 5000

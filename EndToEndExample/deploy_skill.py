@@ -20,24 +20,13 @@ import sys
 import json
 from pprint import pprint
 
+from config import PROJECT_ID, API_ENDPOINT, CORTEX_TOKEN, CONN_PARAMS
+
 from cortex import Cortex
 from cortex.model import Model, ModelClient
 from cortex.experiment import Experiment, ExperimentClient
 from cortex.connection import ConnectionClient, Connection
 from cortex.skill import SkillClient
-
-
-# Global Configs
-PROJECT_ID = ""
-API_ENDPOINT = ""
-CORTEX_TOKEN = ""
-
-AWS_PUBLIC_KEY = ""
-S3_BUCKET = "cortex-fabric-examples"
-FILE_NAME = "german_credit_eval.csv"
-URI = f"s3a://{S3_BUCKET}/{FILE_NAME}"
-S3_ENDPOINT = "http://s3.us-east-1.amazonaws.com"
-# use `cortex configure token` to get token
 
 
 params = {
@@ -50,23 +39,14 @@ if __name__ == "__main__":
     client = Cortex.client(
         api_endpoint=params['apiEndpoint'], project=params['projectId'], token=params['token'])
     cc = ConnectionClient(client)
+    conn_params = {}
+    with open("conn.json") as f:
+        conn_params = json.load(f)
 
-    conn_params = {
-        "name": "exp-connection",
-        "title": "S3 Conn for fabric examples - German Credit Data",
-        "description": "S3 Conn",
-        "connectionType": "s3",
-        "allowWrite": False,
-        "allowRead": True,
-        "contentType": "csv",
-        "params": [
-            {"name": "s3Endpoint", "value":  S3_ENDPOINT},
-            {"name": "bucket", "value": S3_BUCKET},
-            {"name": "publicKey", "value": AWS_PUBLIC_KEY},
-            {"name": "secretKey", "value": "#SECURE.awssecretadmin"},
-            {"name": "uri", "value": URI}
-        ]
-    }
+    conn_params["params"] = []
+    for name, value in CONN_PARAMS.items():
+        conn_params["params"].append({"name": name, "value": value})
+    
     # create a secret called awssecretadmin in your project which contains the aws secret key
 
     # create a connection

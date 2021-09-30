@@ -1,0 +1,128 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.github.jengelman.gradle.plugins:shadow:4.0.0'
+    }
+}
+
+plugins {
+    id "com.github.hierynomus.license" version "0.15.0"
+    id 'com.palantir.git-version' version '0.11.0'
+}
+
+def exportedProjects= [
+        ":jdbc-service-lib",
+        ":jdbc-plugin-cdata"
+]
+
+allprojects {
+    def details = versionDetails()
+
+    ext.getProjectVersion = { ->
+
+        String line = details.lastTag + '.' + details.commitDistance + '-' + details.gitHash
+        if(!details.isCleanTag){
+            line = line + "-dirty"
+        }
+        line = line.replaceFirst("v", "")
+        return line;
+    }
+    group "com.c12e"
+    version null
+
+    apply plugin: 'java'
+    apply plugin: 'eclipse'
+    apply plugin: 'maven'
+    apply plugin: 'idea'
+    apply plugin: 'com.github.johnrengelman.shadow'
+    apply plugin: 'com.github.hierynomus.license'
+    apply plugin: 'com.palantir.git-version'
+
+    license {
+        header rootProject.file('CognitiveScaleLicense.txt')
+        strictCheck true
+        excludes(["**/*.xml", "**/*.yml", "**/*.txt", "**/*.json"])
+    }
+
+    repositories {
+        jcenter()
+        mavenCentral()
+    }
+
+    downloadLicenses{
+        includeProjectDependencies = true
+    }
+
+    defaultTasks 'clean', 'build', 'javadoc', 'alljavadoc'
+
+}
+
+subprojects {
+    def artifactVersion = getProjectVersion()
+    configurations { testArtifacts.extendsFrom testRuntime }
+
+    repositories {
+        jcenter()
+        mavenCentral()
+    }
+
+    jar {
+        manifest {
+            attributes("Implementation-Title": project.name,
+                    "Implementation-Version": artifactVersion,
+                    "Project-Artifact": project.name)
+        }
+    }
+
+    javadoc {
+        source = sourceSets.main.allJava
+        classpath = configurations.compile
+    }
+
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
+    eclipse {
+        classpath {
+            downloadSources = true
+            downloadJavadoc = false
+        }
+
+        jdt {
+            sourceCompatibility = 1.8
+            targetCompatibility = 1.8
+        }
+    }
+
+    task createEclipseEnv {
+        dependsOn tasks.cleanEclipse, tasks.eclipse
+    }
+
+    artifacts { archives shadowJar }
+
+    dependencies {
+        testCompile('junit:junit:4.12')
+    }
+
+    shadowJar {
+        classifier = null
+        version = null
+    }
+}
+
+task createIntelliJEnv {
+    dependsOn tasks.cleanIdea, tasks.idea
+}
+
+jar.enabled = false
+
+task alljavadoc(type: Javadoc) {
+    source = exportedProjects.collect { project(it).sourceSets.main.allJava }
+    classpath = files(exportedProjects.collect { project(it).sourceSets.main.compileClasspath })
+    destinationDir = file("${buildDir}/docs/javadoc")
+    options.addStringOption("bottom","<div class=\"javadocs-footer\">&nbsp;Copyright &copy; 2019 CognitiveScale. All Rights"
+            + " Reserved.&nbsp;&nbsp;|&nbsp;&nbsp;<a href=\"{@docRoot}/../index.html\" target=\"_top\">Dev Portal Home</a>"
+            + "&nbsp;&nbsp;|&nbsp;&nbsp;<a href=\"https://www.cognitivescale.com/privacy-policy/\" target=\"_top\">Privacy Policy</a></div>")
+}

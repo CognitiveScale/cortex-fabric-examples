@@ -18,7 +18,7 @@ types:
     title: Online Predict Response
     description: Represents a response of online prediction
     parameters:
-      - name: predictions
-        type: object
+      - name: payload
+        type: array
         description: Prediction Results
         required: false

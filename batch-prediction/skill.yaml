@@ -9,7 +9,7 @@ inputs:
       $ref: BatchPredictRequest
     routing:
       all:
-        action: batch-predict
+        action: batch-prediction
         runtime: cortex/jobs
         output: response
 
@@ -62,6 +62,13 @@ properties:
     required: false
     type: string
     secure: false
+  - name: model-artifact
+    title: Model Artifact Key
+    description: Artifact key of the model uploaded
+    required: true
+    type: string
+    secure: false
+    defaultValue: model
 
 
 tags:

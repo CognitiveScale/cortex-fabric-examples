@@ -1,69 +1,59 @@
 """
 Copyright (c) 2021. Cognitive Scale Inc. All rights reserved.
-
 Licensed under CognitiveScale Example Code [License](https://cognitivescale.github.io/cortex-fabric-examples/LICENSE.md)
 """
 import logging
+import traceback
+
 import uvicorn
-import numpy as np
-import pandas as pd
 
-# cortex
-from cortex import Cortex
+from fastapi import FastAPI, Response, HTTPException
 
-# fastapi
-from fastapi import FastAPI
+from predict.request_models import InvokeRequest, InitializeRequest
+from predict.model_flow import load_model, process
 
 app = FastAPI()
 
 
+@app.get('/health')
+async def health():
+    return Response(status_code=200)
+
+
+@app.post('/init')
+def init(request: InitializeRequest):
+    logging.info("Online Prediction: Init Request:{}".format(request))
+
+    try:
+        load_model(request.api_endpoint, request.token, request.project_id, request.properties.experiment_name,
+                   request.properties.run_id, request.properties.artifact_key)
+    except ValueError as e:
+        logging.error(traceback.format_exc())
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        logging.error(traceback.format_exc())
+        raise HTTPException(status_code=412, detail=str(e))
+
+    return {
+        "payload": "model loaded successfully"
+    }
+
+
 @app.post('/invoke')
-async def run(request: dict):
+async def run(request: InvokeRequest):
     logging.info("Online Prediction: Invoke Request:{}".format(request))
-    columns = request['payload']["columns"]
-    instances = request['payload']["instances"]
-    df = pd.DataFrame(columns=columns, data=instances)
-    # Initialize Cortex Client
-    client = Cortex.client(api_endpoint=request["apiEndpoint"], token=request["token"], project=request["projectId"])
 
-    # Load Model from the experiment run
-    logging.info("Loading model artifacts from experiment run...")
-    model = await load_model(client, request["properties"]["experiment-name"],
-                             request["properties"].get("run-id", None), request["properties"]["model-artifact"])
-    logging.info("Model Loaded!")
     try:
-        # If the model artifact is of type `dict`
-        if isinstance(model, dict):
-            categorical_cols = model["cat_columns"] if "cat_columns" in model else []
-            numerical_cols = [x for x in df.columns if x not in categorical_cols]
-            # Transforming the input data-frame using encoder & normalizer from the experiment artifact
-            if ("encoder" in model) or ("normalizer" in model):
-                x_encoded = model["encoder"].transform(
-                    df[categorical_cols]).toarray() if "encoder" in model and categorical_cols else []
-                x_normalized = model["normalizer"].transform(df[numerical_cols]) if "normalizer" in model else df[
-                    numerical_cols].values
-                if np.any(x_encoded) and np.any(x_normalized):
-                    x_transformed = np.concatenate((x_encoded, x_normalized), axis=1)
-                else:
-                    x_transformed = x_encoded if np.any(x_encoded) else x_normalized
-            else:
-                x_transformed = df.values
-            predictions = model["model"].predict(x_transformed)
-        else:
-            # If the model object is an instance of model itself
-            predictions = model.predict(instances)
+        predictions = await process(request)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
-        raise Exception("Error occurred while making predictions, Please check the model. Message: {}".format(e))
-    return {'payload': predictions.tolist()}
+        logging.error(traceback.format_exc())
+        raise HTTPException(status_code=412, detail=str(e))
 
-
-async def load_model(client, experiment_name, run_id, artifact_key):
-    try:
-        experiment = client.experiment(experiment_name)
-        run = experiment.get_run(run_id) if run_id else experiment.last_run()
-        return run.get_artifact(artifact_key)
-    except Exception as e:
-        logging.error("Error: Failed to load model: {}".format(e))
+    return {
+        "payload": predictions.tolist()
+    }
 
 
 if __name__ == "__main__":

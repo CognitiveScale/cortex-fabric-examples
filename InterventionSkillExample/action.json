@@ -1,0 +1,6 @@
+{
+    "name":"intervention-example",
+    "actionType":"daemon",
+    "command": ["python", "main.py"],
+    "port": "5000"
+}
