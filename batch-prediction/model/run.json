@@ -1,0 +1,14 @@
+{
+  "experimentName": "gc_dtree_exp",
+  "meta": {
+    "algo": "DecisionTreeClassifier"
+  },
+  "params": {
+    "category": "Decision Tree",
+    "version": "1",
+    "SourceData": "Upstream Server Data"
+  },
+  "metrics": {
+    "accuracy": 0.68
+  }
+}

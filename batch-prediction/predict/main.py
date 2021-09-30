@@ -16,20 +16,21 @@ import pymongo
 from cortex import Cortex
 
 
-def load_model(client, experiment_name, run_id):
+def load_model(client, experiment_name, run_id, artifact_key):
     """
     Load Model from Cortex Experiment
 
     :param client: Cortex Client
     :param experiment_name: Experiment Name
     :param run_id: Experiment Run ID
+    :param artifact_key: Model Artifact Key
     :return: Model Object
     """
     logging.info("Loading Model from Experiment Run: {}".format(run_id))
     try:
         experiment = client.experiment(experiment_name)
         run = experiment.get_run(run_id)
-        return run.get_artifact('model')
+        return run.get_artifact(artifact_key)
     except Exception as e:
         logging.error("Error: Failed to load model: {}".format(e))
 
@@ -127,7 +128,8 @@ def make_batch_predictions(input_params):
         logging.info("connection params", conn_params)
 
         # Load Model from the experiment run
-        model = load_model(client, input_params["properties"]["experiment-name"], input_params["properties"]["run-id"])
+        model = load_model(client, input_params["properties"]["experiment-name"], input_params["properties"]["run-id"],
+                           input_params["properties"]["model-artifact"])
         logging.info("Model Loaded!")
 
         if connection.get("connectionType") == "s3":
