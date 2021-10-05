@@ -1,6 +1,6 @@
 types:
   - camel: 1.0.0
-    name: OnlinePredictRequest
+    name: OnlineRequest
     title: Online Predict Request
     description: Represents a request of online prediction input
     parameters:
@@ -14,7 +14,7 @@ types:
         required: true
 
   - camel: 1.0.0
-    name: OnlinePredictResponse
+    name: OnlineResponse
     title: Online Predict Response
     description: Represents a response of online prediction
     parameters:

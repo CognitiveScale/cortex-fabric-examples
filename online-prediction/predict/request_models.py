@@ -16,6 +16,7 @@ class InvokeRequestPayload(BaseModel):
 class InvokeRequestProperties(BaseModel):
     experiment_name: Optional[str] = Field(alias="experiment-name")
     run_id: Optional[str] = Field(alias="run-id")
+    artifact_key: str = Field(alias="model-artifact")
 
 
 class InvokeRequest(BaseModel):

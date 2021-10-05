@@ -41,7 +41,7 @@ async def process(request: InvokeRequest):
     global model
     if not model:
         load_model(request.api_endpoint, request.token, request.project_id, request.properties.experiment_name,
-                   request.properties.run_id)
+                   request.properties.run_id, request.properties.artifact_key)
 
     columns = request.payload.columns
     instances = request.payload.instances
