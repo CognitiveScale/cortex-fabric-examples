@@ -6,7 +6,7 @@ inputs:
   - name: train
     title: Train Request
     parameters:
-      $ref: default/TrainRequest
+      $ref: default/TReq
     routing:
       all:
         action  : train-example
@@ -16,7 +16,7 @@ inputs:
   - name: predict
     title: Predict Request
     parameters:
-      $ref: default/PredictRequest
+      $ref: default/PReq
     routing:
       all:
         action  : predict-example
@@ -27,12 +27,12 @@ outputs:
   - name: response_train
     title: Train Response
     parameters:
-      $ref: default/TrainResponse
+      $ref: default/TResp
         
   - name: response_predict
     title: Predict Response
     parameters:
-      $ref: default/PredictResponse
+      $ref: default/PResp
 
 properties:
   - name: daemon.method
