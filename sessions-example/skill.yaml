@@ -6,7 +6,7 @@ inputs:
   - name: request
     title: API Request
     parameters:
-      $ref: default/SessionRequest
+      $ref: default/SReq
     routing:
       all:
         action  : sessions-example
@@ -17,7 +17,7 @@ outputs:
   - name: response
     title: API Response
     parameters:
-      $ref: default/SessionResponse
+      $ref: default/SRes
 
 properties:
   - name: daemon.method
