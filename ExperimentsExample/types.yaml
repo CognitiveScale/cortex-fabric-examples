@@ -1,7 +1,7 @@
 camel: 1.0.0
 types:
   - camel: 1.0.0
-    name: default/TrainRequest
+    name: default/TReq
     title: ExperimentsTrainRequest
     description: Parameters passed to Train Job
     parameters:
@@ -27,7 +27,7 @@ types:
         required: true
 
   - camel: 1.0.0
-    name: default/TrainResponse
+    name: default/TResp
     title: ExperimentsTrainResponse
     description: Train Response
     parameters:
@@ -35,7 +35,7 @@ types:
         type: object
 
   - camel: 1.0.0
-    name: default/PredictRequest
+    name: default/PReq
     title: ExperimentsPredictRequest
     description: Parameters passed to Inference Daemon
     parameters:
@@ -49,7 +49,7 @@ types:
         required: true
 
   - camel: 1.0.0
-    name: default/PredictResponse
+    name: default/PResp
     title: ExperimentsPredictResponse
     description: Predict Response
     parameters:

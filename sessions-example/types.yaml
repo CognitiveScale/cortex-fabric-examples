@@ -1,7 +1,7 @@
 camel: 1.0.0
 types:
   - camel: 1.0.0
-    name: default/SessionRequest
+    name: default/SReq
     title: SessionRequest
     description: Parameters passed to Sessions Example
     parameters:
@@ -15,7 +15,7 @@ types:
         type: number
 
   - camel: 1.0.0
-    name: default/SessionResponse
+    name: default/SRes
     title: SessionResponse
     description: Session Response
     parameters:
