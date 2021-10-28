@@ -1,6 +1,6 @@
 camel: 1.0.0
-name: cortex/hellodaemon-skill
-title: Hello daemon skill
+name: word-count-daemon
+title: Word Count Daemon Skill
 description: ...
 properties:
   - name: daemon.method
@@ -14,13 +14,19 @@ properties:
     description: path
     required: true
     type: String
-    defaultValue: v1/hello
+    defaultValue: invoke
+  - name: daemon.port
+    title: Daemon port
+    description: port
+    required: true
+    type: Number
+    defaultValue: 5000
 inputs:
   - name: input
     title: input
     routing:
       all:
-        action: cortex/hellodaemon
+        action: word-count-daemon
         output: output
         runtime: cortex/daemons
 outputs:
