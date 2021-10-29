@@ -47,7 +47,7 @@ Run the command to build the Docker containers and deploy the Action, Skill, and
 After deploying the Skill you can invoke the Skill using the Cortex CLI.
 
 ```shell
-$ cortex skills invoke word-count-daemon input --params '{"payload":{"text":"This is a test"}}'
+cortex skills invoke word-count-daemon input --params '{"payload":{"text":"This is a test"}}'
 ```
 
 Response:
@@ -86,7 +86,7 @@ Response:
 ```
 
 
-### 5. Invoke Agent via Fabric Console
+### 4. Invoke Agent via Fabric Console
 1. Log into the Console.
 2. On the left menu, click Agents.
 3. From the list of Agents, click on "word-count-agent".
