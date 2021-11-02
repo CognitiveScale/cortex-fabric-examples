@@ -1,0 +1,45 @@
+camel: 1.0.0
+name: word-count-agent
+tags:
+  - label: example
+    value: example
+title: Word Count Agent Example
+inputs:
+  - name: input
+    output: output
+    signalId: 80a1fc2b-2077-49fe-8fee-5bb5e2cb53f3
+    signalType: Service
+    title: input
+    parameters:
+      - name: text
+        required: true
+        title: Text to process
+        type: string
+outputs:
+  - name: output
+    signalId: a469818f-f7d0-41bf-8577-bde05136d6b8
+    signalType: Service
+    title: output
+    parameters:
+      - name: message
+        required: true
+        title: Message results
+        type: string
+mappings:
+  - from:
+      input:
+        signalId: 80a1fc2b-2077-49fe-8fee-5bb5e2cb53f3
+    to:
+      skill:
+        input: input
+        refId: deef58fc-b698-4166-a0a9-41bc6d29537b
+  - from:
+      skill:
+        output: output
+        refId: deef58fc-b698-4166-a0a9-41bc6d29537b
+    to:
+      output:
+        signalId: a469818f-f7d0-41bf-8577-bde05136d6b8
+skills:
+  - skillName: word-count-daemon
+    refId: deef58fc-b698-4166-a0a9-41bc6d29537b

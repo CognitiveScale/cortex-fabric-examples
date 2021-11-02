@@ -1,0 +1,26 @@
+camel: 1.0.0
+name: m-content-job
+title: m-content-job
+description: Managed Content Job Skill
+inputs:
+  - name: params
+    title: Job Input
+    parameters:
+      - name: params
+        type: object
+        description: Input Params
+        required: true
+    routing:
+      all:
+        action  : m-content-job
+        runtime: cortex/jobs
+        output: result
+
+outputs:
+  - name: result
+    title: Job result
+    parameters:
+      - name: result
+        type: object
+        description: Job Execution Logs
+        required: true
