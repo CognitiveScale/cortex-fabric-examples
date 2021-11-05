@@ -1,7 +1,7 @@
 camel: 1.0.0
-name: experiment-predict
-title: Experiment Predict
-description: Experiment Predict
+name: simple-exp-predict
+title: simple-exp-predict
+description: simple-exp-predict
 inputs:
   - name: request
     title: API Request
@@ -12,7 +12,7 @@ inputs:
         required: true
     routing:
       all:
-        action  : experiment-predict
+        action  : simple-exp-predict
         runtime: cortex/daemons
         output: response
 
@@ -44,3 +44,19 @@ properties:
     required: true
     type: String
     defaultValue: 5000
+
+actions:
+  - name: simple-exp-predict
+    actionType: daemon
+    docker: simple-exp-predict:latest
+    environmentVariables: '"TEST"="value"'
+    command:
+      - uvicorn
+      - "main:app"
+      - --host
+      - "0.0.0.0"
+      - --port
+      - "5000"
+      - --workers
+      - "2"
+    port: 5000

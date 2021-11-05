@@ -1,7 +1,7 @@
 camel: 1.0.0
-name: experiment-train
-title: Experiment Train
-description: Experiment Train
+name: simple-exp-train
+title: simple-exp-train
+description: simple-exp-train
 inputs:
   - name: params
     title: Job Input
@@ -12,15 +12,21 @@ inputs:
         required: true
     routing:
       all:
-        action  : experiment-train
+        action  : simple-exp-train
         runtime: cortex/jobs
-        output: response
+        output: result
 
 outputs:
-  - name: response
+  - name: result
     title: Job result
     parameters:
       - name: result
         type: object
         description: Job Execution Logs
         required: true
+
+actions:
+  - name: simple-exp-train
+    actionType: job
+    docker: simple-exp-train:latest
+    environmentVariables: '"TEST"="value"'

@@ -1,4 +1,4 @@
-IMAGE_TAG=latest1
+IMAGE_TAG=latest
 SKILL_NAME=$(notdir $(CURDIR))
 DOCKER_IMAGE_URL=${DOCKER_PREGISTRY_URL}/${SKILL_NAME}:${IMAGE_TAG}
 
@@ -6,15 +6,15 @@ build: check-env
 	docker build -t ${DOCKER_IMAGE_URL} .
 
 push: check-env
+	cortex docker login
 	docker push ${DOCKER_IMAGE_URL}
 
 deploy: check-env
-	cortex actions deploy action.json --project ${PROJECT_NAME} --docker ${DOCKER_IMAGE_URL}
-	cortex skills save -y skill.yaml --project ${PROJECT_NAME}
+	cortex skills save skill.yaml --project ${PROJECT_NAME}
 	sleep 10s # wait for action containers to pull and deploy
 
 tests: check-env
-	cortex skills invoke --params-file ./test/payload.json ${SKILL_NAME} request --project ${PROJECT_NAME}
+	cortex skills invoke --params-file ./test/payload.json ${SKILL_NAME} params --project ${PROJECT_NAME}
 
 all: build push deploy tests
 
