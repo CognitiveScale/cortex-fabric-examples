@@ -3,7 +3,7 @@ SKILL_NAME=$(notdir $(CURDIR))
 DOCKER_IMAGE_URL=${DOCKER_PREGISTRY_URL}/${SKILL_NAME}:${IMAGE_TAG}
 
 build: check-env
-	docker build -t ${DOCKER_IMAGE_URL} .
+	docker build -t ${DOCKER_IMAGE_URL} ./actions/simple-exp-predict/Dockerfile
 
 push: check-env
 	cortex docker login
@@ -14,7 +14,7 @@ deploy: check-env
 	sleep 10s # wait for action containers to pull and deploy
 
 tests: check-env
-	cortex skills invoke --params-file ./test/payload.json ${SKILL_NAME} request --project ${PROJECT_NAME}
+	cortex skills invoke --params-file ./invoke/message.json ${SKILL_NAME} request --project ${PROJECT_NAME}
 
 all: build push deploy tests
 
