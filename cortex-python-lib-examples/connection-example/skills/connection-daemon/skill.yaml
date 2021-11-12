@@ -1,7 +1,7 @@
 camel: 1.0.0
-name: connection
-title: connection
-description: connection
+name: connection-daemon
+title: connection-daemon
+description: connection-daemon
 inputs:
   - name: request
     title: API Request
@@ -12,7 +12,7 @@ inputs:
         required: true
     routing:
       all:
-        action  : connection
+        action  : connection-daemon
         runtime: cortex/daemons
         output: response
 
@@ -44,3 +44,19 @@ properties:
     required: true
     type: String
     defaultValue: 5000
+
+actions:
+  - name: connection-daemon
+    actionType: daemon
+    docker: connection-daemon:latest
+    environmentVariables: '"TEST"="value"'
+    command:
+      - uvicorn
+      - "main:app"
+      - --host
+      - "0.0.0.0"
+      - --port
+      - "5000"
+      - --workers
+      - "2"
+    port: 5000
