@@ -2,25 +2,32 @@ camel: 1.0.0
 name: m-content-job
 title: m-content-job
 description: Managed Content Job Skill
+
 inputs:
-  - name: params
-    title: Job Input
+  - name: request
+    title: Job Request
     parameters:
       - name: params
         type: object
-        description: Input Params
+        description: Request Parameters
         required: true
     routing:
       all:
-        action  : m-content-job
+        action: m-content-job
         runtime: cortex/jobs
         output: result
 
 outputs:
-  - name: result
-    title: Job result
+  - name: response
+    title: Job Response
     parameters:
       - name: result
         type: object
-        description: Job Execution Logs
+        description: Job Response
         required: true
+
+actions:
+  - name: m-content-job
+    actionType: job
+    docker: m-content-job:latest
+    environmentVariables: '"TEST"="value"'

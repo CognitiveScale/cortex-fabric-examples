@@ -1,34 +1,63 @@
 camel: 1.0.0
 name: word-count-daemon
 title: Word Count Daemon Skill
-description: ...
+description: A Word Counting Daemon Skill
+
+inputs:
+  - name: request
+    title: API Request
+    parameters:
+      - name: params
+        type: object
+        description: Request Parameters
+        required: true
+    routing:
+      all:
+        action: {{skillname}}
+        runtime: cortex/daemons
+        output: response
+
+outputs:
+  - name: response
+    title: API Response
+    parameters:
+      - name: result
+        type: object
+        description: API Response
+        required: true
+
 properties:
   - name: daemon.method
     title: Daemon method
-    description: method
+    description: Update default value to HTTP method supported by endpoint
     required: true
     type: String
     defaultValue: POST
   - name: daemon.path
     title: Daemon path
-    description: path
+    description: Update default value to HTTP endpoint path in container
     required: true
     type: String
     defaultValue: invoke
   - name: daemon.port
-    title: Daemon port
-    description: port
+    title: Daemon Port
+    description: Update default value to port on which app will be running
     required: true
-    type: Number
+    type: String
     defaultValue: 5000
-inputs:
-  - name: input
-    title: input
-    routing:
-      all:
-        action: word-count-daemon
-        output: output
-        runtime: cortex/daemons
-outputs:
-  - name: output
-    title: output
+
+actions:
+  - name: {{skillname}}
+    actionType: daemon
+    docker: {{repo.url}}/{{skillname}}:latest
+    environmentVariables: '"TEST"="value"'
+    command:
+      - uvicorn
+      - "main:app"
+      - --host
+      - "0.0.0.0"
+      - --port
+      - "5000"
+      - --workers
+      - "2"
+    port: 5000

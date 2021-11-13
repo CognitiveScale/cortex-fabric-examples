@@ -9,24 +9,6 @@ import sys
 from cortex.content import ManagedContentClient
 
 
-# Download data from managed content.
-def download(content_client: ManagedContentClient, project_id: str, key: str):
-
-    data = content_client.download(key=key, project=project_id).data
-
-    return print(f'{data}')
-
-
-# Uploads string to managed content
-def upload(content_client: ManagedContentClient, project_id: str, key: str, content: str):
-
-    # Upload content in payload.
-    content_client.upload(key=key, project=project_id, stream_name=key, stream=content,
-                          content_type="application/octet-stream")
-
-    return print(f'Managed content ({key}) uploaded: {content}')
-
-
 # The starting point for the job
 if __name__ == '__main__':
     request_body = json.loads(sys.argv[1])

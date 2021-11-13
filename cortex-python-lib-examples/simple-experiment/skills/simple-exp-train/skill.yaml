@@ -2,27 +2,28 @@ camel: 1.0.0
 name: simple-exp-train
 title: simple-exp-train
 description: simple-exp-train
+
 inputs:
-  - name: params
-    title: Job Input
+  - name: request
+    title: Job Request
     parameters:
       - name: params
         type: object
-        description: Input Params
+        description: Request Parameters
         required: true
     routing:
       all:
-        action  : simple-exp-train
+        action: simple-exp-train
         runtime: cortex/jobs
-        output: result
+        output: response
 
 outputs:
-  - name: result
-    title: Job result
+  - name: response
+    title: Job Response
     parameters:
       - name: result
         type: object
-        description: Job Execution Logs
+        description: Job Response
         required: true
 
 actions:
