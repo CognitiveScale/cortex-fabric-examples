@@ -28,6 +28,6 @@ outputs:
 
 actions:
   - name: m-content-job
-    actionType: job
-    docker: m-content-job:latest
+    type: job
+    image: m-content-job:latest
     environmentVariables: '"TEST"="value"'

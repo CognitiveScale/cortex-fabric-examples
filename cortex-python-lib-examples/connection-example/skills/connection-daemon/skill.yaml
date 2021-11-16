@@ -47,8 +47,8 @@ properties:
 
 actions:
   - name: connection-daemon
-    actionType: daemon
-    docker: connection-daemon:latest
+    type: daemon
+    image: connection-daemon:latest
     environmentVariables: '"TEST"="value"'
     command:
       - uvicorn

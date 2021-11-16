@@ -28,6 +28,6 @@ outputs:
 
 actions:
   - name: simple-exp-train
-    actionType: job
-    docker: simple-exp-train:latest
+    type: job
+    image: simple-exp-train:latest
     environmentVariables: '"TEST"="value"'

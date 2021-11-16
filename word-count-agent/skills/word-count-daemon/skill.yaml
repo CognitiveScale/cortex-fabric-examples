@@ -13,7 +13,7 @@ inputs:
         required: true
     routing:
       all:
-        action: {{skillname}}
+        action: word-count-daemon
         runtime: cortex/daemons
         output: response
 
@@ -47,9 +47,9 @@ properties:
     defaultValue: 5000
 
 actions:
-  - name: {{skillname}}
-    actionType: daemon
-    docker: {{repo.url}}/{{skillname}}:latest
+  - name: word-count-daemon
+    type: daemon
+    image: word-count-daemon:latest
     environmentVariables: '"TEST"="value"'
     command:
       - uvicorn

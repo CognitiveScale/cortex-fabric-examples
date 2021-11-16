@@ -13,7 +13,7 @@ inputs:
         required: true
     routing:
       all:
-        action: {{skillname}}-predict
+        action: simple-exp-predict
         runtime: cortex/daemons
         output: response
 
@@ -48,8 +48,8 @@ properties:
 
 actions:
   - name: simple-exp-predict
-    actionType: daemon
-    docker: simple-exp-predict:latest
+    type: daemon
+    image: simple-exp-predict:latest
     environmentVariables: '"TEST"="value"'
     command:
       - uvicorn
