@@ -12,7 +12,7 @@ inputs:
         required: true
     routing:
       all:
-        action  : connection-daemon
+        action: connection-daemon
         runtime: cortex/daemons
         output: response
 
@@ -48,7 +48,7 @@ properties:
 actions:
   - name: connection-daemon
     type: daemon
-    image: connection-daemon:latest
+    image: private-registry.dci-dev.dev-eks.insights.ai/connection-daemon
     environmentVariables: '"TEST"="value"'
     command:
       - uvicorn

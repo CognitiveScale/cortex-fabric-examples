@@ -15,7 +15,7 @@ inputs:
       all:
         action: m-content-job
         runtime: cortex/jobs
-        output: result
+        output: response
 
 outputs:
   - name: response
@@ -29,5 +29,5 @@ outputs:
 actions:
   - name: m-content-job
     type: job
-    image: m-content-job:latest
+    image: private-registry.dci-dev.dev-eks.insights.ai/m-content-job
     environmentVariables: '"TEST"="value"'

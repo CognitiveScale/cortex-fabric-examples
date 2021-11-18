@@ -29,5 +29,5 @@ outputs:
 actions:
   - name: simple-exp-train
     type: job
-    image: simple-exp-train:latest
+    image: private-registry.dci-dev.dev-eks.insights.ai/simple-exp-train
     environmentVariables: '"TEST"="value"'

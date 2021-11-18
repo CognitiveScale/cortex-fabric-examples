@@ -49,7 +49,7 @@ properties:
 actions:
   - name: word-count-daemon
     type: daemon
-    image: word-count-daemon:latest
+    image: private-registry.dci-dev.dev-eks.insights.ai/word-count-daemon
     environmentVariables: '"TEST"="value"'
     command:
       - uvicorn

@@ -49,7 +49,7 @@ properties:
 actions:
   - name: simple-exp-predict
     type: daemon
-    image: simple-exp-predict:latest
+    image: private-registry.dci-dev.dev-eks.insights.ai/simple-exp-predict
     environmentVariables: '"TEST"="value"'
     command:
       - uvicorn

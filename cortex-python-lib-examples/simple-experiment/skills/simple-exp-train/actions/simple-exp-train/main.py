@@ -20,7 +20,7 @@ def train_and_save_model():
     iris = datasets.load_iris()
 
     x = iris["data"][:, 3:]  # petal width
-    y = (iris["target"] == 2).astype(np.int)
+    y = (iris["target"] == 2).astype(int)
 
     clf = RandomForestClassifier(n_estimators=100, max_depth=2, random_state=0)
     clf.fit(x, y)
