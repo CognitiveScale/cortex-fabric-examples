@@ -4,16 +4,20 @@
 
 
 ## Included Files to Review
-- `skills/` - The directory that houses the Skills
-    - `m-content-job/` - The contents of the m-content-job action
-        - `Dockerfile` - Builds the Docker image the action
-        - `main.py` - Code for Cortex job
-        - `requirements.txt` - Dependencies and libraries
-        - `skill.yaml` - Skill definition and action mapping
-- `agent.yaml` - Agent definition and Skill mapping
-- `deploy.sh` - Builds and pushes images, deploys actions, saves Skills and saves Agents.
-- `README.md` - Provides the objectives, requirements, and instructions for generating and deploying the Skill.
-- `managed_content_notebook.ipynb` - jupyter notebook example for Managed Content
+- `docs/` - The directory that houses the Skills' READMEs
+    - `m-content-job/`: The directory that houses the m-content-job Skill's README
+        - `README.md`: Provides the objectives, requirements, and instructions for generating and deploying the Skill.
+- `skills/`: The directory that houses the Skills
+    - `m-content-job/`: The directory that houses the m-content-job Skill's assets
+        - `actions/`: The directory that houses the m-content-job Skill's Actions
+            - `m-content-job/`: The contents of the m-content-job action
+                - `Dockerfile`: Builds the Docker image the action
+                - `main.py`: Code for Cortex job
+                - `requirements.txt`: Dependencies and libraries
+        - `invoke/`: Contains the payloads, organized by Skill input name, used to invoke the m-content-job Skill
+            - `request/`: Contains payload files used to invoke the Skill
+                - `message.json`: JSON payload used to invoke the Skill
+            - `skill.yaml`: m-content-job Skill definition and Action mapping
 
 
 ## Requirements

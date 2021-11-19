@@ -1,29 +1,33 @@
-### Job Skill type
+# simple-exp-train Job Skill
 
-Cortex skill that runs a background job.
-
-
-#### Files generated
-* `invoke/`
-  * `message.json` Payload used when invoking Skill
-* `Dockerfile` Builds the Docker image for the Action
-* `main.py` Code for Cortex job
-* `Makefile` Used to perform deployment steps
-* `README.md` Provides the objectives, requirements, and instructions for generating and deploying the Skill.
-* `requirements.txt` Dependencies and libraries
-* `skill.yaml` Skill definition and Action mapping
+Cortex Skill that runs a background job.
 
 
-#### Steps
+## Files Generated
+- `docs/` - The directory that houses the Skills' READMEs
+    - `simple-exp-train/`: The directory that houses the simple-exp-train Skill's README
+        - `README.md`: Provides the objectives, requirements, and instructions for generating and deploying the Skill.
+- `skills/`: The directory that houses the Skills
+    - `simple-exp-train/`: The directory that houses the simple-exp-train Skill's assets
+        - `actions/`: The directory that houses the simple-exp-train Skill's Actions
+            - `simple-exp-train/`: The contents of the simple-exp-train action
+                - `Dockerfile`: Builds the Docker image the action
+                - `main.py`: Code for Cortex job
+                - `requirements.txt`: Dependencies and libraries
+        - `invoke/`: Contains the payloads, organized by Skill input name, used to invoke the simple-exp-train Skill
+            - `request/`: Contains payload files used to invoke the Skill
+                - `message.json`: JSON payload used to invoke the Skill
+            - `skill.yaml`: simple-exp-train Skill definition and Action mapping
 
-1. Modify the main executable (`main.py` by default) run by the action image's entrypoint/command to handle the action's custom logic.
-2. Modify the `requirements.txt` file to provide packages or libraries that the action requires.
-3. Modify the `skill.yaml` file as needed. The Skill is added to the Cortex Fabric catalog and is available for selection when building interventions or Agents. Skills that are deployed may be invoked (run) either independently or within an agent. For more details about how to build Skills go to [Cortex Fabric Documentation - Development - Develop Skills](https://cognitivescale.github.io/cortex-fabric/docs/build-skills/define-skills)
-4. A Makefile is provided to do these steps. Set environment variables `DOCKER_PREGISTRY_URL` (like `<docker-registry-url>/<namespace-org>`) and `PROJECT_NAME` (Cortex Project Name) to use the Makefile.
-   `make all` will build and push Docker image, deploy Cortex Skill, and then invoke Skill to test.
-   ```text
-   DOCKER_PREGISTRY_URL=<docker-registry-url>/<namespace-org> PROJECT_NAME=<project-name> make all
-   ```
+
+## Generate the Skill.
+
+You've already done this via:
+- [VS Code Extension](https://cognitivescale.github.io/cortex-code/)
+- [Skill Builder in the Fabric Console](https://cognitivescale.github.io/cortex-fabric/docs/build-skills/skill-builder-ui)
+
+Please use the above links for more information on how to continue building, pushing, deploying, developing, and invoking your Skill.
+
 
 #### Test the code locally
 To avoid using up your private registry space, it is good practice testing your code before pushing.

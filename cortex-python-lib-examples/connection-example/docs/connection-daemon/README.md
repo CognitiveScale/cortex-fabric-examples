@@ -1,4 +1,4 @@
-### Daemon Skill type
+### Cortex-Python Library Example: Connection Example
 
 Cortex Skill (daemon) example for Cortex Connections. This demonstrates:
 * Create Cortex Connections with Secrets
@@ -9,12 +9,21 @@ Cortex Skill (daemon) example for Cortex Connections. This demonstrates:
     * Create Secrets and run `make all` to save connection, build & deploy Action/Skill, and test the deployed Skill 
 
 #### Files to review
-* `skill.yaml` Skill definition
-* `main.py` Python3 code serving the daemon API
-* `requirements.txt` Python3 libraries dependencies
-* `Dockerfile` to build Docker image for this skill
-* `Makefile` to setup and deploy Skill
-* `test-connection.json` Connection definition
+- `docs/` - The directory that houses the Skills' READMEs
+  - `connection-daemon/`: The directory that houses the connection-daemon Skill's README
+    - `README.md`: Provides the objectives, requirements, and instructions for generating and deploying the Skill.
+- `connections/test-connection.json`: Connection definition
+- `skills/`: The directory that houses the Skills
+  - `connection-daemon/`: The directory that houses the connection-daemon Skill's assets
+    - `actions/`: The directory that houses the connection-daemon Skill's Actions
+      - `connection-daemon/`: The contents of the connection-daemon action
+        - `Dockerfile`: Builds the Docker image the action
+        - `main.py`: Code for Cortex job
+        - `requirements.txt`: Dependencies and libraries
+    - `invoke/`: Contains the payloads, organized by Skill input name, used to invoke the connection-daemon Skill
+      - `request/`: Contains payload files used to invoke the Skill
+        - `message.json`: JSON payload used to invoke the Skill
+      - `skill.yaml`: connection-daemon Skill definition and Action mapping
 
 #### Steps
 
