@@ -105,7 +105,7 @@ cortex agents get-activation <requestId>
 
 
 ## Test the code locally
-To avoid using up your private registry space, it is good practice testing your code before pushing.
+To avoid filling your private registry, testing your code prior to deployment is recommended.
 
 Create Python virtual env.
 ```shell
