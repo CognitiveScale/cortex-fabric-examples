@@ -1,7 +1,7 @@
 camel: 1.0.0
-name: word-count-daemon
-title: Word Count Daemon Skill
-description: A Word Counting Daemon Skill
+name: simple-exp-predict
+title: simple-exp-predict
+description: simple-exp-predict
 
 inputs:
   - name: request
@@ -13,7 +13,7 @@ inputs:
         required: true
     routing:
       all:
-        action: word-count-daemon
+        action: simple-exp-predict
         runtime: cortex/daemons
         output: response
 
@@ -47,9 +47,9 @@ properties:
     defaultValue: 5000
 
 actions:
-  - name: word-count-daemon
+  - name: simple-exp-predict
     type: daemon
-    image: private-registry.dci-dev.dev-eks.insights.ai/word-count-daemon
+    image: private-registry.dci-dev.dev-eks.insights.ai/simple-exp-predict
     environmentVariables: '"TEST"="value"'
     command:
       - uvicorn

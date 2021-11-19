@@ -1,0 +1,33 @@
+camel: 1.0.0
+name: simple-exp-train
+title: simple-exp-train
+description: simple-exp-train
+
+inputs:
+  - name: request
+    title: Job Request
+    parameters:
+      - name: params
+        type: object
+        description: Request Parameters
+        required: true
+    routing:
+      all:
+        action: simple-exp-train
+        runtime: cortex/jobs
+        output: response
+
+outputs:
+  - name: response
+    title: Job Response
+    parameters:
+      - name: result
+        type: object
+        description: Job Response
+        required: true
+
+actions:
+  - name: simple-exp-train
+    type: job
+    image: private-registry.dci-dev.dev-eks.insights.ai/simple-exp-train
+    environmentVariables: '"TEST"="value"'

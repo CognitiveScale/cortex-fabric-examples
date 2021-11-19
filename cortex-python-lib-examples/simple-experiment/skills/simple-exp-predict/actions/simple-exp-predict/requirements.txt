@@ -1,0 +1,4 @@
+cortex-python
+fastapi
+uvicorn
+scikit-learn

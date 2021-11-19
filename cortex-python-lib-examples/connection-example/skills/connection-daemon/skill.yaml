@@ -1,8 +1,7 @@
 camel: 1.0.0
-name: word-count-daemon
-title: Word Count Daemon Skill
-description: A Word Counting Daemon Skill
-
+name: connection-daemon
+title: connection-daemon
+description: connection-daemon
 inputs:
   - name: request
     title: API Request
@@ -13,7 +12,7 @@ inputs:
         required: true
     routing:
       all:
-        action: word-count-daemon
+        action: connection-daemon
         runtime: cortex/daemons
         output: response
 
@@ -47,9 +46,9 @@ properties:
     defaultValue: 5000
 
 actions:
-  - name: word-count-daemon
+  - name: connection-daemon
     type: daemon
-    image: private-registry.dci-dev.dev-eks.insights.ai/word-count-daemon
+    image: private-registry.dci-dev.dev-eks.insights.ai/connection-daemon
     environmentVariables: '"TEST"="value"'
     command:
       - uvicorn

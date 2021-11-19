@@ -1,17 +1,12 @@
 # Cortex fabric example repository
 
-This repository contains examples for help Cortex fabric users.  
-Each folder in the repository contains a standalone example consisting of:
- - Agents
- - Skills
- - Actions/Docker images
- - Sample Data
- - Scripts
+This repository contains examples for help Cortex Fabric users.
 
 ## Contents
  | Folder | Language |Description |
  | --------| -------- |----------- |
- |  [APIExamples](./APIExamples) | JSON | Postman collection and environment files to be imported to your Postman app to help you get started with Cortex Fabric OpenAPIs |
- | [HelloWorldDaemon/](./HelloWorldDaemon) | Python | A simple agent with a single flask app |
- | [JobChaining/](./JobChaining) | Python | An agent with two jobs one generating a data file and the second job consuming a generated file.  The jobs use managed content for read/write file content.
- | [JobWebhook/](./JobWebhook) | Python | An agent with two jobs one generating messages and the second job POSTing the payload to a webhook. The jobs use skill properties.
+ | [cortex-python-lib-examples/connection-example](./cortex-python-lib-examples/connection-example) | Python | An example daemon-Skill that connects to a Mongo database. Uses cortex-python library to get Connection definition. |
+ | [cortex-python-lib-examples/managed-content-example](./cortex-python-lib-examples/managed-content-example) | Python | An example job-Skill that uses the cortex-python library's ManagedContentClient to upload and download a message to Managed Content. |
+ | [cortex-python-lib-examples/simple-experiment](./cortex-python-lib-examples/simple-experiment) | Python | A pair of Skills that train (job) and predict (daemon) a Model using sklearn's RandomForestClassifier and the cortex-python library's Experiment class. |
+ | [word-count-agent/](./word-count-agent) | Python | An Agent with one daemon-Skill that reads `text` from the payload and responds with a word count.
+
