@@ -52,7 +52,7 @@ async def run(request: InvokeRequest):
         raise HTTPException(status_code=412, detail=str(e))
 
     return {
-        "payload": predictions.tolist()
+        "payload": {"request": request.payload, "response": predictions.tolist()}
     }
 
 
