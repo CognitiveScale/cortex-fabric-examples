@@ -1,7 +1,7 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  namespace: cortex
+  namespace: cortex-compute
   name: spark-role
 rules:
 - apiGroups: [""]
@@ -13,16 +13,19 @@ rules:
 - apiGroups: [""]
   resources: ["configmaps"]
   verbs: ["*"]
+- apiGroups: [""]
+  resources: ["persistentvolumes"]
+  verbs: ["*"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: spark-role-binding
-  namespace: cortex
+  namespace: cortex-compute
 subjects:
 - kind: ServiceAccount
   name: default
-  namespace: cortex
+  namespace: cortex-compute
 roleRef:
   kind: Role
   name: spark-role

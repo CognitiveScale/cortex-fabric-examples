@@ -5,3 +5,5 @@
 .vscode
 venv/
 dist
+spark-batch-prediction/spark-base/spark-*-bin-hadoop*
+spark-batch-prediction/spark-base/spark.tgz
