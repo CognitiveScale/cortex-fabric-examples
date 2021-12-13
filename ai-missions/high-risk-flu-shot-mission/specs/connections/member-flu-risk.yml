@@ -1,0 +1,20 @@
+apiVersion: "fabric.cognitivescale.com/v1"
+kind: "Connection"
+metadata:
+  "name": "member-flu-risk"
+spec:
+  title: "member-flu-risk"
+  description: ""
+  connectionType: "s3"
+  contentType: "parquet"
+  allowRead: true
+  allowWrite: false
+  params:
+  - name: "uri"
+    value: "s3a://ol-test-data/member_flu_risk_v14.parquet"
+  - name: "publicKey"
+    value: "AKIAY4JSNX4D2OMJE3UN"
+  - name: "secretKey"
+    value: "#SECURE.awssecret"
+  - name: "s3Endpoint"
+    value: "http://s3.us-east-1.amazonaws.com"

@@ -1,0 +1,20 @@
+apiVersion: "fabric.cognitivescale.com/v1"
+kind: "DataSource"
+metadata:
+  "name": "member-feedback"
+spec:
+  kind: "batch"
+  primaryKey: "member_id"
+  attributes:
+  - "hrfsm_feedback_call_made"
+  - "hrfsm_feedback_call_ignored"
+  - "member_id"
+  - "intervention_date"
+  - "hrfsm_feedback_comms_ignored"
+  - "hrfsm_feedback_comms_made"
+  - "feedback_id"
+  - "feedback_date"
+  connection:
+    name: "member-feedback"
+  title: "member-feedback"
+  description: ""

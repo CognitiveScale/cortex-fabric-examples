@@ -1,0 +1,15 @@
+apiVersion: "fabric.cognitivescale.com/v1"
+kind: "DataSource"
+metadata:
+  "name": "member-flu-risk"
+spec:
+  kind: "batch"
+  primaryKey: "member_id"
+  attributes:
+  - "flu_risk_score"
+  - "member_id"
+  - "date"
+  connection:
+    name: "member-flu-risk"
+  title: "member-flu-risk"
+  description: ""
