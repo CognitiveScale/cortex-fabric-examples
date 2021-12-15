@@ -1,0 +1,42 @@
+camel: 1.0.0
+name: basic-ext-api
+title: basic-ext-api Title
+description: basic-ext-api Description
+
+inputs:
+  - name: request
+    title: request
+    routing:
+      all:
+        output: response
+        runtime: cortex/external-api
+
+outputs:
+  - name: response
+    title: response
+
+properties:
+  - name: url
+    title: URL
+    description: http[s]://host:port
+    required: true
+    type: String
+    defaultValue: https://httpbin.org
+  - name: path
+    title: API path
+    description: API URL Path
+    required: true
+    type: String
+    defaultValue: post
+  - name: method
+    title: HTTP Method
+    description: HTTP Method
+    required: true
+    type: String
+    defaultValue: POST
+  - name: headers.content-type
+    title: Content-Type header
+    description: Response Content Type
+    required: true
+    type: String
+    defaultValue: 'application/json'
