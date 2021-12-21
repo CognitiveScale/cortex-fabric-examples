@@ -1,0 +1,40 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+group 'com.example'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility=1.8
+targetCompatibility=1.8
+
+task fatJar(type: Jar) {
+    manifest {
+        attributes 'Main-Class': 'com.c12e.fabric.Main'
+    }
+    baseName = project.name + '-all'
+    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'com.zaxxer:HikariCP:3.2.0'
+    implementation 'com.sparkjava:spark-core:2.9.3'
+    implementation 'com.squareup.okhttp3:okhttp:3.11.0'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.0.1'
+
+    implementation fileTree(dir: 'lib', include: '*.jar')
+    runtime fileTree(dir: 'lib', include: '*.jar')
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+}
+
+test {
+    useJUnitPlatform()
+}
