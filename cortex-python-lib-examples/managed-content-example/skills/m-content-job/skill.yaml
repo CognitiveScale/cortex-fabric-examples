@@ -1,0 +1,33 @@
+camel: 1.0.0
+name: m-content-job
+title: m-content-job
+description: Managed Content Job Skill
+
+inputs:
+  - name: request
+    title: Job Request
+    parameters:
+      - name: params
+        type: object
+        description: Request Parameters
+        required: true
+    routing:
+      all:
+        action: m-content-job
+        runtime: cortex/jobs
+        output: response
+
+outputs:
+  - name: response
+    title: Job Response
+    parameters:
+      - name: result
+        type: object
+        description: Job Response
+        required: true
+
+actions:
+  - name: m-content-job
+    type: job
+    image: private-registry.dci-dev.dev-eks.insights.ai/m-content-job
+    environmentVariables: '"TEST"="value"'

@@ -1,0 +1,5 @@
+{
+  "payload":{
+    "command":"upload", "key":"m-content-job-content", "content":"I am here"
+  }
+}

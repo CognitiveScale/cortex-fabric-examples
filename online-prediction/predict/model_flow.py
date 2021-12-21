@@ -15,7 +15,7 @@ from predict.request_models import InvokeRequest
 model = None
 
 
-def load_model(api_endpoint: str, token: str, project_id: str, experiment_name: str, run_id: str):
+def load_model(api_endpoint: str, token: str, project_id: str, experiment_name: str, run_id: str, artifact_key: str):
     global model
 
     if not experiment_name:
@@ -29,7 +29,7 @@ def load_model(api_endpoint: str, token: str, project_id: str, experiment_name: 
     try:
         experiment = client.experiment(experiment_name)
         run = experiment.get_run(run_id) if run_id else experiment.last_run()
-        model = run.get_artifact('model')
+        model = run.get_artifact(artifact_key)
     except Exception as e:
         logging.error("Error: Failed to load model: {}".format(e))
         raise
@@ -41,7 +41,7 @@ async def process(request: InvokeRequest):
     global model
     if not model:
         load_model(request.api_endpoint, request.token, request.project_id, request.properties.experiment_name,
-                   request.properties.run_id)
+                   request.properties.run_id, request.properties.artifact_key)
 
     columns = request.payload.columns
     instances = request.payload.instances

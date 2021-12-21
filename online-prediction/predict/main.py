@@ -1,6 +1,5 @@
 """
 Copyright (c) 2021. Cognitive Scale Inc. All rights reserved.
-
 Licensed under CognitiveScale Example Code [License](https://cognitivescale.github.io/cortex-fabric-examples/LICENSE.md)
 """
 import logging
@@ -27,7 +26,7 @@ def init(request: InitializeRequest):
 
     try:
         load_model(request.api_endpoint, request.token, request.project_id, request.properties.experiment_name,
-                   request.properties.run_id)
+                   request.properties.run_id, request.properties.artifact_key)
     except ValueError as e:
         logging.error(traceback.format_exc())
         raise HTTPException(status_code=400, detail=str(e))
@@ -53,7 +52,7 @@ async def run(request: InvokeRequest):
         raise HTTPException(status_code=412, detail=str(e))
 
     return {
-        "payload": predictions.tolist()
+        "payload": {"request": request.payload, "response": predictions.tolist()}
     }
 
 

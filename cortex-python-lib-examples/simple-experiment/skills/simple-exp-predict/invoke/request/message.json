@@ -1,0 +1,6 @@
+{
+  "payload": {
+    "experiment_name":  "sample_experiment",
+    "instance": [[1.7],[1.5]]
+  }
+}
