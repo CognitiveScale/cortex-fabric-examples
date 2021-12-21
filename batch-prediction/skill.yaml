@@ -69,7 +69,12 @@ properties:
     type: string
     secure: false
     defaultValue: model
-
+  - name: model-id
+    title: Model ID
+    description: Model ID
+    required: true
+    type: string
+    secure: false
 
 tags:
   - label: template
