@@ -9,7 +9,8 @@ import json
 import subprocess
 import logging
 from cortex import Cortex
-from cortex.run import Run
+from cortex.utils import log_message, get_logger
+from cortex.experiment import Experiment, ExperimentClient
 
 
 def get_runtime_args(config):
@@ -34,13 +35,25 @@ if __name__ == '__main__':
     url = input_params["apiEndpoint"]
     token = input_params["token"]
     project = input_params["projectId"]
+    skill_name = input_params["skillName"]
     experiment_name = input_params["properties"]["experiment-name"]
     run_id = input_params["properties"]["run-id"]
     client = Cortex.client(api_endpoint=url, token=token, project=project)
-    experiment = client.experiment(experiment_name)
-    run = Run.from_json(experiment.get_run(run_id), experiment)
+    experiment_client = ExperimentClient(client)
+    result = experiment_client.get_experiment(experiment_name, project)
+    experiment = Experiment(result, project, experiment_client)
+    run = experiment.get_run(run_id)
+    conn_params = {}
+    connection = client.get_connection(input_params["properties"]["connection-name"])
+    for p in connection['params']:
+        conn_params.update({p['name']: p['value']})
     spark_config = run.get_artifact('spark-config')
-    logging.info("Spark Config: {}".format(str(spark_config)))
+    log_message(msg=f"Spark Config: {str(spark_config)}", log=get_logger(skill_name), level=logging.INFO)
+    spark_config["pyspark"]["options"]["--conf"]['spark.kubernetes.file.upload.path'] = input_params["properties"]["output-path"]
+    spark_config["pyspark"]["options"]["--conf"]['spark.hadoop.fs.s3a.access.key'] = conn_params.get('publicKey')
+    spark_config["pyspark"]["options"]["--conf"]['spark.hadoop.fs.s3a.secret.key'] = input_params["properties"]["aws-secret"]
+    spark_config["pyspark"]["options"]["--conf"]['spark.hadoop.fs.s3a.impl'] = "org.apache.hadoop.fs.s3a.S3AFileSystem"
+    spark_config["pyspark"]["options"]["--conf"]["spark.hadoop.fs.s3a.endpoint"] = conn_params.get("s3Endpoint")
     run_args = get_runtime_args(spark_config)
     run_args.append("src/main/python/main.py")
     run_args.append(json.dumps(input_params))
