@@ -40,6 +40,12 @@ properties:
     required: true
     type: string
     secure: false
+  - name: model-id
+    title: Model ID
+    description: Model ID
+    required: true
+    type: string
+    secure: false
   - name: aws-secret
     title: AWS Secret
     description: AWS Secret

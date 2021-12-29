@@ -5,7 +5,8 @@ Licensed under CognitiveScale Example Code [License](https://cognitivescale.gith
 """
 import sys
 from cortex import Cortex
-from cortex.run import Run
+from cortex.utils import log_message, get_logger
+from cortex.experiment import Experiment, ExperimentClient
 import json
 import numpy as np
 import logging
@@ -67,17 +68,19 @@ def initialize_spark_session(conf):
     return builder.getOrCreate()
 
 
-def load_model(client, experiment_name, run_id):
-    experiment = client.experiment(experiment_name)
-    run = Run.from_json(experiment.get_run(run_id), experiment)
+def load_model(client, experiment_name, run_id, project):
+    experiment_client = ExperimentClient(client)
+    result = experiment_client.get_experiment(experiment_name, project)
+    experiment = Experiment(result, project, experiment_client)
+    run = experiment.get_run(run_id)
     return run.get_artifact('model')
 
 
-def score_predictions(df, model, outcome, sc):
+def score_predictions(df, model, outcome, sc, skill_name):
     global broadcast_ml_model
     # Broadcasting ML model across nodes for parallel prediction
     broadcast_ml_model = sc.broadcast(model)
-    logging.info("Model Object:", broadcast_ml_model.value)
+    log_message(msg=f"Model Object: {str(broadcast_ml_model.value)}", log=get_logger(skill_name), level=logging.INFO)
     # Scoring using the Model
     return df.rdd.mapPartitions(predict_partition).toDF().withColumnRenamed("prediction", outcome)
 
@@ -87,6 +90,7 @@ def make_batch_predictions(input_params):
     url = input_params["apiEndpoint"]
     token = input_params["token"]
     project = input_params["projectId"]
+    skill_name = input_params["skillName"]
     outcome = input_params["properties"]["outcome"]
 
     # Initialize Cortex Client
@@ -96,10 +100,9 @@ def make_batch_predictions(input_params):
     connection = client.get_connection(input_params["properties"]["connection-name"])
     for p in connection['params']:
         conn_params.update({p['name']: p['value']})
-    logging.info("connection params", conn_params)
-
+    log_message(msg=f"Connection Params: {str(conn_params)}", log=get_logger(skill_name), level=logging.INFO)
     # Load Model from the experiment run
-    model = load_model(client, input_params["properties"]["experiment-name"], input_params["properties"]["run-id"])
+    model = load_model(client, input_params["properties"]["experiment-name"], input_params["properties"]["run-id"], project)
 
     if connection.get("connectionType") == "s3":
         output_path = input_params["properties"]["output-path"]
@@ -119,10 +122,10 @@ def make_batch_predictions(input_params):
         # Create spark data-frame for prediction
         df = spark.read.option("inferSchema", True).csv(file, header=True)
         df = df.drop(outcome)
-        logging.info(df.printSchema())
+        log_message(msg=f"DataFrame Schema: {str(df.printSchema())}", log=get_logger(skill_name), level=logging.INFO)
 
         # Make predictions
-        df = score_predictions(df, model, outcome, sc)
+        df = score_predictions(df, model, outcome, sc, skill_name)
         # Converting struct to double
         for t in df.dtypes:
             if t[1] == "struct<_1:double>":
@@ -143,10 +146,10 @@ def make_batch_predictions(input_params):
             .option("database", database) \
             .option("collection", collection).load()
         df = df.drop(outcome, "_id")
-        logging.info(df.printSchema())
+        log_message(msg=f"DataFrame Schema after Prediction: {str(df.printSchema())}", log=get_logger(skill_name), level=logging.INFO)
 
         # Score predictions
-        df = score_predictions(df, model, outcome, sc)
+        df = score_predictions(df, model, outcome, sc, skill_name)
         for t in df.dtypes:
             if t[1] == "struct<_1:double>":
                 df = df.withColumn(t[0], col(t[0]).getField("_1"))
