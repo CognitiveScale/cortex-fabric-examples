@@ -9,7 +9,6 @@ buildscript {
 
 plugins {
     id "com.github.hierynomus.license" version "0.15.0"
-    id 'com.palantir.git-version' version '0.11.0'
 }
 
 def exportedProjects= [
@@ -18,17 +17,6 @@ def exportedProjects= [
 ]
 
 allprojects {
-    def details = versionDetails()
-
-    ext.getProjectVersion = { ->
-
-        String line = details.lastTag + '.' + details.commitDistance + '-' + details.gitHash
-        if(!details.isCleanTag){
-            line = line + "-dirty"
-        }
-        line = line.replaceFirst("v", "")
-        return line;
-    }
     group "com.c12e"
     version null
 
@@ -38,7 +26,6 @@ allprojects {
     apply plugin: 'idea'
     apply plugin: 'com.github.johnrengelman.shadow'
     apply plugin: 'com.github.hierynomus.license'
-    apply plugin: 'com.palantir.git-version'
 
     license {
         header rootProject.file('CognitiveScaleLicense.txt')
@@ -60,7 +47,6 @@ allprojects {
 }
 
 subprojects {
-    def artifactVersion = getProjectVersion()
     configurations { testArtifacts.extendsFrom testRuntime }
 
     repositories {
@@ -71,7 +57,7 @@ subprojects {
     jar {
         manifest {
             attributes("Implementation-Title": project.name,
-                    "Implementation-Version": artifactVersion,
+                    "Implementation-Version": '0.1.0-SNAPSHOT',
                     "Project-Artifact": project.name)
         }
     }
