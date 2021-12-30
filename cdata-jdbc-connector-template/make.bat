@@ -21,8 +21,8 @@ GOTO :checkenv %*
 
 :deploy
 	echo Deploying %SKILL_NAME% ...
-    cmd /c cortex actions deploy --actionName cdata-jdbc-connector --actionType daemon --cmd '["/bin/sh","-c","java -jar /app/server.jar"]' --project %PROJECT_NAME% --docker %DOCKER_IMAGE_URL%
-    cmd /c cortex actions deploy --actionName grc-jdbc-connector --actionType daemon --cmd '["/bin/sh","-c","java -jar /app/server.jar"]' --project %PROJECT_NAME% --docker %DOCKER_IMAGE_URL%
+    cmd /c cortex actions deploy --actionName cdata-jdbc-connector --actionType daemon --project %PROJECT_NAME% --docker %DOCKER_IMAGE_URL%
+    cmd /c cortex actions deploy --actionName grc-jdbc-connector --actionType daemon --project %PROJECT_NAME% --docker %DOCKER_IMAGE_URL%
     cmd /c cortex skills save -y skill.yaml --project %PROJECT_NAME%
 	echo Waiting for Skill %SKILL_NAME% to deploy
 	TIMEOUT 10
