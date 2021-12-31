@@ -11,6 +11,7 @@ GOTO :checkenv %*
     cmd /c cortex models save model/model.json --project %PROJECT_NAME%
     cmd /c cortex experiments save model/experiment.json --project %PROJECT_NAME%
     cmd /c cortex experiments create-run model/run.json --project %PROJECT_NAME%
+    GOTO :EOF
 
 :build
 	echo Building %SKILL_NAME% action image...
@@ -40,13 +41,13 @@ GOTO :checkenv %*
 	GOTO :EOF
 
 :checkenv
-	echo Validating environment variables
-	IF "!DOCKER_PREGISTRY_URL!" == "" (
-		echo Environment variable DOCKER_PREGISTRY_URL is not set. Set it like <docker-registry-url>/<namespace-org>"
-		exit/b 1
-	)
-	IF "!PROJECT_NAME!" == ""  (
-		echo  "Environment variable PROJECT_NAME is not set. Set this to Cortex project name."
-		exit/b 1
-	)
-	GOTO :%1
+echo Validating environment variables
+IF not defined DOCKER_PREGISTRY_URL (
+	echo "Environment variable DOCKER_PREGISTRY_URL is not set. Set it like <docker-registry-url>/<namespace-org>"
+	GOTO :EOF
+)
+IF not defined PROJECT_NAME (
+	echo "Environment variable PROJECT_NAME is not set. Set this to Cortex project name."
+	GOTO :EOF
+)
+GOTO :%1
