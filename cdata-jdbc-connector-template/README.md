@@ -80,7 +80,7 @@ Properties:
           "{\"User\":\"username@example.com\",\"Password\":\"password\",\"Security Token\":\"<TOKEN>\"}"    
   * `run_time_key`: CDATA JAR RTK String
           
-* The Connection Metadata & Params for a cdata should be as below:
+* The Connection Metadata & Params for a jdbc should be as below:
 
   * `managed_content_key`: Managed Content Key where the driver jar is uploaded. Project to Upload should be Shared for driver reusability.
     
