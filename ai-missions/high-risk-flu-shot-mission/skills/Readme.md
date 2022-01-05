@@ -29,19 +29,47 @@ These skills will send flu-shot reminder notifications along with provider info 
 5. Send Virtual Care Notification
 6. Update Member Phone Number
 
-## Deployment steps
+#### Steps to build and deploy
 
-Set the evironment variable `PROJECT_NAME` using `export PROJECT_NAME=<project_name>` and `DOCKER_PRIV_REGISTRY_URL` using `export DOCKER_PRIV_REGISTRY_URL=<project_name>`, make sure to have access to the private registry being used, for cortex users it would be as simple as `cortex docker login`.
+Set environment variables `DOCKER_PREGISTRY_URL` (like <docker-registry-url>/<namespace-org>) and `PROJECT_NAME` (Cortex Project Name), and use build scripts to build and deploy.
 
-`make all` builds and deploys all the skills along with saving the actions, types and skills.
+Configure Docker auth to the private registry:
+1. For Cortex DCI with Docker registry installed use `cortex docker login`
+2. For external Docker registries like Google Cloud's GCR etc use their respective CLI for Docker login
 
-To individually run through the steps we can:
-1. `make save-type`
-2. `make build`
+##### On *nix systems
+A Makefile is provided to do these steps.
+* `export DOCKER_PREGISTRY_URL=<docker-registry-url>/<namespace-org>`
+* `export PROJECT_NAME=<cortex-project>`
+* `make all` will build and push Docker image, deploy Cortex Action and Skill, and then invoke Skill to test.##### On *nix systems
+A Makefile is provided to do these steps.
+* `export DOCKER_PREGISTRY_URL=<docker-registry-url>/<namespace-org>`
+* `export PROJECT_NAME=<cortex-project>`
+* `make all` will build and push Docker image, deploy Cortex Action and Skill, and then invoke Skill to test.
+
+ > To individually run through the steps we can:
+1. `make build`
+2. `make push`
+33. `make deploy`
+
+ > To check the status
+* `make get`
+ 
+ > To run tests
+* `make tests`
+
+##### On Windows systems
+A `make.bat` batch file is provided to do these steps.
+* `set DOCKER_PREGISTRY_URL=<docker-registry-url>/<namespace-org>`
+* `set PROJECT_NAME=<cortex-project>`
+
+  > Below commands will build and push Docker image, deploy Cortex Action and Skill, and then invoke Skill to test.
+1. `make build`
+2. `make push`
 3. `make deploy`
-4. `make save-skill`
 
+ > To check the status
+* `make get`
 
-
-
-
+ > To run tests
+* `make tests`
