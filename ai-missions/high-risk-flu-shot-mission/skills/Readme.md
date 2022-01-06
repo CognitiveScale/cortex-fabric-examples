@@ -35,7 +35,7 @@ Set environment variables `DOCKER_PREGISTRY_URL` (like <docker-registry-url>/<na
 
 Configure Docker auth to the private registry:
 1. For Cortex DCI with Docker registry installed use `cortex docker login`
-2. For external Docker registries like Google Cloud's GCR etc use their respective CLI for Docker login
+2. For external Docker registries like Google Cloud's GCR, ECR, ACR etc use their respective CLI for Docker login
 
 ##### On *nix systems
 A Makefile is provided to do these steps.
