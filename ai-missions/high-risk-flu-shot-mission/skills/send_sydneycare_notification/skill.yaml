@@ -1,0 +1,28 @@
+camel: 1.0.0
+name: hw/sydneycare
+title: Sydneycare Notification
+description: Sends nearest flu shot centre information to the members
+inputs:
+  - name: request
+    title: request
+    parameters:
+      $ref: InterventionRequest
+    routing:
+      all:
+        action: hw/sydneycare
+        runtime: cortex/functions
+        output: response
+
+outputs:
+  - name: response
+    title: response
+    parameters:
+      $ref: InterventionResponse
+
+properties:
+  - name: daemon.port
+    title: Daemon Port
+    description: port
+    required: true
+    type: Number
+    defaultValue: 6000
