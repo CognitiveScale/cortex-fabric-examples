@@ -1,8 +1,0 @@
-{
-  "table_mapping": {
-    "intervention_mapping": "mapping",
-    "rl":  "rl",
-    "members": "member_base",
-    "hospital_data": "health_care_centres"
-  }
-}
