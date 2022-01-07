@@ -9,7 +9,7 @@ GOTO :checkenv %*
 
 :build
 	echo Building %DOCKER_IMAGE_URL% action image...
-	xcopy /s ..\..\common .\src
+	xcopy /s ..\..\common .\src\common /i
 	cmd /c docker build -t %DOCKER_IMAGE_URL% .
 	echo done building %DOCKER_IMAGE% action image
 	GOTO :EOF
