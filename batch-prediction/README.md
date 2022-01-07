@@ -18,6 +18,8 @@ Cortex Batch Prediction Skill that runs a background job which makes predictions
 * `connection-name`: Connection used to read and write data
 * `experiment-name`: Experiment name to retrieve Models
 * `run-id`: Run id of the experiment
+* `model-artifact` Artifact key of the uploaded model
+* `model-id` ModelID of the saved model
 * `outcome`: Prediction class or label in the dataset
 * `output-path`: Output S3 path to save the predictions
 * `output-collection`: Output Mongo collection to save the predictions

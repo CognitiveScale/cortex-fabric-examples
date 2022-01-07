@@ -38,17 +38,9 @@ A `make.bat` batch file is provided to do these steps.
 
 ### Building Step by Step:
 
-* Gradle Build with tests
-```
-make gradle.build
-```
-* Gradle Build without tests
-```
-make gradle.build.skip-tests
-```
 * Build Docker Image:
 ```build docker
-make push
+make build
 ```
 * Push Docker Image:
 ```push docker
