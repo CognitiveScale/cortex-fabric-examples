@@ -1,0 +1,33 @@
+camel: 1.0.0
+name: basic-job
+title: basic-job Title
+description: basic-job Description
+
+inputs:
+  - name: request
+    title: Job Request
+    parameters:
+      - name: params
+        type: object
+        description: Request Parameters
+        required: true
+    routing:
+      all:
+        action: basic-job
+        runtime: cortex/jobs
+        output: response
+
+outputs:
+  - name: response
+    title: Job Response
+    parameters:
+      - name: result
+        type: object
+        description: Job Response
+        required: true
+
+actions:
+  - name: basic-job
+    type: job
+    image: private-registry.trainingv6.cognitiveu.insights.ai/basic-job
+    environmentVariables: '"TEST"="value"'
