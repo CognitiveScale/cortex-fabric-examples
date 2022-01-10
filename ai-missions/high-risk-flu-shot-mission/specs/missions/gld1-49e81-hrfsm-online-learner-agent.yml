@@ -1,0 +1,78 @@
+apiVersion: "fabric.cognitivescale.com/v1"
+kind: "Agent"
+metadata:
+  "name": "gld1-49e81-hrfsm-online-learner-agent"
+spec:
+  title: "Ensure at risk members get flu shots"
+  publish: true
+  inputs:
+  - name: "online_learner_service"
+    title: "online_learner_input"
+    signalType: "Service"
+    signalId: "e47178d1-a3dd-424d-b42d-72defc601bca"
+    parameters:
+    - name: "payload"
+      type: "object"
+      title: "payload"
+      description: null
+      format: null
+      required: false
+    output: "online_learner_service"
+  outputs:
+  - name: "online_learner_service"
+    title: "online_learner_output"
+    signalType: "Service"
+    signalId: "647f0ec1-304c-4a89-a955-4e578ced87fe"
+    parameters:
+    - name: "payload"
+      type: "object"
+      title: "payload"
+      description: null
+      format: null
+      required: false
+  skills:
+  - skillName: "hrfsm-ol"
+    title: "hrfsm-ol"
+    refId: "3eb8fbbb-6414-44d7-859b-6994b1fdd362"
+    properties: []
+  - skillName: "agent-invoke"
+    title: "Agent invoke"
+    refId: "464e3ea9-d39f-4961-8c55-d198f0c13df2"
+    properties:
+    - name: "agentName"
+      value: "hrfsm"
+    - name: "serviceName"
+      value: "cohort_manager_service"
+  mappings:
+  - from:
+      type: "com.c12e.cortex.phoenix.spec.AgentInputMapping"
+      input:
+        signalId: "e47178d1-a3dd-424d-b42d-72defc601bca"
+    to:
+      type: "com.c12e.cortex.phoenix.spec.SkillOutputMapping"
+      skill:
+        refId: "3eb8fbbb-6414-44d7-859b-6994b1fdd362"
+        input: "online_learner_input"
+    rules: []
+  - from:
+      type: "com.c12e.cortex.phoenix.spec.SkillInputMapping"
+      skill:
+        refId: "3eb8fbbb-6414-44d7-859b-6994b1fdd362"
+        output: "online_learner_output"
+    to:
+      type: "com.c12e.cortex.phoenix.spec.SkillOutputMapping"
+      skill:
+        refId: "464e3ea9-d39f-4961-8c55-d198f0c13df2"
+        input: "input"
+    rules: []
+  - from:
+      type: "com.c12e.cortex.phoenix.spec.SkillInputMapping"
+      skill:
+        refId: "464e3ea9-d39f-4961-8c55-d198f0c13df2"
+        output: "output"
+    to:
+      type: "com.c12e.cortex.phoenix.spec.AgentOutputMapping"
+      output:
+        signalId: "647f0ec1-304c-4a89-a955-4e578ced87fe"
+    rules: []
+  properties: []

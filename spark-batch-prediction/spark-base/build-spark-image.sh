@@ -1,6 +1,6 @@
 #!/bin/bash
 
-spark_version=3.0.2
+spark_version=3.2.0
 hadoop_version=3.2
 
 cd spark-base

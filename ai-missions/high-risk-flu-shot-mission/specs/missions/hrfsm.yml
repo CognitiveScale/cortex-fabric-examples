@@ -1,0 +1,199 @@
+apiVersion: "fabric.cognitivescale.com/v1"
+kind: "Mission"
+metadata:
+  "name": "hrfsm"
+spec:
+  campaign:
+    name: "ipc"
+  title: "Ensure at risk members get flu shots"
+  description: "Ensure at risk members get flu shots"
+  subject:
+    cohort: "High Risk Flu Members"
+  goal:
+    name: "Increase percentage of members that receive annual flu vaccinations"
+    condition: "has_flu_shot.equalTo(true)"
+  simulatedAttributes:
+  - name: "has_flu_shot"
+    dataType: "boolean"
+    initialValue: "false"
+  - name: "hrfsm_feedback_comms_made"
+    dataType: "integer"
+    initialValue: "0"
+  - name: "hrfsm_feedback_comms_ignored"
+    dataType: "integer"
+    initialValue: "0"
+  - name: "hrfsm_feedback_call_made"
+    dataType: "integer"
+    initialValue: "0"
+  - name: "hrfsm_feedback_call_ignored"
+    dataType: "integer"
+    initialValue: "0"
+  conditions:
+  - name: "isMedicare"
+    expression: "segment.eq(\"Medicare\")"
+  - name: "noFluShot"
+    expression: "has_flu_shot.eq(false)"
+  - name: "notMedicare"
+    expression: "segment.neq(\"Medicare\")"
+  - name: "isNational"
+    expression: "segment.eq(\"National Accounts\")"
+  - name: "isLocalGroup"
+    expression: "segment.eq(\"Local Group\")"
+  - name: "isCommercial"
+    expression: "isNational.or(isLocalGroup)"
+  - name: "isFluHighRisk"
+    expression: "flu_risk_score.gt(0.5)"
+  - name: "isFluCriticalRisk"
+    expression: "flu_risk_score.gt(0.8)"
+  - name: "isFluLowRisk"
+    expression: "flu_risk_score.lte(0.5)"
+  - name: "havePhoneNumber"
+    expression: "has_phone_number.eq(true)"
+  - name: "missingPhoneNumber"
+    expression: "has_phone_number.eq(false)"
+  - name: "allowedToCall"
+    expression: "do_not_call.eq(0)"
+  - name: "canCall"
+    expression: "allowedToCall.and(havePhoneNumber)"
+  - name: "fluCommIgnored"
+    expression: "hrfsm_feedback_comms_ignored.eq(1)"
+  - name: "commercialHighRisk"
+    expression: "isCommercial.and(isFluHighRisk)"
+  - name: "isMedicareOrCommercialHighRisk"
+    expression: "isMedicare.or(commercialHighRisk)"
+  - name: "medicareOrHighRiskCommercial"
+    expression: "noFluShot.and(isMedicareOrCommercialHighRisk)"
+  - name: "criticalRiskCommercial"
+    expression: "isCommercial.and(isFluCriticalRisk)"
+  - name: "highRiskMedicare"
+    expression: "isMedicare.and(isFluHighRisk)"
+  - name: "followUpConditions"
+    expression: "noFluShot.and(fluCommIgnored)"
+  - name: "highestRiskGroup"
+    expression: "criticalRiskCommercial.or(highRiskMedicare)"
+  - name: "highRiskFollowUp"
+    expression: "followUpConditions.and(highestRiskGroup)"
+  - name: "prefersSydney"
+    expression: "channel_pref.eq('SydneyCare')"
+  - name: "notPrefersSydney"
+    expression: "channel_pref.neq('SydneyCare')"
+  - name: "prefersPhone"
+    expression: "channel_pref.eq('Phone')"
+  interventions:
+  - name: "Call member about flu shots"
+    condition: "medicareOrHighRiskCommercial"
+    effects:
+    - script: "hrfsm_feedback_call_ignored = 1;\nhrfsm_feedback_call_made = 0;"
+      probability: 0.9
+    - script: "hrfsm_feedback_call_ignored = 0;\nhrfsm_feedback_call_made = 1;"
+      probability: 0.8
+    cost: 0.8
+    action:
+      type: "skill"
+      skill:
+        name: "hw/nursline"
+    timeout: 3
+    timeout_unit: "second"
+  - name: "Use SydneyCare Bot to Prompt member to schedule a flu shot"
+    condition: "medicareOrHighRiskCommercial.and(prefersSydney)"
+    effects:
+    - script: "has_flu_shot = true"
+      probability: 0.01
+    - script: "hrfsm_feedback_comms_ignored = 1;\nhrfsm_feedback_comms_made = 0;"
+      probability: 0.7
+    - script: "hrfsm_feedback_comms_ignored = 0;\nhrfsm_feedback_comms_made = 1;"
+      probability: 0.3
+    cost: 0.01
+    action:
+      type: "skill"
+      skill:
+        name: "hw/nursline"
+    timeout: 6
+    timeout_unit: "day"
+  - name: "Prompt member via Email about flu shots"
+    condition: "medicareOrHighRiskCommercial"
+    effects:
+    - script: "has_flu_shot = true"
+      probability: 0.05
+    - script: "hrfsm_feedback_comms_ignored = 1;\nhrfsm_feedback_comms_made = 0;"
+      probability: 0.4
+    - script: "hrfsm_feedback_comms_ignored = 0;\nhrfsm_feedback_comms_made = 1;"
+      probability: 0.6
+    cost: 0.6
+    action:
+      type: "skill"
+      skill:
+        name: "hw/nursline"
+    timeout: 15
+    timeout_unit: "minute"
+  - name: "Outreach nurse contacts high flu risk member (AgentAssist)"
+    condition: "highRiskFollowUp.and(canCall)"
+    effects:
+    - script: "has_flu_shot = true"
+      probability: 0.85
+    - script: "hrfsm_feedback_comms_ignored = 1;\nhrfsm_feedback_comms_made = 0;"
+      probability: 0.1
+    - script: "hrfsm_feedback_comms_ignored = 0;\nhrfsm_feedback_comms_made = 1;"
+      probability: 0.9
+    cost: 0.3
+    action:
+      type: "skill"
+      skill:
+        name: "hw/nursline"
+    timeout: 3
+    timeout_unit: "minute"
+  - name: "Prompt member via SMS about flu shots"
+    condition: "highRiskFollowUp.and(prefersSydney)"
+    effects:
+    - script: "has_flu_shot = true"
+      probability: 0.25
+    - script: "hrfsm_feedback_comms_ignored = 1;\nhrfsm_feedback_comms_made = 0;"
+      probability: 0.5
+    - script: "hrfsm_feedback_comms_ignored = 0;\nhrfsm_feedback_comms_made = 1;"
+      probability: 0.5
+    cost: 0.2
+    action:
+      type: "skill"
+      skill:
+        name: "hw/nursline"
+    timeout: 2
+    timeout_unit: "hour"
+  simulation:
+    iterations: 100
+    seed: 7
+    order: []
+    limit: 100
+    attributes:
+    - "avg_flu_risk"
+    - "flu_risk_1_pct"
+    - "is_flu_risk_1_pct"
+    - "has_phone_number"
+    - "age_group"
+    - "pcp_name"
+    - "state_code"
+    - "city"
+    - "state"
+    - "zip_code"
+    - "gender"
+    - "segment"
+    - "member_health_plan"
+    - "is_PCP_auto_assigned"
+    - "pcp_tax_id"
+    - "phone"
+    - "do_not_call"
+    - "channel_pref"
+    - "age"
+    - "last_flu_shot_date"
+    - "flu_risk_score"
+    - "has_flu_shot"
+    - "hrfsm_feedback_comms_made"
+    - "hrfsm_feedback_comms_ignored"
+    - "hrfsm_feedback_call_made"
+    - "hrfsm_feedback_call_ignored"
+    exploration:
+    - type: "EpsilonGreedy"
+      epsilon: 0.05
+      lambda: null
+    policy:
+    - "dr"
+  simulationV2: null

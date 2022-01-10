@@ -123,6 +123,8 @@ iii. Build the docker image from project root directory
       pickle.dump(config, open('config.pickle', 'wb'))
    ```
 
+[Refer](https://spark.apache.org/docs/latest/running-on-kubernetes.html#accessing-driver-ui) to this docs for accessing Sparl UI during job run.
+
 The Skill is added to the Cortex Fabric catalog and can be used as template and is available for selection when building interventions or Agents.
 
    Skills that are deployed may be invoked (run) either independently or within an agent.

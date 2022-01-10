@@ -1,0 +1,28 @@
+camel: 1.0.0
+name: hw/update-phone
+title: Update member phone number
+description: Update member phone number
+inputs:
+  - name: request
+    title: request
+    parameters:
+      $ref: InterventionRequest
+    routing:
+      all:
+        action: hw/update-phone
+        runtime: cortex/functions
+        output: response
+
+outputs:
+  - name: response
+    title: response
+    parameters:
+      $ref: InterventionResponse
+
+properties:
+  - name: daemon.port
+    title: Daemon Port
+    description: port
+    required: true
+    type: Number
+    defaultValue: 6000

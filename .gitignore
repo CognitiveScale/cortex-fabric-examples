@@ -5,3 +5,6 @@
 .vscode
 venv/
 dist
+ai-missions/*/skills/*/src/common
+spark-batch-prediction/spark-base/spark-*-bin-hadoop*
+spark-batch-prediction/spark-base/spark.tgz

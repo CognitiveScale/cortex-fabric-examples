@@ -3,8 +3,12 @@
 Cortex Skill Template for Generic and CDATA JDBC connections
 
 ### Requirements:
-- Java >= 8
-- Gradle 3.4.x+
+- cortex-cli 2.0.x
+- Docker
+
+### Developer Notes (Local environment setup for updating example):
+- Java 1.8 (confirm with checking `javac -version`, as we need JDK for development)
+- Gradle will be downloaded in not installed
 
 Uses hikari but doesn't parse the extra params CDATA has../CDATA specific plugin, require extra parsing for CData params.
 
@@ -13,34 +17,34 @@ Uses hikari but doesn't parse the extra params CDATA has../CDATA specific plugin
 * jdbc-service-harness - daemon code, load plugins, ...
 * jdbc-service-lib - base library for creating plug-ins
 
-### Installation Steps:
+#### Steps to build and deploy
 
-* First setup environment variables for docker registry and project like below:
-```
-export PROJECT_NAME=shared
-export DOCKER_PREGISTRY_URL=private-registry.dci-dev.dev-eks.insights.ai
-```
+Set environment variables `DOCKER_PREGISTRY_URL` (like <docker-registry-url>/<namespace-org>) and `PROJECT_NAME` (Cortex Project Name), and use build scripts to build and deploy.
+Configure Docker auth to the private registry:
+  1. For Cortex DCI with Docker registry installed use `cortex docker login`
+  2. For external Docker registries like Google Cloud's GCR etc use their respective CLI for Docker login
 
-* Run make all command below to run all the installation steps after doing docker login.
+##### On *nix systems
+A Makefile is provided to do these steps.
+* `export DOCKER_PREGISTRY_URL=<docker-registry-url>/<namespace-org>`
+* `export PROJECT_NAME=<cortex-project>`
+* `make all` will build and push Docker image, deploy Cortex Action and Skill, and then invoke Skill to test.
 
-```
-cortex docker login
-make all
-```
+##### On Windows systems
+A `make.bat` batch file is provided to do these steps.
+* `set DOCKER_PREGISTRY_URL=<docker-registry-url>/<namespace-org>`
+* `set PROJECT_NAME=<cortex-project>`
+  > Below commands will build and push Docker image, deploy Cortex Action and Skill, and then invoke Skill to test.
+* `make build`
+* `make push`
+* `make deploy`
+* `make tests`
 
 ### Building Step by Step:
 
-* Gradle Build with tests
-```
-make gradle.build
-```
-* Gradle Build without tests
-```
-make gradle.build.skip-tests
-```
 * Build Docker Image:
 ```build docker
-make push
+make build
 ```
 * Push Docker Image:
 ```push docker
@@ -65,14 +69,14 @@ Properties:
       
 * The Connection Metadata & Params for a cdata should be as below:
       
-  *  `managed_content_key`: Managed Content Key where the driver jar is uploaded. Project to Upload should be Shared for driver reusability.
+  *  `managed_content_key`: Managed Content Key where the driver jar is uploaded. Project to Upload should be `shared` for driver re-usability.
        
   * `plugin_properties`: JSON String with Cdata Connection Params for Salesforce:
           
           "{\"User\":\"username@example.com\",\"Password\":\"password\",\"Security Token\":\"<TOKEN>\"}"    
   * `run_time_key`: CDATA JAR RTK String
           
-* The Connection Metadata & Params for a cdata should be as below:
+* The Connection Metadata & Params for a jdbc should be as below:
 
   * `managed_content_key`: Managed Content Key where the driver jar is uploaded. Project to Upload should be Shared for driver reusability.
     
