@@ -23,11 +23,10 @@ A system generated Skill based on the custom daemon Skill template.
 
 ## Generate the Skill
 
-You've already done this via:
+The Skill should have been generated previously. If not, please use the following links for more information on how to continue building, pushing, deploying, developing, and invoking your Skill.
 - [VS Code Extension](https://cognitivescale.github.io/cortex-code/)
 - [Skill Builder in the Fabric Console](https://cognitivescale.github.io/cortex-fabric/docs/build-skills/skill-builder-ui)
 
-Please use the above links for more information on how to continue building, pushing, deploying, developing, and invoking your Skill.
 
 > NOTE: Modify the following files for your specific use case:
 > - `docs/basic-daemon/README.md`
