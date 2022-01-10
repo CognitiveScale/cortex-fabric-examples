@@ -6,6 +6,10 @@ Cortex Skill Template for Generic and CDATA JDBC connections
 - cortex-cli 2.0.x
 - Docker
 
+### Developer Notes (Local environment setup for updating example):
+- Java 1.8 (confirm with checking `javac -version`, as we need JDK for development)
+- Gradle will be downloaded in not installed
+
 Uses hikari but doesn't parse the extra params CDATA has../CDATA specific plugin, require extra parsing for CData params.
 
 ### Contents:
