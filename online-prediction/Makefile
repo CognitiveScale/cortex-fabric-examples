@@ -14,7 +14,7 @@ push: check-env
 	docker push ${DOCKER_IMAGE_URL}
 
 deploy: check-env
-	cortex actions deploy --actionName ${SKILL_NAME} --actionType daemon --docker ${DOCKER_IMAGE_URL} --project ${PROJECT_NAME}
+	cortex actions deploy --actionName ${SKILL_NAME} --actionType daemon --docker ${DOCKER_IMAGE_URL} --port '6000' --project ${PROJECT_NAME}
 	cortex types save -y types/types.yaml --project ${PROJECT_NAME}
 	cortex skills save -y skill.yaml --project ${PROJECT_NAME}
 

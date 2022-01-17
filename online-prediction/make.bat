@@ -28,7 +28,7 @@ GOTO :checkenv %*
 
 :deploy
 	echo Deploying %SKILL_NAME% ...
-    cmd /c cortex actions deploy --actionName %SKILL_NAME% --actionType daemon --project %PROJECT_NAME% --docker %DOCKER_IMAGE_URL%
+    cmd /c cortex actions deploy --actionName %SKILL_NAME% --actionType daemon --port 6000 --project %PROJECT_NAME% --docker %DOCKER_IMAGE_URL%
     cmd /c cortex types save -y types/types.yaml --project %PROJECT_NAME%
     cmd /c cortex skills save -y skill.yaml --project %PROJECT_NAME%
 	echo Waiting for Skill %SKILL_NAME% to deploy
