@@ -43,6 +43,9 @@ cortex experiments upload-artifact <experiment-name> <run-id> model/german_credi
 
        cortex models publish <model-name> --project <PROJECT_NAME>
 
+Note:
+> In case the model.pickle is updated we need to invoke `/init` endpoint to reflect the new model or, restart the skill.
+
 #### Steps to build and deploy
 
 Set environment variables `DOCKER_PREGISTRY_URL` (like <docker-registry-url>/<namespace-org>) and `PROJECT_NAME` (Cortex Project Name), and use build scripts to build and deploy.
