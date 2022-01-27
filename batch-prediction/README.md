@@ -2,6 +2,9 @@
 
 Cortex Batch Prediction Skill that runs a background job which makes predictions in batches using the model.
 
+### Requirements:
+- cortex-cli 2.0.x
+- Docker
 
 #### File Structure:
 * `skill.yaml` Skill definition
@@ -15,6 +18,8 @@ Cortex Batch Prediction Skill that runs a background job which makes predictions
 * `connection-name`: Connection used to read and write data
 * `experiment-name`: Experiment name to retrieve Models
 * `run-id`: Run id of the experiment
+* `model-artifact` Artifact key of the uploaded model
+* `model-id` ModelID of the saved model
 * `outcome`: Prediction class or label in the dataset
 * `output-path`: Output S3 path to save the predictions
 * `output-collection`: Output Mongo collection to save the predictions
@@ -29,14 +34,12 @@ If not create one by invoking
        cd ..
        
 3. Create Model and Experiment:
-            
-       ./model/init.sh <PROJECT_NAME> 
-        
-4. Upload a model file to the cortex experiment from cortex cli before invoking the skill.
+```shell
+make init
+cortex experiments upload-artifact <experiment-name> <run-id> model/german_credit_model.pickle <artifact-key> --project <PROJECT_NAME>
+```
 
-       cortex experiments upload-artifact <experiment-name> <run-id> model/german_credit_model.pickle <artifact-key> --project <PROJECT_NAME>
-       
-5. Publish model:
+4. Publish model:
 
        cortex models publish <model-name> --project <PROJECT_NAME>
 
@@ -48,21 +51,31 @@ If not create one by invoking
                     
         We directly pass the trained model object here after model.fit()
         example: DecisionTreeClassifier()
-        
-#### Deployment Steps
 
-A Makefile is provided to do these steps. Set environment variables `DOCKER_PREGISTRY_URL` (like <docker-registry-url>/<namespace-org>), `PROJECT_NAME` and use Makefile to deploy Skill.<br>
-        
-        export DOCKER_PREGISTRY_URL=<private-registry-url> (Don't export this if you want to use the default environment specific cortex-private-registry)
-        export PROJECT_NAME=shared  #Templates will be deployed to Shared Project
-        
-* `Note`: Models & artifacts should be created/uploaded to current project and templates should be deployed to shared project
+#### Steps to build and deploy
 
-* Build and push Docker image, deploy Cortex Action and Skill.
-        
-        make all 
+Set environment variables `DOCKER_PREGISTRY_URL` (like <docker-registry-url>/<namespace-org>) and `PROJECT_NAME` (Cortex Project Name), and use build scripts to build and deploy.
 
-Follow the below steps for deploying the skill manually.
+Configure Docker auth to the private registry:
+    1. For Cortex DCI with Docker registry installed use `cortex docker login`
+    2. For external Docker registries like Google Cloud's GCR etc use their respective CLI for Docker login
+
+##### On *nix systems
+A Makefile is provided to do these steps.
+* `export DOCKER_PREGISTRY_URL=<docker-registry-url>/<namespace-org>`
+* `export PROJECT_NAME=<cortex-project>`
+* `make all` will build and push Docker image, deploy Cortex Action and Skill, and then invoke Skill to test.
+
+##### On Windows systems
+A `make.bat` batch file is provided to do these steps.
+* `set DOCKER_PREGISTRY_URL=<docker-registry-url>/<namespace-org>`
+* `set PROJECT_NAME=<cortex-project>`
+  > Below commands will build and push Docker image, deploy Cortex Action and Skill, and then invoke Skill to test.
+* `make build`
+* `make push`
+* `make deploy`
+
+##### Follow the below steps for deploying the skill manually.
 
 1. Modify the `requirements.txt` file to provide packages or libraries that the action requires if any.
 2. Build the docker image (uses the `main.py` file)

@@ -1,0 +1,28 @@
+camel: 1.0.0
+name: hw/sc-chatbot
+title: Engage Sydneycare Chatbot Notification
+description: Sends notification to engage with chatbot to the members.
+inputs:
+  - name: request
+    title: request
+    parameters:
+      $ref: InterventionRequest
+    routing:
+      all:
+        action: hw/sc-chatbot
+        runtime: cortex/functions
+        output: response
+
+outputs:
+  - name: response
+    title: response
+    parameters:
+      $ref: InterventionResponse
+
+properties:
+  - name: daemon.port
+    title: Daemon Port
+    description: port
+    required: true
+    type: Number
+    defaultValue: 6000

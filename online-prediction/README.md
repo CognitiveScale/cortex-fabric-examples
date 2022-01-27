@@ -5,6 +5,9 @@ Long running Cortex skill serving REST API prediction requests
 Note:
 > This project assumes a `fast api server` with one endpoint `/invoke` that is run with the Uvicorn python3 binary; you may change to another framework or language.
 
+### Requirements:
+- cortex-cli 2.0.x
+- Docker
 
 #### Files
 * `skill.yaml` Skill definition
@@ -29,32 +32,44 @@ If not create one by invoking
        cd train
        python main.py
        cd ..
-       
-3. Create Model and Experiment:
-            
-       ./model/init.sh <PROJECT_NAME> 
-        
-4. Upload a model file to the cortex experiment from cortex cli before invoking the skill.
 
-       cortex experiments upload-artifact <experiment-name> <run-id> model/german_credit_model.pickle <artifact-key> --project <PROJECT_NAME>
-       
-5. Publish model:
+3. Create Model and Experiment:
+```shell
+make init
+cortex experiments upload-artifact <experiment-name> <run-id> model/german_credit_model.pickle <artifact-key> --project <PROJECT_NAME>
+```
+
+4. Publish model:
 
        cortex models publish <model-name> --project <PROJECT_NAME>
 
-#### Deployment Steps
+Note:
+> In case the model.pickle is updated we need to invoke `/init` endpoint to reflect the new model or, restart the skill.
 
-A Makefile is provided to do these steps. Set environment variables `DOCKER_PREGISTRY_URL` (like <docker-registry-url>/<namespace-org>), `PROJECT_NAME` and use Makefile to deploy Skill.<br>
-        
-        export DOCKER_PREGISTRY_URL=<private-registry-url> (Don't export this if you want to use the default environment specific cortex-private-registry)
-        export PROJECT_NAME=shared  #Templates will be deployed to Shared Project
-        
-* `Note`: Models & artifacts should be created/uploaded to current project and templates should be deployed to shared project
-* Build and push Docker image, deploy Cortex Action and Skill.
-        
-        make all 
+#### Steps to build and deploy
 
-Follow the below steps for deploying the skill manually.
+Set environment variables `DOCKER_PREGISTRY_URL` (like <docker-registry-url>/<namespace-org>) and `PROJECT_NAME` (Cortex Project Name), and use build scripts to build and deploy.
+
+Configure Docker auth to the private registry:
+1. For Cortex DCI with Docker registry installed use `cortex docker login`
+2. For external Docker registries like Google Cloud's GCR etc use their respective CLI for Docker login
+
+##### On *nix systems
+A Makefile is provided to do these steps.
+* `export DOCKER_PREGISTRY_URL=<docker-registry-url>/<namespace-org>`
+* `export PROJECT_NAME=<cortex-project>`
+* `make all` will build and push Docker image, deploy Cortex Action and Skill, and then invoke Skill to test.
+
+##### On Windows systems
+A `make.bat` batch file is provided to do these steps.
+* `set DOCKER_PREGISTRY_URL=<docker-registry-url>/<namespace-org>`
+* `set PROJECT_NAME=<cortex-project>`
+  > Below commands will build and push Docker image, deploy Cortex Action and Skill, and then invoke Skill to test.
+* `make build`
+* `make push`
+* `make deploy`
+
+##### Follow the below steps for deploying the skill manually.
 
 1. Modify the `requirements.txt` file to provide packages or libraries that the action requires.
 2. Build the docker image (uses the `main.py` file)

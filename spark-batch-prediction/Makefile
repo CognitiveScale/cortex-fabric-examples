@@ -30,6 +30,6 @@ types.save:
 	cortex types save -y types/types.yaml --project shared
 
 skill.save:
-	cortex skills save -y skill.yaml --project  shared
+	cortex skills save -y skill.yaml --project shared
 
 deploy.all: docker.push-all.spark-images docker.build.spark-batch-predict config.update.spark.image deploy.spark-batch-predict types.save skill.save

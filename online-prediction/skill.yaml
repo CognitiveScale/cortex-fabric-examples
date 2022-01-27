@@ -6,7 +6,7 @@ inputs:
   - name: request
     title: Predict Request
     parameters:
-      $ref: OnlinePredictRequest
+      $ref: OnlineRequest
 
     routing:
       all:
@@ -18,7 +18,7 @@ outputs:
   - name: response
     title: Predict Response
     parameters:
-      $ref: OnlinePredictResponse
+      $ref: OnlineResponse
 
 properties:
   - name: daemon.method
@@ -58,6 +58,12 @@ properties:
     type: string
     secure: false
     defaultValue: model
+  - name: model-id
+    title: Model ID
+    description: Model ID
+    required: true
+    type: string
+    secure: false
 
 tags:
     - label: template
