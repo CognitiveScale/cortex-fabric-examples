@@ -1,4 +1,11 @@
-FROM adoptopenjdk/openjdk8:x86_64-ubi-minimal-jre8u312-b07
-ADD /build/libs/jdbc-example-all-1.0-SNAPSHOT.jar jdbc-example-all-1.0-SNAPSHOT.jar
+FROM gradle:jdk11 AS builder
+WORKDIR /app
+COPY . .
+RUN ./gradlew clean build
+
+FROM openjdk:11-jre-slim-buster
+COPY --from=builder /app/build/distributions/jdbc-example-1.0-SNAPSHOT.tar jdbc-example-1.0-SNAPSHOT.tar
+RUN tar -xvf jdbc-example-1.0-SNAPSHOT.tar
+WORKDIR jdbc-example-1.0-SNAPSHOT
 EXPOSE 5000
-CMD ["java", "-cp", "lib","-jar", "jdbc-example-all-1.0-SNAPSHOT.jar"]
+CMD ["./bin/jdbc-example"]

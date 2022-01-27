@@ -2,6 +2,6 @@
     "name":"jdbc-example",
     "actionType":"daemon",
     "docker":"jdbc-example:latest",
-    "command": ["java", "-cp", "lib","-jar", "jdbc-example-all-1.0-SNAPSHOT.jar"],
+    "command": ["./bin/jdbc-example"],
     "port": "5000"
 }

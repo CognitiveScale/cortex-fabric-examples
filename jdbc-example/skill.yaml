@@ -37,3 +37,6 @@ properties:
     required: true
     type: String
     defaultValue: 5000
+tags:
+  - label: template
+    value: template

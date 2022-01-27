@@ -1,13 +1,12 @@
 IMAGE_TAG=latest
 SKILL_NAME=$(notdir $(CURDIR))
-DOCKER_IMAGE_URL=${DOCKER_PREGISTRY_URL}/${SKILL_NAME}:${IMAGE_TAG}
+DOCKER_IMAGE_URL=${SKILL_NAME}:${IMAGE_TAG}
 
 build: check-env
-	./gradlew clean build fatJar
 	docker build -t ${DOCKER_IMAGE_URL} .
 
 push: check-env
-	cortex docker login
+	#cortex docker login
 	docker push ${DOCKER_IMAGE_URL}
 
 deploy: check-env

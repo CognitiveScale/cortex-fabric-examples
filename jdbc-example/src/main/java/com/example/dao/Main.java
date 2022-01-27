@@ -1,11 +1,8 @@
-package com.c12e.fabric;
+package com.example.dao;
 
-import com.c12e.fabric.jdbc.FabricJdbcStatement;
-import com.example.dao.ConnectionManager;
+import com.c12e.fabric.ConfigurationProvider;
+import com.c12e.fabric.CortexClient;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Objects;
@@ -22,11 +19,13 @@ public class Main {
 
     public static void main(String[] args) {
         port(5000); // default Cortex Fabric daemon Action port
-        initExceptionHandler((e) -> e.printStackTrace());
+        initExceptionHandler(Throwable::printStackTrace);
 
-        ConnectionManager connectionManager = new ConnectionManager();
+        Example example = new HibernateExample();
+
         post("invoke", "application/json", (request, response) -> {
             try {
+                // cortex payload parsing
                 Map<String, Object> requestBody = ConfigurationProvider.mapper.readValue(request.body(), Map.class);
                 String endpoint = (String) requestBody.get("apiEndpoint");
                 String token = (String) requestBody.get("token");
@@ -40,18 +39,10 @@ public class Main {
                 if (allValuesPresent(connectionName, sql)) {
                     throw new RuntimeException("'connection_name' skill property and 'query' in payload must be provided");
                 }
-
-                if (!connectionName.equals(connectionManager.getConnectionPoolName())) { // if not initialized or connection name changed in skill properties
-                    ConfigurationProvider configClient = new CortexClient(endpoint, token, project, "lib");
-                    ConfigurationProvider.JdbcConnectionParams jdbcParams = configClient.getConnectionParams(connectionName);
-                    connectionManager.initializeHikariPool(jdbcParams);
-                }
-
-                try (Connection connection = connectionManager.getHikariPoolConnection();
-                     Statement statement = new FabricJdbcStatement(connection.createStatement());
-                     ResultSet resultSet = statement.executeQuery(sql)) {
-                    return connectionManager.convertToJSON(resultSet);
-                }
+                ConfigurationProvider configClient = new CortexClient(endpoint, token, project);
+                ConfigurationProvider.JdbcConnectionParams jdbcParams = configClient.getConnectionParams(connectionName);
+                example.setup(jdbcParams);
+                return example.execute(sql);
             } catch (Exception e) {
                 e.printStackTrace();
                 throw e;
