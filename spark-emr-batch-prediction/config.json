@@ -1,0 +1,21 @@
+{
+    "emr": {
+        "pyspark_bin": "spark-submit",
+        "options": {
+            "--deploy-mode": "cluster",
+            "--conf": {
+                "spark.executorEnv.YARN_CONTAINER_RUNTIME_TYPE": "docker",
+                "spark.executorEnv.YARN_CONTAINER_RUNTIME_DOCKER_IMAGE": "610527985415.dkr.ecr.us-east-1.amazonaws.com/emr-spark-template:spark-container-758411467",
+                "spark.executorEnv.PYSPARK_PYTHON": "python3",
+                "spark.yarn.appMasterEnv.YARN_CONTAINER_RUNTIME_TYPE": "docker",
+                "spark.yarn.appMasterEnv.YARN_CONTAINER_RUNTIME_DOCKER_IMAGE": "610527985415.dkr.ecr.us-east-1.amazonaws.com/emr-spark-template:spark-container-758411467",
+                "spark.yarn.appMasterEnv.PYSPARK_PYTHON": "python3"
+            }
+        }
+    },
+    "params": {
+        "CORTEX_URI": "https://api.dci-dev.dev-eks.insights.ai",
+        "CORTEX_TOKEN": ""
+    },
+    "spark_base": "610527985415.dkr.ecr.us-east-1.amazonaws.com/emr-spark-template"
+}

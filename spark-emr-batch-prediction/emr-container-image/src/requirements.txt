@@ -1,0 +1,6 @@
+numpy
+pandas==1.0.5
+cortex-python==6.1.0
+catboost==0.25.1
+scikit-learn==0.24.0
+ 
