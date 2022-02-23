@@ -19,9 +19,6 @@ config.update.spark.image:
 types.save: check-env
 	cortex types save -y types/types.yaml --project ${PROJECT_NAME}
 
-test:
-	cortex configure env
-	echo ${CORTEX_URL}
 
 skill.save: check-env
 	cortex actions deploy --actionName ${DOCKER_IMAGE} --actionType job --docker ${DOCKER_IMAGE_URL} --project ${PROJECT_NAME}

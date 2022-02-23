@@ -115,6 +115,8 @@ if __name__ == '__main__':
 
     # Set up s3 resources for the skill.
     s3_resource = boto3.resource('s3')
+    if input_params['properties'].startswith('s3://'):
+        input_params['properties'] = input_params['properties'].strip("s3://")
     bucket_name = input_params['properties'].pop('s3-bucket')
     script_file_name = 'emr-container-image/src/job.py'
     script_key = f'scripts/{script_file_name}'
