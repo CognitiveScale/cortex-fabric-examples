@@ -10,6 +10,9 @@ import json
 import sys
 import os
 
+from cortex import Cortex
+from cortex.experiment import Experiment, ExperimentClient
+
 
 def get_runtime_args(config):
     pyspark_args = config["emr"]
@@ -107,16 +110,26 @@ if __name__ == '__main__':
     input_params = json.loads(sys.argv[1])
     os.environ['AWS_ACCESS_KEY_ID'] = input_params['properties'].pop('aws-access-id')
     os.environ['AWS_SECRET_ACCESS_KEY'] = input_params['properties'].pop('aws-secret')
+    url = input_params["apiEndpoint"]
+    token = input_params["token"]
+    project = input_params["projectId"]
+    skill_name = input_params["skillName"]
+    experiment_name = input_params["properties"]["experiment-name"]
+    run_id = input_params["properties"]["run-id"]
 
-    with open('config.json') as f:
-        spark_config = json.load(f)
+    client = Cortex.client(api_endpoint=url, token=token, project=project)
+    experiment_client = ExperimentClient(client)
+    result = experiment_client.get_experiment(experiment_name, project)
+    experiment = Experiment(result, project, experiment_client)
+    run = experiment.get_run(run_id)
+    spark_config = run.get_artifact('spark-config')
     
     input_params = {**spark_config['params'], **input_params}
 
     # Set up s3 resources for the skill.
     s3_resource = boto3.resource('s3')
-    if input_params['properties'].startswith('s3://'):
-        input_params['properties'] = input_params['properties'].strip("s3://")
+    if input_params['properties']['s3-bucket'].startswith('s3://'):
+        input_params['properties']['s3-bucket'] = input_params['properties']['s3-bucket'].strip("s3://")
     bucket_name = input_params['properties'].pop('s3-bucket')
     script_file_name = 'emr-container-image/src/job.py'
     script_key = f'scripts/{script_file_name}'
@@ -126,6 +139,9 @@ if __name__ == '__main__':
                               )
 
     args = get_runtime_args(spark_config)
+    # remove unwanted params
+    input_params.pop('token')
+    input_params.pop('apiEndpoint')
 
     add_step(input_params['properties'].pop('cluster-id'), emr_client,
              args, f"s3://{bucket_name}/{script_key}", input_params)

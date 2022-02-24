@@ -1,4 +1,4 @@
-TAG := $(shell git describe --long --always --match='v*.*' | sed 's/v//; s/-/./')67
+TAG := $(shell git describe --long --always --match='v*.*' | sed 's/v//; s/-/./')
 SPARK_BASE_IMG := $(shell cat config.json | jq '.spark_base' | sed -e 's/^"//' -e 's/"$///')
 DOCKER_IMAGE=emr-job-submit# Docker Image Name
 DOCKER_IMAGE_URL=${DOCKER_PREGISTRY_URL}/${DOCKER_IMAGE}:skill-image-${TAG}
@@ -13,7 +13,6 @@ docker.build.skill.container: check-env
 	docker push ${DOCKER_IMAGE_URL}
 
 config.update.spark.image:
-	eval $(cortex configure env)
 	python update-container-image.py $(SPARK_BASE_IMG):spark-container-$(TAG) ${CORTEX_URI} ${CORTEX_TOKEN}
 
 types.save: check-env
@@ -35,5 +34,11 @@ ifndef DOCKER_PREGISTRY_URL
 endif
 ifndef PROJECT_NAME
 	$(error environment variable PROJECT_NAME is not set. Set this to Cortex project name.)
+endif
+ifndef CORTEX_URI
+	$(error environment variable CORTEX_URI is not set. Set this using `eval $(cortex configure env)`)
+endif
+ifndef CORTEX_TOKEN
+	$(error environment variable CORTEX_TOKEN is not set. Set this using `eval $(cortex configure env)`)
 endif
 

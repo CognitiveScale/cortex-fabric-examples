@@ -23,8 +23,29 @@ Update config.json with registry to push spark base & container images. In the c
 Builds & Pushes all the images and you can skip the below 5 steps upto save types:
 
         make deploy.all
+(make sure you have push access to registries in use in case of ECR
+ `aws ecr get-login-password --region region | docker login --username AWS --password-stdin aws_account_id.dkr.ecr.region.amazonaws.com` or `cortex docker login`
+)
+
+The `make deploy.all` updates `config.json` and generates `config.pickle` file(this is the spark config). We need to upload the the model and the config pickle file to the experiment (run-id) that we want to use. (For this example we can use the same model in [batch-predcition](https://github.com/CognitiveScale/cortex-fabric-examples/tree/master/batch-prediction/model) example)
+
+        ```
+        cortex experiments upload-artifact <experiment_name> <run_id> german_credit_model.pickle model --project <project_name>
+        cortex experiments upload-artifact <experiment_name> <run_id> config.pickle spark-config --project <project_name>
+        ```
 
 Setup the skill in an agent and invoke or use `make tests` after updating 
+
+Skill properties: There are certain skill properties that need to be provide for the skill to work
+Descriptions:
+1. EMR Cluster id - The EMR Cluster Id we want to submit the job to
+2. Experiment Name - The Experiment name for the model
+3. Run ID - The Run ID for the Experiment
+4. AWS Secret - The AWS Secret for an IAM that has EMR and S3 access
+5. AWS Access Key Id - The AWS Access key for the above secret
+6. S3 input path - The path for the input file
+7. S3 output path - The path where the predictions will be saved
+8. Prediction class or label - The label to be predicted
 
 ### About
 There are essentially 2 main ways to create an EMR cluster
