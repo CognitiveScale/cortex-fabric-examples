@@ -135,8 +135,5 @@ if __name__ == "__main__":
     if len(sys.argv) < 1:
         logging.error("Missing Arguments", file=sys.stderr)
         sys.exit(-1)
-    print("================")
-    print(sys.argv)
     params = json.loads(sys.argv[1])
-    print("================")
     make_batch_predictions(params)
