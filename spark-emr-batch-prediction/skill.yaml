@@ -10,7 +10,7 @@ inputs:
 
     routing:
       all:
-        action: emr-job-submit
+        action: emr-batch-predict
         runtime: cortex/jobs
         output: response
 

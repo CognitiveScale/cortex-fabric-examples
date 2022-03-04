@@ -6,8 +6,7 @@ Cortex skill that submits spark jobs to an external EMR cluster.
 
 - Python 3.x
 - Docker client
-- Cortex client ( installed )
-- URL/Credentials for a cortex instance
+- Cortex CLI 
 - EMR 6.X setup (EMR on EC2) and neccesary IAM roles setup for s3 and docker registry(either ECR or docker hub setup)
 - URL/Credentials for a cortex instance
 
@@ -16,13 +15,24 @@ job source code location `emr-container-image/src/job.py`
 job submit code location `submit-job.py`
 
 #### Steps
-Update config.json with registry to push spark base & container images. In the current example, we are pushing to 610527985415.dkr.ecr.us-east-1.amazonaws.com/emr-spark-template (an ECR registry, this can be a dockerhub repo as well, EMR needs to have access to this repo).
+
+We start by publishing the (trained)model we use for our predictions. For this example we are going to use the same model as [batch-predcition](https://github.com/CognitiveScale/cortex-fabric-examples/tree/master/batch-prediction/model) example). `cd` into the directory and run the following commands
+
+        make init
+        cortex experiments upload-artifact gc_dtree_exp ko90dzd model/german_credit_model.pickle model --project <project_emr>
+        cortex models publish german-credit-model --project demoemr
+
+We upload the file we want to make predictions on, to an S3 bucket. In this case it is going to be [batch-predcition](https://github.com/CognitiveScale/cortex-fabric-examples/tree/master/batch-prediction/train/german_credit_eval.csv) and keep a note of the s3 path which looks like, `s3://test-smr-remote/german_credit_eval.csv`, we need to pass this as a skill property value later.
+
+
+Update config.json with registry to push spark base & container images. In the current example, we are pushing to 610527985415.dkr.ecr.us-east-1.amazonaws.com/emr-spark-template (an ECR repo, this can be a dockerhub repo as well, EMR needs to have access to this repo).
         
         "spark_base": "610527985415.dkr.ecr.us-east-1.amazonaws.com/emr-spark-template"
 
 Builds & Pushes all the images and you can skip the below 5 steps upto save types:
 
         make deploy.all
+        
 (make sure you have push access to registries in use in case of ECR
  `aws ecr get-login-password --region region | docker login --username AWS --password-stdin aws_account_id.dkr.ecr.region.amazonaws.com` or `cortex docker login`
 )
@@ -120,4 +130,4 @@ The following configuration needs to be passed while setting up the cluster to s
 [Reference 1](https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-spark-docker.html)
 [Reference 2](https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-gs.html)
 
-For more details about how to build skills go to [Cortex Fabric Documentation - Development - Develop Skills](https://cognitivescale.github.io/cortex-fabric/docs/development/define-skills)
+For more details about how to build skills go to [Cortex Fabric Documentation - Development - Develop Skills](https://cognitivescale.github.io/cortex-fabric/docs/build-skills/define-skills)
