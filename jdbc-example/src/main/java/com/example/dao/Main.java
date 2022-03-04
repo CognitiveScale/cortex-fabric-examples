@@ -21,7 +21,7 @@ public class Main {
         port(5000); // default Cortex Fabric daemon Action port
         initExceptionHandler(Throwable::printStackTrace);
 
-        Example example = new HibernateExample();
+        Example example = new HikariExample();
 
         post("invoke", "application/json", (request, response) -> {
             try {
