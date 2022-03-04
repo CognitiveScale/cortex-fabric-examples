@@ -5,11 +5,15 @@
             "--deploy-mode": "cluster",
             "--conf": {
                 "spark.executorEnv.YARN_CONTAINER_RUNTIME_TYPE": "docker",
-                "spark.executorEnv.YARN_CONTAINER_RUNTIME_DOCKER_IMAGE": "610527985415.dkr.ecr.us-east-1.amazonaws.com/emr-spark-template:spark-container-758411467",
+                "spark.executorEnv.YARN_CONTAINER_RUNTIME_DOCKER_IMAGE": "610527985415.dkr.ecr.us-east-1.amazonaws.com/emr-spark-template:spark-container-062cd5e",
                 "spark.executorEnv.PYSPARK_PYTHON": "python3",
                 "spark.yarn.appMasterEnv.YARN_CONTAINER_RUNTIME_TYPE": "docker",
-                "spark.yarn.appMasterEnv.YARN_CONTAINER_RUNTIME_DOCKER_IMAGE": "610527985415.dkr.ecr.us-east-1.amazonaws.com/emr-spark-template:spark-container-758411467",
-                "spark.yarn.appMasterEnv.PYSPARK_PYTHON": "python3"
+                "spark.yarn.appMasterEnv.YARN_CONTAINER_RUNTIME_DOCKER_IMAGE": "610527985415.dkr.ecr.us-east-1.amazonaws.com/emr-spark-template:spark-container-062cd5e",
+                "spark.yarn.appMasterEnv.PYSPARK_PYTHON": "python3",
+                "spark.yarn.submit.waitAppCompletion": false,
+                "spark.executor.instances": 2,
+                "spark.executor.cores": 2,
+                "spark.executor.memory": "1g"
             }
         }
     },

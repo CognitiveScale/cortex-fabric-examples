@@ -34,7 +34,25 @@ The `make deploy.all` updates `config.json` and generates `config.pickle` file(t
         cortex experiments upload-artifact <experiment_name> <run_id> config.pickle spark-config --project <project_name>
         ```
 
-Setup the skill in an agent and invoke or use `make tests` after updating 
+Setup the skill in an agent and invoke or use `make tests` after updating payload.json in [tests](/tests)
+        ```
+        {
+            "payload":{
+                "input":null
+                },
+            "properties":{
+                "cluster-id":"j-2F41SXO8SHBXO", 
+                "experiment-name":"gc_dtree_exp",
+                "run-id":"so60yh3",
+                "aws-secret":"",
+                "s3-bucket":"",
+                "aws-access-id":"",
+                "input-file":"s3://test-smr-remote/german_credit_eval.csv",
+                "output-path":"s3://test-smr-remote/out-test",
+                "outcome":"outcome"
+            }
+        }
+        ```
 
 Skill properties: There are certain skill properties that need to be provide for the skill to work
 Descriptions:
