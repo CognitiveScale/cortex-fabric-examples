@@ -34,7 +34,8 @@ The `make deploy.all` updates `config.json` and generates `config.pickle` file(t
         cortex experiments upload-artifact <experiment_name> <run_id> config.pickle spark-config --project <project_name>
         ```
 
-Setup the skill in an agent and invoke or use `make tests` after updating payload.json in [tests](/tests)
+Setup the skill in an agent and invoke or use `make tests` after updating payload.json in [tests](./tests)
+        
         ```
         {
             "payload":{
@@ -86,7 +87,8 @@ Installation steps :
 Deployment steps are comprehensively detailed in a step wise manner in the blog [here](https://hangar.tech/posts/emr-docker/) the gist of which are (these can be considered pre requisites for us, to be able to submit jobs):
 
 Creating a file called install-docker.sh and copy the following into it:
-	```
+	
+    ```
 	#!/bin/sh
 
     sudo yum install -y docker    # Install docker
@@ -95,7 +97,8 @@ Creating a file called install-docker.sh and copy the following into it:
 
 Which we upload to an s3 bucket s3://test-smr-remote/install-docker.sh. We use this as part of bootstrap actions, commands that are run before the cluster starts running any steps
 The following configuration needs to be passed while setting up the cluster to setup the trusted docker registries that Yarn is going to use to pull the image from 
-	```
+	
+    ```
         [
             {
                 "classification": "container-executor",
@@ -114,7 +117,7 @@ The following configuration needs to be passed while setting up the cluster to s
 
 
 
-[Refer1](https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-spark-docker.html)
-[Refer1](https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-gs.html)
+[Reference 1](https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-spark-docker.html)
+[Reference 2](https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-gs.html)
 
 For more details about how to build skills go to [Cortex Fabric Documentation - Development - Develop Skills](https://cognitivescale.github.io/cortex-fabric/docs/development/define-skills)
