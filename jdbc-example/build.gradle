@@ -28,9 +28,13 @@ repositories {
 dependencies {
     implementation 'com.zaxxer:HikariCP:3.2.0'
     implementation 'org.hibernate:hibernate-core:5.6.3.Final'
-    implementation 'com.sparkjava:spark-core:2.9.3'
+    implementation('com.sparkjava:spark-core:2.9.3') {
+        exclude group: 'org.eclipse.jetty'
+        exclude group: 'org.eclipse.jetty.websocket'
+    }
     implementation 'com.squareup.okhttp3:okhttp:3.11.0'
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.0.1'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.1'
+    implementation 'org.eclipse.jetty:jetty-webapp:9.4.45.v20220203'
 //    Add JDBC driver jar from maven repository or copy into lib folder
 //    implementation 'mysql:mysql-connector-java:8.0.28'
 

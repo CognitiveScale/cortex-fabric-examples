@@ -15,7 +15,7 @@ deploy: check-env
 	sleep 10s # wait for action containers to pull and deploy
 
 undeploy: check-env
-	cortex skills undeploy ${SKILL_NAME} --project ${PROJECT_NAME}
+	-cortex skills undeploy ${SKILL_NAME} --project ${PROJECT_NAME}
 	sleep 5s
 
 tests: check-env
