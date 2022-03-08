@@ -1,4 +1,4 @@
-FROM python:3-slim-buster
+FROM python:3.11.0a5-slim-bullseye
 WORKDIR /app
 COPY requirements.txt /app
 COPY *.py /app
