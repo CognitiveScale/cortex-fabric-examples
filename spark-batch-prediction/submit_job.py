@@ -49,12 +49,7 @@ if __name__ == '__main__':
         conn_params.update({p['name']: p['value']})
     spark_config = run.get_artifact('spark-config')
     log_message(msg=f"Spark Config: {str(spark_config)}", log=get_logger(skill_name), level=logging.INFO)
-    spark_config["pyspark"]["options"]["--conf"]['spark.kubernetes.file.upload.path'] = input_params["properties"]["output-path"]
-    spark_config["pyspark"]["options"]["--conf"]['spark.hadoop.fs.s3a.access.key'] = conn_params.get('publicKey')
-    spark_config["pyspark"]["options"]["--conf"]['spark.hadoop.fs.s3a.secret.key'] = input_params["properties"]["aws-secret"]
-    spark_config["pyspark"]["options"]["--conf"]['spark.hadoop.fs.s3a.impl'] = "org.apache.hadoop.fs.s3a.S3AFileSystem"
-    spark_config["pyspark"]["options"]["--conf"]["spark.hadoop.fs.s3a.endpoint"] = conn_params.get("s3Endpoint")
     run_args = get_runtime_args(spark_config)
-    run_args.append("src/main/python/main.py")
+    run_args.append("local:///opt/spark/work-dir/src/main/python/main.py")
     run_args.append(json.dumps(input_params))
     subprocess.call(run_args)
