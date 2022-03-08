@@ -1,4 +1,4 @@
-FROM python:3.7.12-slim
+FROM python:3.11.0a4-slim
 ADD . /app
 COPY --from=redboxoss/scuttle:latest /scuttle /bin/scuttle
 ENV ENVOY_ADMIN_API=http://localhost:15000
