@@ -2,8 +2,12 @@
 
 Cortex skill demonstrating Sessions API
 
-Note:
-> This project assumes a `fast api server` with one endpoint `/invoke` that is run with the Uvicorn python3 binary; you may change to another framework or language.
+| Endpoint |                         Input                         |                Output                |              Description               |
+|:--------:|:-----------------------------------------------------:|:------------------------------------:|:--------------------------------------:|
+|  /start  | {"ttl": 10,<br/> "description":"session description"} | {"session_id": "created session id"} |    Start the session for given ttl     |
+|   /get   |  {"session_id": "session id",<br/>"key": "data_key"}  |         session data by key          | get session data by session_id and key |
+|   /put   |     {"session_id": "session id",<br/>"data": {}}      |           status response            |            put session data            |
+| /delete  |      {"session_id": "session id to be deleted"}       |           status response            |    Delete the session by session_id    |
 
 
 #### Files generated
@@ -50,4 +54,4 @@ A Makefile is provided to do these steps. Set environment variables `DOCKER_PREG
 
    Skills that are deployed may be invoked (run) either independently or within an agent.
 
-For more details about how to build skills go to [Cortex Fabric Documentation - Development - Develop Skills](https://cognitivescale.github.io/cortex-fabric/docs/development/define-skills)
+For more details about how to build skills go to [Cortex Fabric Documentation - Development - Develop Skills](https://cognitivescale.github.io/cortex-fabric/docs/build-skills/define-skills)

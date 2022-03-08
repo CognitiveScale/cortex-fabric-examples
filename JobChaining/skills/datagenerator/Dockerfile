@@ -1,4 +1,4 @@
-FROM python:3.10.0-alpine
+FROM python:3.10.1-alpine
 WORKDIR /app
 COPY requirements.txt /app
 COPY *.py /app
