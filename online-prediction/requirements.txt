@@ -1,4 +1,4 @@
-pandas==1.0.5
+pandas==1.4.1
 cortex-python==6.0.3
 fastapi==0.66.0
 uvicorn==0.14.0
