@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.Objects;
 
+import static spark.Spark.exception;
 import static spark.Spark.initExceptionHandler;
 import static spark.Spark.port;
 import static spark.Spark.post;
@@ -47,6 +48,11 @@ public class Main {
                 e.printStackTrace();
                 throw e;
             }
+        });
+
+        exception(Exception.class, (e, request, response) -> {
+            response.status(500);
+            response.body(e.getMessage());
         });
     }
 }

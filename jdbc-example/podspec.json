@@ -1,0 +1,24 @@
+[
+  {
+    "path": "/containers/0/volumeMounts",
+    "value": [
+      {
+        "name": "secure-storage",
+        "mountPath": "/secure-storage",
+        "readOnly": true
+      }
+    ]
+  },
+  {
+    "path": "/volumes",
+    "value": [
+        {
+          "name": "secure-storage",
+          "secret": {
+            "secretName": "secure-storage",
+            "optional": true
+          }
+        }
+    ]
+  }
+]
