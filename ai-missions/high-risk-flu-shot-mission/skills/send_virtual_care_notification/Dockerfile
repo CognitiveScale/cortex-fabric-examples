@@ -1,8 +1,10 @@
-FROM python:3.11.0a5-slim-bullseye
+FROM python:3.9.10-bullseye
 
 ADD requirements.txt requirements.txt
 
-RUN pip install -r requirements.txt
+RUN pip install --upgrade -r requirements.txt \
+    && apt-get purge unzip -y \
+    && apt-get clean
 
 ADD . /code
 
