@@ -84,10 +84,10 @@ There are essentially 2 main ways to create an EMR cluster
 
 Both of these cluster types come with docker container support, but we need to pass correct configurations and docker installation scripts (for installing docker- look at `install-docker.sh`) to activate Docker support for YarnNodeManager while launching the Cluster.(steps for deploying a cluster added below)
 
-Q: What do we mean by Docker Support for YarnNodeManager?
+Q: What do we mean by Docker Support for YarnNodeManager?<br>
 A: Amazon EMR 6.x supports Hadoop 3, which allows the YARN NodeManager to launch containers either directly on the Amazon EMR cluster or inside a Docker container. 
 
-Q: Why do we neeed Docker Container Support?
+Q: Why do we neeed Docker Container Support?<br>
 A: Docker containers provide custom execution environments in which application code runs. The custom execution environment is isolated from the execution environment of the YARN NodeManager and other applications. Also helps us package the dependencies in a better way
 
 #### EMR on EC2
@@ -127,7 +127,7 @@ The following configuration needs to be passed while setting up the cluster to s
 
 
 
-[Reference 1](https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-spark-docker.html)
-[Reference 2](https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-gs.html)
+[https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-spark-docker.html](https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-spark-docker.html) <br>
+[https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-gs.html](https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-gs.html)
 
 For more details about how to build skills go to [Cortex Fabric Documentation - Development - Develop Skills](https://cognitivescale.github.io/cortex-fabric/docs/build-skills/define-skills)
