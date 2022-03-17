@@ -1,0 +1,13 @@
+[
+    {
+        "path": "/containers/0/resources",
+        "value": {
+            "requests": {
+                "memory": "4G", "ephemeral-storage": "10G"
+            },
+            "limits": {
+                "memory": "8G"
+            }
+        }
+    }
+]
