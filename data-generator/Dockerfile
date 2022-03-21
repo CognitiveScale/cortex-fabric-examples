@@ -20,4 +20,4 @@ ENV ISTIO_QUIT_API=http://localhost:15020
 ENV SCUTTLE_LOGGING=false
 
 
-ENTRYPOINT ["python", "__main__.py"]
+ENTRYPOINT ["scuttle", "python", "__main__.py"]

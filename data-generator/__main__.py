@@ -20,7 +20,6 @@ def domain_controller():
         properties = job_data["properties"]
         aws_access_key_id = properties["awspublickey"]
         aws_secret_access_key = properties["awssecretkey"]
-        n_fold = payload['n_fold']
 
         for key in os.environ.keys():
             if key.startswith('HADRON'):
@@ -41,20 +40,19 @@ def domain_controller():
         for key in hadron_kwargs.copy().keys():
             if str(key).isupper():
                 os.environ[key] = hadron_kwargs.pop(key)
+        
+        run_book = hadron_kwargs.pop('runbook', None)
+        mod_tasks = hadron_kwargs.pop('mod_tasks', None)
+        repeat = hadron_kwargs.pop('repeat', None)
+        sleep = hadron_kwargs.pop('sleep', None)
 
 
         os.environ["AWS_SECRET_ACCESS_KEY"] = aws_secret_access_key
         os.environ["AWS_ACCESS_KEY_ID"] = aws_access_key_id
 
         controller = Controller.from_env(uri_pm_repo=uri_pm_repo, default_save=False, has_contract=True)
-        controller.remove_run_book()
-        roadmap = [
-            controller.runbook2dict(task='sor_sim',source=100000*n_fold, persist=True),
-            controller.runbook2dict(task='members_gen', source='@', persist=True),
-            controller.runbook2dict(task='flu_risk_members_gen', source='@', persist=True),
-            controller.runbook2dict(task='feedback_gen', source='@', persist=True),
-        ]
-        controller.run_controller(run_book=roadmap)
+        
+        controller.run_controller(run_book=run_book, mod_tasks=mod_tasks, repeat=repeat, sleep=sleep)
 
     except Exception as e:
         print(e)
