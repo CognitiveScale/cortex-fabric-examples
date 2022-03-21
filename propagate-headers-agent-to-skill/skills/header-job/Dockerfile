@@ -1,4 +1,7 @@
-FROM python:3.11.0a5-slim-bullseye
+FROM python:3.9-slim
 ADD . /app
-RUN pip install -r /app/requirements.txt
+RUN apt-get update \
+    && apt-get upgrade -y \
+    && pip install --upgrade -r /app/requirements.txt \
+    && apt-get clean
 ENTRYPOINT ["python", "/app/main.py"]
