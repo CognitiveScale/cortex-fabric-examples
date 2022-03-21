@@ -1,5 +1,5 @@
 IMAGE_TAG:=$(shell git describe --long --always --match='v*.*' | sed 's/v//; s/-/./')fai
-DOCKER_IMAGE=data-gen3# Docker Image Name
+DOCKER_IMAGE=data-gen# Docker Image Name
 DOCKER_IMAGE_URL=${DOCKER_PREGISTRY_URL}/${DOCKER_IMAGE}:${IMAGE_TAG}
 
 
