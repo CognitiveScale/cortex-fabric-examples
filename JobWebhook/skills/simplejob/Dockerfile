@@ -1,6 +1,9 @@
-FROM python:3.11.0a5-slim-bullseye
+FROM python:3.9-slim
 WORKDIR /app
 COPY requirements.txt /app
 COPY *.py /app
-RUN pip install -r requirements.txt
+RUN apt-get update \
+    && apt-get upgrade -y \
+    && pip install --upgrade -r requirements.txt \
+    && apt-get clean
 ENTRYPOINT ["python","/app/job.py"]

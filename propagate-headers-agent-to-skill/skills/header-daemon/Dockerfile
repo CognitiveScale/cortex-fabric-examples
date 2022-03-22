@@ -1,5 +1,8 @@
-FROM python:3.11.0a5-slim-bullseye
+FROM python:3.9-slim
 ADD . /app
 WORKDIR /app
-RUN pip install -r requirements.txt
+RUN apt-get update \
+    && apt-get upgrade -y \
+    && pip install --upgrade -r requirements.txt \
+    && apt-get clean
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "5000", "--workers", "2"]
