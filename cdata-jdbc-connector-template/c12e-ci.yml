@@ -1,3 +1,0 @@
-builder:
-  image: gradle:6.5.0-jdk8
-  command: "gradle --info clean build"

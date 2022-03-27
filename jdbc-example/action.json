@@ -1,0 +1,7 @@
+{
+    "name":"jdbc-example",
+    "actionType":"daemon",
+    "docker":"jdbc-example:latest",
+    "command": ["./bin/jdbc-example"],
+    "port": "5000"
+}

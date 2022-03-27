@@ -1,0 +1,8 @@
+{
+  "payload": {
+    "query": "select * from \"SNOWFLAKE_SAMPLE_DATA\".\"WEATHER\".\"DAILY_14_TOTAL\" limit 1"
+  },
+  "properties": {
+    "connection_name": "cdata-snowflake"
+  }
+}

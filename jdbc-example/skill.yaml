@@ -1,0 +1,42 @@
+camel: 1.0.0
+name: jdbc-example
+title: jdbc-example
+description: jdbc-example
+inputs:
+  - name: request
+    title: API Request
+    parameters:
+      - name: params
+        type: object
+        description: Request Parameters
+        required: true
+    routing:
+      all:
+        action  : jdbc-example
+        runtime: cortex/daemons
+        output: response
+
+outputs:
+  - name: response
+    title: API Response
+    parameters:
+      - name: result
+        type: object
+        description: API Response
+        required: true
+
+properties:
+  - name: connection_name
+    title: Cortex Connection Name
+    description: Cortex Connection Name. This connection must be be JDBC or CDATA type
+    required: true
+    type: String
+  - name: daemon.port
+    title: Daemon Port
+    description: Daemon Port
+    required: true
+    type: String
+    defaultValue: 5000
+tags:
+  - label: template
+    value: template

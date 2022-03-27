@@ -1,0 +1,49 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+mainClassName = 'com.example.dao.Main'
+
+applicationDefaultJvmArgs = [
+    "-javaagent:lib/c12e-cdata-0.1.0.jar"
+]
+
+group 'com.example'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility=1.8
+targetCompatibility=1.8
+
+jar {
+    manifest {
+        attributes('Main-Class': 'com.example.dao.Main', 'Premain-Class': 'com.c12e.fabric.JvmClasspathAgent', 'Agent-Class': 'com.c12e.fabric.JvmClasspathAgent')
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'com.zaxxer:HikariCP:3.2.0'
+    implementation 'org.hibernate:hibernate-core:5.6.3.Final'
+    implementation('com.sparkjava:spark-core:2.9.3') {
+        exclude group: 'org.eclipse.jetty'
+        exclude group: 'org.eclipse.jetty.websocket'
+    }
+    implementation 'com.squareup.okhttp3:okhttp:3.11.0'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.1'
+    implementation 'org.eclipse.jetty:jetty-webapp:9.4.45.v20220203'
+//    Add JDBC driver jar from maven repository or copy into lib folder
+//    implementation 'mysql:mysql-connector-java:8.0.28'
+
+    implementation fileTree(dir: 'lib', include: '*.jar')
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+}
+
+test {
+    useJUnitPlatform()
+}

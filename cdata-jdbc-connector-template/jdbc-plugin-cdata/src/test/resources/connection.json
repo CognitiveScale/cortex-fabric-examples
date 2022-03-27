@@ -1,7 +1,0 @@
-{
-  "connectionType": "jdbc_cdata",
-  "params": [{"name": "managed_content_key", "value": "cdata.jdbc.json.jar"},
-    {"name": "run_time_key", "value": "<JAR-RTK>"},
-    {"name": "plugin_properties", "value": "{\"JSONPath\":\"$.people\",\"DataModel\":\"Document\",\"URI\":\"${data.json}\"}"}
-  ]
-}
