@@ -12,7 +12,7 @@ common:
                   make build
 pipelines:
   cortex-fabric-examples-builds:
-    group: tests
+    group: WIP
     materials:
       cortex-fabric-examples:
         git: git@github.com:CognitiveScale/cortex-fabric-examples.git
