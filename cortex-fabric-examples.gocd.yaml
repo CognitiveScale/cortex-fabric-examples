@@ -1,0 +1,32 @@
+format_version: 10
+common:
+  serviceBuild: &serviceBuild
+    - build:
+        clean_workspace: true
+        jobs:
+          Build:
+            elastic_profile_id: gocd-test-agent-dind
+            tasks:
+              - script: |
+                  apk add --no-cache make
+                  make build
+pipelines:
+  cortex-fabric-examples-builds:
+    group: tests
+    materials:
+      cortex-fabric-examples:
+        git: git@github.com:CognitiveScale/cortex-fabric-examples.git
+        branch: FAB-3999
+    stages: *serviceBuild
+  cortex-fabric-examples-builds-pr:
+    group: pull-requests
+    label_template: ${COUNT}
+    materials:
+      cortex-fabric-examples:
+        plugin_configuration:
+          id: github.pr
+          version: 1
+        options:
+          url: git@github.com:CognitiveScale/cortex-fabric-examples.git
+          defaultBranch: develop
+    stages: *serviceBuild
