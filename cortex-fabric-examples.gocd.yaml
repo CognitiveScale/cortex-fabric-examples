@@ -28,5 +28,5 @@ pipelines:
           version: 1
         options:
           url: git@github.com:CognitiveScale/cortex-fabric-examples.git
-          defaultBranch: develop
+          defaultBranch: master
     stages: *serviceBuild
