@@ -1,0 +1,30 @@
+format_version: 10
+common:
+  serviceBuild: &serviceBuild
+    - build:
+        clean_workspace: true
+        jobs:
+          Build:
+            elastic_profile_id: integrationTestAgent
+            tasks:
+              - script: make build
+pipelines:
+  cortex-fabric-examples-builds:
+    group: fabric6
+    materials:
+      cortex-fabric-examples:
+        git: git@github.com:CognitiveScale/cortex-fabric-examples.git
+        branch: master
+    stages: *serviceBuild
+  cortex-fabric-examples-builds-pr:
+    group: pull-requests
+    label_template: ${COUNT}
+    materials:
+      cortex-fabric-examples:
+        plugin_configuration:
+          id: github.pr
+          version: 1
+        options:
+          url: git@github.com:CognitiveScale/cortex-fabric-examples.git
+          defaultBranch: master
+    stages: *serviceBuild
