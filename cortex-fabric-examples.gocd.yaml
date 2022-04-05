@@ -10,11 +10,11 @@ common:
               - script: make build
 pipelines:
   cortex-fabric-examples-builds:
-    group: WIP
+    group: fabric6
     materials:
       cortex-fabric-examples:
         git: git@github.com:CognitiveScale/cortex-fabric-examples.git
-        branch: FAB-3999
+        branch: master
     stages: *serviceBuild
   cortex-fabric-examples-builds-pr:
     group: pull-requests
