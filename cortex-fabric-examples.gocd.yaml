@@ -7,9 +7,7 @@ common:
           Build:
             elastic_profile_id: integrationTestAgent
             tasks:
-              - script: |
-                  apk add --no-cache make
-                  make build
+              - script: make build
 pipelines:
   cortex-fabric-examples-builds:
     group: WIP
