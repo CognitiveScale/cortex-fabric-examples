@@ -5,7 +5,7 @@ common:
         clean_workspace: true
         jobs:
           Build:
-            elastic_profile_id: gocd-test-agent-dind
+            elastic_profile_id: integrationTestAgent
             tasks:
               - script: |
                   apk add --no-cache make
