@@ -111,7 +111,7 @@ def train(params):
     conn_params = {}
     for p in connection['params']:
         conn_params.update({p['name']: p['value']})
-    print(conn_params)
+    print({k:v for k,v in conn_params.items() if v not in ('secretKey', 'publicKey')})
     uri = conn_params["uri"]
 
     # Download training data using connection
