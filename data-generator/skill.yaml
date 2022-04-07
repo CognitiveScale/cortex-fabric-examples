@@ -1,0 +1,40 @@
+camel: 1.0.0
+name: data-gen
+title:  Domain Contract execution
+description: A reusable skill run against predefined domain contracts
+inputs:
+  - name: controller_run_params
+    title: Input
+    parameters:
+      - name: payload
+        type: object
+        description: payload
+        required: true
+    routing:
+      all:
+        action: data-gen
+        runtime: cortex/jobs
+        output: controller_out
+outputs:
+  - name: controller_out
+    title: Controller output
+    parameters:
+      - name: payload
+        type: object
+        description: output
+        required: false
+
+properties:
+  - name: awspublickey
+    title: AWS Public Key
+    description: AWS Public Key
+    required: true
+    type: string
+    secure: false
+  - name: awssecretkey
+    title: AWS Secret
+    description: AWS Secret
+    required: false
+    type: string
+    secure: true
+

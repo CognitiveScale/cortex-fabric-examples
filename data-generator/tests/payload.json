@@ -1,0 +1,19 @@
+{
+    "payload": {
+        "hadron_kwargs":{
+            "HADRON_FEEDBACK_PATH": "s3://project-hadron-cs-repo/13/2022-03-16 20:49:07.602028/members_feedback_v16.parquet",
+            "HADRON_MEMBERS_PATH": "s3://project-hadron-cs-repo/13/2022-03-16 20:49:07.602028/members_v14.parquet",
+            "HADRON_FLU_RISK_PATH": "s3://project-hadron-cs-repo/13/2022-03-16 20:49:07.602028/members_flu_risk_v14.parquet",
+            "mod_tasks": {
+                "sor_sim": {
+                    "source": 10000000
+                }
+            }
+        },
+        "domain_contract_repo": "https://raw.githubusercontent.com/project-hadron/hadron-asset-bank/master/contracts/helloworld/members/sor"
+    },
+    "properties": {
+        "awspublickey": "",
+        "awssecretkey": ""
+    }
+}
