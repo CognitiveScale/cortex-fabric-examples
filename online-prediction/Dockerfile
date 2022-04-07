@@ -1,4 +1,4 @@
-FROM python:3.9.10-bullseye
+FROM python:3.9.11-bullseye
 ADD . /app
 WORKDIR /app
 RUN pip install --upgrade -r requirements.txt \
