@@ -1,7 +1,7 @@
 SHELL := /bin/bash
 
 .PHONY:build push deploy tests get all
-EXAMPLES := ai-missions/high-risk-flu-shot-mission/skills batch-prediction online-prediction jdbc-example ExperimentsExample InterventionSkillExample
+EXAMPLES := ai-missions/high-risk-flu-shot-mission/skills batch-prediction online-prediction jdbc-example ExperimentsExample InterventionSkillExample EndToEndExample
 export PROJECT_NAME=test
 export DOCKER_PREGISTRY_URL=test
 
