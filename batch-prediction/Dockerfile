@@ -9,7 +9,7 @@ RUN apt-get update \
     && pip install --upgrade -r requirements.txt \
     && apt-get clean
 
-COPY --from=redboxoss/scuttle:latest /scuttle /bin/scuttle
+COPY --from=c12e/scuttle:latest /scuttle /bin/scuttle
 ENV ENVOY_ADMIN_API=http://localhost:15000
 ENV ISTIO_QUIT_API=http://localhost:15020
 
