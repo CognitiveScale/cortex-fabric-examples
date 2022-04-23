@@ -1,4 +1,4 @@
-FROM python:3.9.10-bullseye
+FROM python:latest
 
 ADD requirements.txt requirements.txt
 
