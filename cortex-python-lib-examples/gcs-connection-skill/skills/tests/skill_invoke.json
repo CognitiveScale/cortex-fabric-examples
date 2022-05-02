@@ -1,3 +1,5 @@
 {
-  "connection_name": "gcs-german-credit"
+  "payload": {
+    "connection_name": "gcs-german-credit"
+  }
 }

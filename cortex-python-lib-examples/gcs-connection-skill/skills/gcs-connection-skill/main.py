@@ -16,7 +16,7 @@ def gcs_client(service_account_key):
     # The service account key needs to be saved to a file to authenticate to the Google API
     with tempfile.NamedTemporaryFile() as service_account_file:
         with open(service_account_file.name, 'w+') as f:
-            json.dump(json.loads(service_account_key), f)
+            json.dump(service_account_key, f)
         os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = service_account_file.name
         yield storage.Client()
         os.environ.pop('GOOGLE_APPLICATION_CREDENTIALS', '')
@@ -56,8 +56,9 @@ if __name__ == '__main__':
     try:
         conn_name, destination = main(params)
         print(f'Connection: {conn_name} read successfully')
-    except json.JSONDecodeError as je:
+    except (TypeError, json.JSONDecodeError) as je:
         print(f'Failed to decode GCS service account key, verify it was saved as JSON: {str(je)}')
+        raise
     except Exception as e:
         print(json.dumps({'connection_name': params['payload'].get('connection_name', ''), 'status': 'failed', 'error': str(e)}))
         raise
