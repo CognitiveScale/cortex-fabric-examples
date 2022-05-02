@@ -24,7 +24,7 @@ Cortex Skill (job) example for working with a GCS Cortex Connection. This demons
 #### Steps
 
 Prerequisites:
-* You have uploaded the German Credit dataset (CSV) file, available in the [EndToEndExample/data folder](../EndToEndExample/data/german_credit_eval.csv) to GCS storage (see: https://cloud.google.com/storage/docs/uploading-objects?hl=en). You will need to save the URI to the blob for later configuration, e.g. `gs://test-bucket/german_credit_eval.csv`.
+* You have uploaded the German Credit dataset (CSV) file, available in the [EndToEndExample/data folder](../../../../EndToEndExample/data/german_credit_eval.csv) to GCS storage (see: https://cloud.google.com/storage/docs/uploading-objects?hl=en). You will need to save the URI to the blob for later configuration, e.g. `gs://test-bucket/german_credit_eval.csv`.
 * You have created a GCS Service Account and downloaded a JSON key file that can access the above. You may have to grant certain roles to the service account, for reference see:
   - https://cloud.google.com/iam/docs/creating-managing-service-accounts#console
   - https://cloud.google.com/iam/docs/creating-managing-service-account-keys#console
