@@ -1,9 +1,3 @@
-TODO's:
-- match file structure of existing examples
-- add README & UPDATE SECRET NAMES & VALUES
-- Replace test module with main script that runs everything with the Python Client/CLI
-- Add description of example to top level README
-
 ### Cortex-Python Library Example: GCS Connection Example
 
 Cortex Skill (job) example for working with a GCS Cortex Connection. This demonstrates:
