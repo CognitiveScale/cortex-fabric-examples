@@ -24,7 +24,7 @@ Cortex Skill (job) example for working with a GCS Cortex Connection. This demons
 #### Steps
 
 Prerequisites:
-* You have uploaded the German Credit Dataset (CSV) file, available in the [EndToEndExample/data folder](../EndToEndExample/data/german_credit_eval.csv) to GCS storage (see: https://cloud.google.com/storage/docs/uploading-objects?hl=en).
+* You have uploaded the German Credit dataset (CSV) file, available in the [EndToEndExample/data folder](../EndToEndExample/data/german_credit_eval.csv) to GCS storage (see: https://cloud.google.com/storage/docs/uploading-objects?hl=en). You will need to save the URI to the blob for later configuration, e.g. `gs://test-bucket/german_credit_eval.csv`.
 * You have created a GCS Service Account and downloaded a JSON key file that can access the above. You may have to grant certain roles to the service account, for reference see:
 	- https://cloud.google.com/iam/docs/creating-managing-service-accounts#console
 	- https://cloud.google.com/iam/docs/creating-managing-service-account-keys#console
@@ -32,7 +32,9 @@ Prerequisites:
   Save the JSON service account key to a file for later use, e.g. `service_account.json`.
 * The Cortex CLI is installed and configured in your local environment.
 
-A Makefile is provided to do help with the following steps. Before beginning, update the `DOCKER_PREGISTRY_URL` (e.g. <docker-registry-url>/<namespace-org>) and `PROJECT_NAME` (Cortex Project Name) environment variables within the Makefile. **If you update the `DOCKER_PREGISTRY_URL` in the Makefile, then make an equivalent update for the Action's `image` in the `skill.json` file.**
+A Makefile is provided to do help with the following steps. Before beginning,
+- update the `DOCKER_PREGISTRY_URL` (e.g. <docker-registry-url>/<namespace-org>) and `PROJECT_NAME` (Cortex Project Name) environment variables within the Makefile. **If you update the `DOCKER_PREGISTRY_URL` in the Makefile, then make an equivalent update for the Action's `image` in the `skill.json` file.**
+- update the `uri` parameter in the `connections/connection.json` file with the location of the German Credit dataset you uploaded earlier.
 
 0. Create a secret named `gcs-service-key` in the Cortex project, with the service account key JSON file. You can do either in the Cortex console or via the Cortex CLI by running: `cortex secrets save gcs_service_key --data-file <path to service_account.json>`
 1. Create the Cortex Connection by running: `make save-connection`

@@ -10,7 +10,7 @@
   "params": [
     {
       "name": "uri",
-      "value": "gs://qa-gcs-connection-test-bucket/german_credit_eval.csv"
+      "value": "gs://test-bucket/german_credit_eval.csv"
     },
     {
       "name": "serviceAccountKey",
