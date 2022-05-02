@@ -18,10 +18,16 @@ install:
 	pip install -r gcs-connection-skill/requirements.txt
 
 tests: check-env
-	cortex skills invoke --params-file ./tests/skill_invoke.json ${SKILL_NAME} params
+	cortex skills invoke --params-file ./payload.json ${SKILL_NAME} params
 
 save-skill: check-env
 	cortex skills save skill.json
+
+save-connection: check-env
+	cortex connections save connections/connection.json
+
+all: save-connection deploy tests
+	echo "Done"
 
 check-env:
 ifndef DOCKER_PREGISTRY_URL
