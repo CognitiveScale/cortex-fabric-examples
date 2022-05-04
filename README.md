@@ -2,9 +2,6 @@
 
 This repository contains examples for help Cortex Fabric users.
 
-TODO's:
-* Fill out the table with descriptions of the examples repo
-
 ## Contents
  | Folder | Language | Description |
  | --------| -------- |----------- |
