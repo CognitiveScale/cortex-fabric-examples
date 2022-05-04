@@ -87,4 +87,4 @@ Connection: gcs-german-credit read successfully
 2022-05-02T18:59:20Z scuttle: Sent quitquitquit to Istio, status code: 200
 ```
 
-For more details about how to build skills go to [Cortex Fabric Documentation - Development - Develop Skills](https://cognitivescale.github.io/cortex-fabric/docs/development/define-skills)
+For more details about how to build skills go to [Cortex Fabric Documentation - Development - Develop Skills](https://cognitivescale.github.io/cortex-fabric/docs/build-skills/define-skills).
