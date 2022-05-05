@@ -1,0 +1,54 @@
+{
+  "actions": [
+    {
+      "command": [
+        "scuttle",
+        "python",
+        "/app/main.py"
+      ],
+      "image": "private-registry.dci-dev.dev-eks.insights.ai/gcs-connection-reader:latest",
+      "name": "gcs-connection-reader",
+      "type": "job"
+    }
+  ],
+  "camel": "1.0.0",
+  "description": "gcs-connection-skill",
+  "inputs": [
+    {
+      "name": "params",
+      "parameters": [
+        {
+          "description": "Input Params",
+          "name": "params",
+          "required": true,
+          "type": "object"
+        }
+      ],
+      "routing": {
+        "all": {
+          "action": "gcs-connection-reader",
+          "output": "result",
+          "runtime": "cortex/jobs"
+        }
+      },
+      "title": "Job Input"
+    }
+  ],
+  "name": "gcs-connection-skill",
+  "outputs": [
+    {
+      "name": "result",
+      "parameters": [
+        {
+          "description": "connection location",
+          "name": "connection_name",
+          "required": true,
+          "title": "job result",
+          "type": "object"
+        }
+      ],
+      "title": "Job Result"
+    }
+  ],
+  "title": "gcs-connection-skill"
+}
