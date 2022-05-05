@@ -1,0 +1,28 @@
+{
+  "name": "gcs-german-credit",
+  "title": "German Credit Dataset (GCS) Connection",
+  "description": "GCS Connection",
+  "tags": [],
+  "connectionType": "gcs",
+  "contentType": "csv",
+  "allowRead": true,
+  "allowWrite": true,
+  "params": [
+    {
+      "name": "uri",
+      "value": "gs://test-bucket/german_credit_eval.csv"
+    },
+    {
+      "name": "serviceAccountKey",
+      "value": "#SECURE.gcs_service_key"
+    },
+    {
+      "name": "csv/multiline",
+      "value": "true"
+    },
+    {
+      "name": "csv/header",
+      "value": "true"
+    }
+  ]
+}

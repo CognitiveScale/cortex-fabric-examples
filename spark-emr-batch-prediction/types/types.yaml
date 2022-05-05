@@ -1,0 +1,20 @@
+types:
+  - camel: 1.0.0
+    name: BulkBatchRequest
+    title: Bulk Batch Request
+    description: Represents a request of bulk batch prediction input
+    parameters:
+      - name: input
+        type: object
+        description: Input Params
+        required: false
+
+  - camel: 1.0.0
+    name: BulkBatchResponse
+    title: Bulk Batch Response
+    description: Represents a response of bulk batch prediction input
+    parameters:
+      - name: output
+        type: object
+        description: Job Execution Logs
+        required: false
