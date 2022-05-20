@@ -1,7 +1,7 @@
 ### Cortex-Python Library Example: GCS Connection Example
 
-Cortex Skill (job) example for working with a GCS Cortex Connection. This demonstrates:
-* Creating a Cortex Secret named `gcs-service-key`
+Cortex Skill (job) example for working with a Google Cloud Storage (GCS) Cortex Connection. This demonstrates:
+* Creating a Cortex Secret named `gcs-service-key` with the service account key
 * Creating a Cortex Connection to Google Cloud Storage (GCS)
 * Using the GCS Connection in a Skill
   - See `gcs-connection-skill/main.py` for how to use a Cortex Connections in a Skill. The skill gets the connection from Cortex and uses the `google-cloud-storage` package (https://pypi.org/project/google-cloud-storage/) to read the contents of the connection.
