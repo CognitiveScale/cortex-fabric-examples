@@ -4,3 +4,4 @@ cortex-python==6.0.2a4
 scikit-learn==0.23.2
 fastapi==0.68.0
 uvicorn==0.14.0
+pyjwt>=2.4.0 # not directly required, pinned by Snyk to avoid a vulnerability
