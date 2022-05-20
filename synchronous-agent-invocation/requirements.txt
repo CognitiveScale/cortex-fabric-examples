@@ -3,3 +3,4 @@ cortex-python==6.0.3
 websocket-client==1.2.1
 fastapi==0.68.1
 uvicorn==0.15.0
+pyjwt>=2.4.0 # not directly required, pinned by Snyk to avoid a vulnerability
