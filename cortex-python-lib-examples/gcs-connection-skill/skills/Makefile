@@ -6,7 +6,7 @@ DOCKER_PREGISTRY_URL=private-registry.dci-dev.dev-eks.insights.ai
 DOCKER_IMAGE_URL=${DOCKER_PREGISTRY_URL}/${ACTION_NAME}:${TAG}
 
 build: check-env
-	docker build --no-cache -t ${DOCKER_IMAGE_URL} -f gcs-connection-skill/Dockerfile gcs-connection-skill/
+	docker build --no-cache -t ${DOCKER_IMAGE_URL} -f gcs-connection-reader/Dockerfile gcs-connection-reader/
 
 push: check-env
 	docker push ${DOCKER_IMAGE_URL}
@@ -15,7 +15,7 @@ deploy: install build push
 	cortex skills save skill.json
 
 install: 
-	pip install -r gcs-connection-skill/requirements.txt
+	pip install -r gcs-connection-reader/requirements.txt
 
 tests: check-env
 	cortex skills invoke --params-file ./payload.json ${SKILL_NAME} params
