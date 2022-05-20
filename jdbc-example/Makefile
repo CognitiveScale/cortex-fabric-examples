@@ -24,7 +24,7 @@ tests: check-env
 all: undeploy build push deploy tests
 
 get: check-env
-	cortex skills describe ${SKILL_NAME} --project ${PROJECT_NAME}
+	cortex skills describe ${SKILL_NAME} --project ${PROJECT_NAME} --verbose
 
 check-env:
 ifndef DOCKER_PREGISTRY_URL
