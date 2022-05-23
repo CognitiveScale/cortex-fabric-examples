@@ -36,9 +36,6 @@ def initialize_spark():
         .config("spark.hadoop.fs.s3a.path.style.access", "true")
 
     conf = pyspark.SparkConf()
-    conf.set("spark.jars.ivy", "/tmp/.ivy")
-    conf.set("spark.jars.packages",
-             "io.delta:delta-core_2.12:1.1.0,org.apache.hadoop:hadoop-aws:3.3.1")
 
     spark = configure_spark_with_delta_pip(
         builder).config(conf=conf).getOrCreate()
@@ -52,33 +49,18 @@ def get_queries(staticDf: DataFrame):
     deltaUpdateExpr = {}
 
     for field in filter(lambda it: it != pk, staticDf.schema.fieldNames()):
-        deltaUpdateExpr[field] = functions.when(
-            functions.col(f"incoming.{field}").isNull(),
-            functions.col(f"existing.{field}")).otherwise(Column(f"incoming.{field}"))
+        deltaUpdateExpr[field] = functions.col(f"incoming.{field}")
+        """
+        TODO: figure out why this does not work (merged table is a null)
+            deltaUpdateExpr[field] = functions.when(
+                functions.col(f"incoming.{field}").isNull(),
+                functions.col(f"existing.{field}")).otherwise(Column(f"incoming.{field}"))
+        """
     return localList, deltaUpdateExpr
 
 
 if __name__ == '__main__':
     input_params = json.loads(sys.argv[-1])
-    # input_params = { 
-    #         "uri": "s3a://dci-perf-managed-content-1e891c002ba4dacaca44/perf/CVS/150/stream_parquet/member_feedback_v16_1.parquet",
-    #         "stream_read_dir": "s3a://dci-perf-managed-content-1e891c002ba4dacaca44/perf/CVS/150/stream_parquet", 
-    #         "publicKey":"AKIAWPZU5FVI7VPBAMHV", 
-    #         "secretKey":"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",
-    #         "s3Endpoint":"http://s3.amazonaws.com",
-    #         "maxFilesPerTrigger": 1, 
-    #         "pollInterval":60,
-    #         "type" : 'parquet',
-    #         "storage_protocol": 's3a://',
-    #         "project_id": "bptest",
-    #         "source_name": "stream",
-    #         "isTriggered": False,
-    #         "primary_key": "member_id"
-    #     }
-    # os.environ['PROFILES_BUCKET'] = 'cortex-profiles'
-    # os.environ["AWS_ACCESS_KEY_ID"] = 'csuser'
-    # os.environ["AWS_SECRET_KEY"] = 'cortexfabric'
-    # os.environ["S3_ENDPOINT"] = 'http://localhost:9000'
 
     options = {
         "fs.s3a.access.key": input_params['publicKey'],

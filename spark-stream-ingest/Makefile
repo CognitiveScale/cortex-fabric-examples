@@ -1,34 +1,36 @@
-# TAG := $(shell git describe --long --always --match='v*.*' | sed 's/v//; s/-/./')op
-TAG := test9
-DOCKER_IMAGE := spark-stream-ingest
-DOCKER_PREGISTRY_URL := private-registry.dci-dev.dev-eks.insights.ai
-SPARK_CONTAINER := ${DOCKER_PREGISTRY_URL}/${DOCKER_IMAGE}:${TAG}
-SKILL_CONTAINER := ${DOCKER_PREGISTRY_URL}/${DOCKER_IMAGE}-skill:${TAG}
+# TAG := $(shell git describe --long --always --match='v*.*' | sed 's/v//; s/-/./')
+TAG := test14
+SPARK_BASE_IMG := $(shell cat config.json | jq '.spark_base' | sed -e 's/^"//' -e 's/"$///')
 
-build.container: check-env
-	docker build -t ${SPARK_CONTAINER} -f Dockerfile.executor .
-	docker build -t ${SKILL_CONTAINER} -f Dockerfile .
+docker.build.spark-base:
+	sh spark-base/build-spark-image.sh
 
-push.container: check-env
-	docker push ${SPARK_CONTAINER}
-	docker push ${SKILL_CONTAINER}
+docker.push.spark-base:
+	docker tag spark-base-python:latest $(SPARK_BASE_IMG):spark-base-$(TAG)
+	docker push $(SPARK_BASE_IMG):spark-base-$(TAG)
 
-skill.save: check-env
-	cortex actions deploy --actionName ${DOCKER_IMAGE} --actionType job --docker ${SKILL_CONTAINER} --project ${PROJECT_NAME}
-	cortex skills save -y skill.yaml --project ${PROJECT_NAME}
+docker.build.k8s.container:
+	docker build --build-arg base_img=$(SPARK_BASE_IMG):spark-base-$(TAG) -t spark-container -f spark-k8s-container-image/Dockerfile .
 
-types.save: check-env
-	cortex types save -y types/types.yaml --project ${PROJECT_NAME}
+docker.push.k8s.container:
+	docker tag spark-container:latest $(SPARK_BASE_IMG):spark-container-$(TAG)
+	docker push $(SPARK_BASE_IMG):spark-container-$(TAG)
 
-tests: check-env
-	cortex skills invoke ${DOCKER_IMAGE} params --project ${PROJECT_NAME}
+config.update.spark.image:
+	python update-container-image.py $(SPARK_BASE_IMG):spark-container-$(TAG)
 
-all: build.container push.container types.save skill.save
+docker.push-all.spark-images: docker.build.spark-base docker.push.spark-base docker.build.k8s.container docker.push.k8s.container
 
-check-env:
-ifndef DOCKER_PREGISTRY_URL
-	$(error environment variable DOCKER_PREGISTRY_URL is not set. Set it like <docker-registry-url>/<namespace-org>)
-endif
-ifndef PROJECT_NAME
-	$(error environment variable PROJECT_NAME is not set. Set this to Cortex project name.)
-endif
+docker.build.spark-stream-ingest:
+	docker build --build-arg base_img=$(SPARK_BASE_IMG):spark-container-$(TAG) -t spark-stream-ingest .
+
+deploy.spark-stream-ingest:
+	sh deploy-job.sh
+
+types.save:
+	cortex types save -y types/types.yaml --project bptest
+
+skill.save:
+	cortex skills save -y skill.yaml --project bptest
+
+deploy.all: docker.push-all.spark-images docker.build.spark-stream-ingest deploy.spark-stream-ingest types.save skill.save
