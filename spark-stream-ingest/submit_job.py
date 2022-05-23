@@ -127,8 +127,8 @@ if __name__ == '__main__':
         input_params = { 
             "uri": "s3a://dci-perf-managed-content-1e891c002ba4dacaca44/perf/CVS/150/stream_parquet/member_feedback_v16_1.parquet",
             "stream_read_dir": "s3a://dci-perf-managed-content-1e891c002ba4dacaca44/perf/CVS/150/stream_parquet", 
-            "publicKey":"AKIAWPZU5FVI7VPBAMHV", 
-            "secretKey":"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",
+            "publicKey":"", 
+            "secretKey":"",
             "s3Endpoint":"http://s3.amazonaws.com",
             "maxFilesPerTrigger": 1, 
             "pollInterval":60,
