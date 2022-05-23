@@ -1,0 +1,21 @@
+camel: 1.0.0
+name: spark-stream-ingest
+title: Spark Stream Ingest
+description: Spark stream Ingest 
+inputs:
+  - name: params
+    title: input
+    parameters:
+      $ref: StreamIngestReq
+
+    routing:
+      all:
+        action: spark-stream-ingest
+        runtime: cortex/jobs
+        output: response
+
+outputs:
+  - name: response
+    title: Job result
+    parameters:
+      $ref: StreamIngestRes
