@@ -100,6 +100,6 @@ if __name__ == '__main__':
         .outputMode("append") \
         .option("checkpointLocation", f"{delta_path}/checkpoint") \
         .foreachBatch(func) \
-        .trigger(processingTime=f"{input_params['pollInterval']} seconds") \
+        .trigger(once=True) \
         .start() \
         .awaitTermination()

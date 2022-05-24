@@ -105,7 +105,8 @@ if __name__ == '__main__':
     try:
         # pool values from args
         token = os.environ['CORTEX_TOKEN']
-        # token = "eyJhbGciOiJFZERTQSIsImtpZCI6Im5WalJOdWhPQzc5ZFpPYVMwaGt4U09Bek14Zm1mTWl0SUpLY05fdWQwTGcifQ.eyJzdWIiOiIyNmU5NmU1OC1kYjhjLTQ5NWQtODI3OS1jMjQ1YzNlMjMzMGUiLCJhdWQiOiJjb3J0ZXgiLCJpc3MiOiJjb2duaXRpdmVzY2FsZS5jb20iLCJpYXQiOjE2NTMxMzc5MTIsImV4cCI6MTY1MzIyNDMxMn0.yFz2_t4iYWSZpMsOqjvwA9QOkNyIUaVL7fBiERnxfxTyiXMuDLnsPJN4laoFdfnFpqItUmtEEwJlO1AZJJ6ODA"
+        payload = os.environ['CORTEX_PAYLOAD']
+        input_params = payload['payload']
         n = len(sys.argv)
         # TODO throw error if wrong amount of args
         config_file_loc = sys.argv[1]
@@ -124,21 +125,7 @@ if __name__ == '__main__':
 
         # create spark-submit call
         run_args = get_runtime_args(spark_config, driver_spec_loc, token)
-        input_params = { 
-            "uri": "s3a://dci-perf-managed-content-1e891c002ba4dacaca44/perf/CVS/150/stream_parquet/member_feedback_v16_1.parquet",
-            "stream_read_dir": "s3a://dci-perf-managed-content-1e891c002ba4dacaca44/perf/CVS/150/stream_parquet", 
-            "publicKey":"", 
-            "secretKey":"",
-            "s3Endpoint":"http://s3.amazonaws.com",
-            "maxFilesPerTrigger": 1, 
-            "pollInterval":60,
-            "type" : 'parquet',
-            "storage_protocol": 's3a://',
-            "project_id": "bptest",
-            "source_name": "stream",
-            "isTriggered": False,
-            "primary_key": "member_id"
-        }
+        
         run_args.append(json.dumps(input_params))
 
         cmd = subprocess.Popen(run_args, stderr=subprocess.PIPE, text=True)

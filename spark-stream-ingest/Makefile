@@ -25,7 +25,9 @@ docker.build.spark-stream-ingest:
 	docker build --build-arg base_img=$(SPARK_BASE_IMG):spark-container-$(TAG) -t spark-stream-ingest .
 
 deploy.spark-stream-ingest:
-	sh deploy-job.sh
+	docker tag spark-stream-ingest $(SPARK_BASE_IMG):spark-stream-ingest-skill-$(TAG)
+	docker push  $(SPARK_BASE_IMG):spark-stream-ingest-skill-$(TAG)
+	cortex actions deploy --actionName spark-stream-ingest  --actionType job --docker $(SPARK_BASE_IMG):spark-stream-ingest-skill-$(TAG) --project bptest --cmd '["scuttle", "python3", "submit_job.py", "config.json", "driverTemplate.yaml"]'
 
 types.save:
 	cortex types save -y types/types.yaml --project bptest

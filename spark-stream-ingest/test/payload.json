@@ -1,0 +1,15 @@
+{ 
+    "uri": "s3a://dci-perf-managed-content-1e891c002ba4dacaca44/perf/CVS/150/stream_parquet/member_feedback_v16_1.parquet",
+    "stream_read_dir": "s3a://dci-perf-managed-content-1e891c002ba4dacaca44/perf/CVS/150/stream_parquet", 
+    "publicKey":"", 
+    "secretKey":"",
+    "s3Endpoint":"http://s3.amazonaws.com",
+    "maxFilesPerTrigger": 1, 
+    "pollInterval":60,
+    "type" : "parquet",
+    "storage_protocol": "s3a://",
+    "project_id": "bptest",
+    "source_name": "stream",
+    "isTriggered": false,
+    "primary_key": "member_id"
+}
