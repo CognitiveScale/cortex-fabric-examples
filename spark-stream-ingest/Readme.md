@@ -10,12 +10,13 @@ Cortex skill does a spark stream ingest
 - URL/Credentials for a cortex instance
 
 ### Project Structure
-Job source code location `src/main/python/main.py`
-Job submit code location `submit_job.py`
-spark config location `config.json`
-Dockerfile for skill that does the spark submit `Dockerfile`
-Dockerfile to build Driver /executor images `spark-k8s-container-image/Dockerfile`
-Script to build the spark base image `spark-base`
+
+- Job source code location `src/main/python/main.py`
+- Job submit code location `submit_job.py`
+- spark config location `config.json`
+- Dockerfile for skill that does the spark submit `Dockerfile`
+- Dockerfile to build Driver /executor images `spark-k8s-container-image/Dockerfile`
+- Script to build the spark base image `spark-base`
 
 #### Steps
 
@@ -30,7 +31,8 @@ Builds & Pushes all the images and saves the types, action, skill definition and
 Setup the skill in an agent and invoke or use `make tests` after updating payload.json in [tests](./tests)
         
         ```
-        { 
+        {
+            "payload": { 
             "uri": "s3a://dci-perf-managed-content-1e891c002ba4dacaca44/perf/CVS/150/stream_parquet/member_feedback_v16_1.parquet",
             "stream_read_dir": "s3a://dci-perf-managed-content-1e891c002ba4dacaca44/perf/CVS/150/stream_parquet", 
             "publicKey":"", 
@@ -44,8 +46,10 @@ Setup the skill in an agent and invoke or use `make tests` after updating payloa
             "source_name": "stream",
             "isTriggered": false,
             "primary_key": "member_id"
-        }
+        }}
         ```
+
+
 
 ### About
 

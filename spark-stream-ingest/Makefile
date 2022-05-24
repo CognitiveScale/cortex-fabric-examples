@@ -1,5 +1,5 @@
 # TAG := $(shell git describe --long --always --match='v*.*' | sed 's/v//; s/-/./')
-TAG := test14
+TAG := test15
 SPARK_BASE_IMG := $(shell cat config.json | jq '.spark_base' | sed -e 's/^"//' -e 's/"$///')
 
 docker.build.spark-base:
@@ -27,12 +27,21 @@ docker.build.spark-stream-ingest:
 deploy.spark-stream-ingest:
 	docker tag spark-stream-ingest $(SPARK_BASE_IMG):spark-stream-ingest-skill-$(TAG)
 	docker push  $(SPARK_BASE_IMG):spark-stream-ingest-skill-$(TAG)
-	cortex actions deploy --actionName spark-stream-ingest  --actionType job --docker $(SPARK_BASE_IMG):spark-stream-ingest-skill-$(TAG) --project bptest --cmd '["scuttle", "python3", "submit_job.py", "config.json", "driverTemplate.yaml"]'
+	cortex actions deploy --actionName spark-stream-ingest  --actionType job --docker $(SPARK_BASE_IMG):spark-stream-ingest-skill-$(TAG) --project ${PROJECT_NAME} --cmd '["scuttle", "python3", "submit_job.py", "config.json", "driverTemplate.yaml"]'
 
 types.save:
-	cortex types save -y types/types.yaml --project bptest
+	cortex types save -y types/types.yaml --project ${PROJECT_NAME}
 
 skill.save:
-	cortex skills save -y skill.yaml --project bptest
+	cortex skills save -y skill.yaml --project ${PROJECT_NAME}
 
-deploy.all: docker.push-all.spark-images docker.build.spark-stream-ingest deploy.spark-stream-ingest types.save skill.save
+tests:
+	cortex skills invoke --params-file ./test/payload.json spark-stream-ingest params --project ${PROJECT_NAME}
+
+deploy.all: check-env
+	docker.push-all.spark-images docker.build.spark-stream-ingest deploy.spark-stream-ingest types.save skill.save
+
+check-env:
+ifndef PROJECT_NAME
+	$(error environment variable PROJECT_NAME is not set. Set this to Cortex project name.)
+endif
