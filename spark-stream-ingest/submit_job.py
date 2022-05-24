@@ -105,7 +105,7 @@ if __name__ == '__main__':
     try:
         # pool values from args
         token = os.environ['CORTEX_TOKEN']
-        payload = os.environ['CORTEX_PAYLOAD']
+        payload = json.loads(os.environ['CORTEX_PAYLOAD'])
         input_params = payload['payload']
         n = len(sys.argv)
         # TODO throw error if wrong amount of args

@@ -1,4 +1,5 @@
-{ 
+{
+    "payload" : { 
     "uri": "s3a://dci-perf-managed-content-1e891c002ba4dacaca44/perf/CVS/150/stream_parquet/member_feedback_v16_1.parquet",
     "stream_read_dir": "s3a://dci-perf-managed-content-1e891c002ba4dacaca44/perf/CVS/150/stream_parquet", 
     "publicKey":"", 
@@ -12,4 +13,5 @@
     "source_name": "stream",
     "isTriggered": false,
     "primary_key": "member_id"
+    }
 }
