@@ -58,13 +58,18 @@ public class Main {
                     throw new Exception(String.format("Connection parameters validation failed. %s", errors));
                 }
                 // check any secure files like service account volume mapped
-                Files.list(Paths.get("/secure-storage")).forEach(f -> {
-                    try {
-                        LOGGER.info("File {} of size {} found in '/secure-storage'", f.getFileName(), Files.size(f));
-                    } catch (IOException e) {
-                        LOGGER.error("Failed to get file size of {} ", f.getFileName(), e);
-                    }
-                });
+                try {
+                    Files.list(Paths.get("/secure-storage")).forEach(f -> {
+                        try {
+                            LOGGER.info("File {} of size {} found in '/secure-storage'", f.getFileName(), Files.size(f));
+                        } catch (IOException e) {
+                            LOGGER.error("Failed to get file size of {} ", f.getFileName(), e);
+                        }
+                    });
+                } catch (Exception e) {
+                    // '/secure-storage' volume mount is optional, so may not be present. So, just logging the error
+                    LOGGER.error("Failed to list '/secure-storage' volume mount", e);
+                }
 
                 // setup on validation success
                 example.setup(jdbcParams);
