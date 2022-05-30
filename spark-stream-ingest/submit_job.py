@@ -1,5 +1,5 @@
 """
-Copyright (c) 2021. Cognitive Scale Inc. All rights reserved.
+Copyright (c) 2022. Cognitive Scale Inc. All rights reserved.
 
 """
 import os
@@ -7,14 +7,15 @@ import subprocess
 import yaml
 import sys
 import json
+import io
+import traceback
+from cortex.content import ManagedContentClient
 
 
 def get_runtime_args(config, driver_spec_loc, token):
     pyspark_args = config['pyspark']
     options = pyspark_args['options']
-    # os.environ['SPARK_HOME'] = "/Users/bpandey/projects/cortex6/cortex-fabric-examples/spark-stream-ingest/submit/submit/opt/spark"
-    # os.environ['HADOOP_HOME'] 
-    args = [os.environ['SPARK_HOME'] + "/" + pyspark_args['pyspark_bin']]
+    args = [os.path.join(os.environ['SPARK_HOME'], pyspark_args['pyspark_bin'])]
     for key in options.keys():
         val = options[key]
         if isinstance(val, str):
@@ -43,6 +44,21 @@ def get_config_file(config_file_loc):
     with open(config_file_loc) as json_file:
         return json.load(json_file)
 
+
+def download_from_managed_content(managed_content_client, key, project):
+    try:
+        return managed_content_client.download(
+            key, retries=3, project=project)
+    except Exception as e:
+        traceback.print_exc()
+        raise Exception(f"Failed to fetch {key} from managed content")
+
+
+def get_config_from_mc(key, payload):
+    managed_content_client = ManagedContentClient(payload['apiEndpoint'], token=os.environ['CORTEX_TOKEN'])
+    content = download_from_managed_content(managed_content_client, key, payload['projectId']).read()
+    return json.load(io.BytesIO(content))
+    
 
 def get_driver_template(driver_file_loc):
     with open(driver_file_loc) as yaml_file:
@@ -113,7 +129,11 @@ if __name__ == '__main__':
         driver_template_loc = sys.argv[2]
 
         # get resource files from filesystem
-        spark_config = get_config_file(config_file_loc)
+        if not input_params.get("config"):
+            spark_config = get_config_file(config_file_loc)
+        else:
+            spark_config = get_config_from_mc(key=input_params.get("config"), payload=payload)
+        
         driver_template = get_driver_template(driver_template_loc)
 
         # variable replace and write new driver podspec

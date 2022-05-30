@@ -1,3 +1,7 @@
+"""
+Copyright (c) 2022. Cognitive Scale Inc. All rights reserved.
+
+"""
 import json
 import os
 import sys
