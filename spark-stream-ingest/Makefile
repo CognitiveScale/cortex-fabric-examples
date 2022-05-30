@@ -18,7 +18,7 @@ types.save: check-env
 	cortex types save -y types/types.yaml --project ${PROJECT_NAME}
 
 tests: check-env
-	cortex skills invoke --params-file ./test/payload.json spark-stream-ingest3 params --project ${PROJECT_NAME}
+	cortex skills invoke --params-file ./test/payload.json spark-stream-ingest params --project ${PROJECT_NAME}
 
 all: build.container push.container types.save skill.save
 

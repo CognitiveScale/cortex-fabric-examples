@@ -11,7 +11,6 @@
             "--master": "k8s://https://kubernetes.default.svc",
             "--deploy-mode": "cluster",
             "--name": "amp-cli",
-            "--class": "com.c12e.cortex.phoenix.cli.ApplicationKt",
             "--conf": {
                 "spark.executor.cores": 1,
                 "spark.executor.instances": 1,
@@ -52,8 +51,8 @@
                 "spark.kubernetes.driverEnv.PROFILES_BUCKET": "cortex-profiles",
                 "spark.kubernetes.driverEnv.AMP_BUCKET": "cortex-amp",
                 "spark.kubernetes.driverEnv.CONTENT_BUCKET": "cortex-content",
-                "spark.kubernetes.driver.container.image": "private-registry.dci-dev.dev-eks.insights.ai/spark-stream-ingest:test6",
-                "spark.kubernetes.executor.container.image": "private-registry.dci-dev.dev-eks.insights.ai/spark-stream-ingest:test6",
+                "spark.kubernetes.driver.container.image": "610527985415.dkr.ecr.us-east-1.amazonaws.com/spark-stream-ingest:fin96",
+                "spark.kubernetes.executor.container.image": "610527985415.dkr.ecr.us-east-1.amazonaws.com/spark-stream-ingest:fin96",
                 "spark.kubernetes.namespace": "cortex-compute"
             }
         }

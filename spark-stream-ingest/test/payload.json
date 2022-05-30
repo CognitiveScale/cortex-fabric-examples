@@ -1,9 +1,9 @@
 {
     "payload" : { 
-    "uri": "s3a://dci-perf-managed-content-1e891c002ba4dacaca44/perf/CVS/150/stream_parquet/member_feedback_v16_1.parquet",
-    "stream_read_dir": "s3a://dci-perf-managed-content-1e891c002ba4dacaca44/perf/CVS/150/stream_parquet", 
-    "publicKey":"", 
-    "secretKey":"",
+    "uri": "s3a://dci-perf-managed-content-1e891c002ba4dacaca44/perf/CVS/150/stream_parquet_small/member_feedback_v16_1.parquet",
+    "stream_read_dir": "s3a://dci-perf-managed-content-1e891c002ba4dacaca44/perf/CVS/150/stream_parquet_small", 
+    "publicKey": "", 
+    "secretKey": "",
     "s3Endpoint":"http://s3.amazonaws.com",
     "maxFilesPerTrigger": 1, 
     "pollInterval":60,
@@ -12,6 +12,7 @@
     "project_id": "bptest",
     "source_name": "stream",
     "isTriggered": false,
-    "primary_key": "member_id"
+    "primary_key": "member_id",
+    "config": "config.json"
     }
 }
