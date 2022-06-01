@@ -3,10 +3,9 @@
         "pyspark_bin": "bin/spark-submit",
         "app_command": [
             "scuttle",
-            "python",
-            "src/main/python/main.py"
+            "/opt/entrypoint.sh"
         ],
-        "app_location": "local:///src/main/python/main.py",
+        "app_location": "local:////opt/spark/work-dir/src/main/python/main.py",
         "options": {
             "--master": "k8s://https://kubernetes.default.svc",
             "--deploy-mode": "cluster",

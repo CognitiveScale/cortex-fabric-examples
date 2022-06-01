@@ -27,6 +27,6 @@ WORKDIR /opt/spark/work-dir
 RUN chmod g+w /opt/spark/work-dir
 RUN chmod a+x /opt/decom.sh
 
-ENTRYPOINT ["scuttle", "python3", "submit_job.py", "config.json", "driverTemplate.yaml"]
+ENTRYPOINT ["/bin/scuttle", "/opt/entrypoint.sh"]
 
 USER ${spark_uid}

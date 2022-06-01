@@ -39,10 +39,12 @@ def initialize_spark():
         .config("spark.hadoop.fs.s3a.endpoint", os.environ['S3_ENDPOINT']) \
         .config("spark.hadoop.fs.s3a.path.style.access", "true")
 
-    conf = pyspark.SparkConf()
-
     spark = configure_spark_with_delta_pip(
-        builder).config(conf=conf).getOrCreate()
+        builder).getOrCreate()
+    conf = spark.sparkContext.getConf().getAll()
+    print("===============")
+    print(conf)
+    print("===============")
     return spark
 
 
