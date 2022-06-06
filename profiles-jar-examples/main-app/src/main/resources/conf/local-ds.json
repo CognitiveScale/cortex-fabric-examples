@@ -1,0 +1,20 @@
+{
+    "pyspark": {
+        "pyspark_bin": "bin/spark-submit",
+        "app_command": [
+            "ds-rw",
+            "-p",
+            "mctest30",
+            "-d",
+            "member-base-ds"
+        ],
+        "app_location": "local:///app/libs/app.jar",
+        "options": {
+            "--master": "local[*]",
+            "--class": "com.c12e.cortex.examples.Application",
+            "--conf": {
+                "spark.fabric.catalog.local.dir": "/opt/spark/work-dir/src/main/resources/spec"
+            }
+        }
+    }
+}

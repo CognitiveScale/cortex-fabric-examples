@@ -1,0 +1,16 @@
+#
+# Copyright 2020 Cognitive Scale, Inc. All Rights Reserved.
+#
+# See LICENSE.txt for details.
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+# Get the JFrog credentials from LastPass and put them in $USER_HOME/.gradle/gradle.properties using this template
+
+artifactoryUser=<YOUR USERNAME>
+artifactoryPassword=<YOUR PASSWORD>

@@ -1,0 +1,24 @@
+{
+    "pyspark": {
+        "pyspark_bin": "bin/spark-submit",
+        "app_command": [
+            "join-conns",
+            "-p",
+            "mctest30",
+            "-l",
+            "member-base-file",
+            "-r",
+            "member-flu-risk-file",
+            "-w",
+            "member-joined-file"
+        ],
+        "app_location": "local:///app/libs/app.jar",
+        "options": {
+            "--master": "local[*]",
+            "--class": "com.c12e.cortex.examples.Application",
+            "--conf": {
+                "spark.fabric.catalog.local.dir": "/opt/spark/work-dir/src/main/resources/spec"
+            }
+        }
+    }
+}
