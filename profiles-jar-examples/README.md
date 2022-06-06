@@ -1,7 +1,8 @@
 # Profiles JAR Examples
-Example repository utilizing the Fabric Profiles Spark JAR WIP
+Example project utilizing the Fabric Profiles Spark JAR - WIP.
 
-Additional modules can be added to the main-app to facilitate your specific workflow
+The project has a main CLI entrypoint with subcommands for running different examples. Additional modules can be added
+to the main-app to facilitate your specific workflow.
 
 #### TODO
 * additional unit tests
@@ -44,44 +45,67 @@ make build
 docker system prune
 ```
 
-
 ## Run Commands
-Running the profiles-examples, can replace with your application
 
-Set log levels profiles-examples/main-app/src/main/resources/spark-conf/logback.xml
+The application can be run in a Docker image using compatible Spark & Hadoop dependencies provided by the base Docker
+image. The image uses spark-submit to run the application. Sample spark-submit configs are under
+`main-app/src/main/resources/conf/`. These samples are used below.
 
-Sample spark-submit configs are at profiles-examples/main-app/src/main/resources/conf
-
+The logging configuration for the example application is under `main-app/src/main/resources/spark-conf/logback.xml`.
 
 ### Run spark-submit in standalone (local) mode
+
+The sample spark-submit config file is under:  `main-app/src/main/resources/conf/local.json`. The config uses a local
+spark session and local (mock) clients for interacting with Cortex (see the volume mounts for 'Catalog').
+
 ```
 # vol 1 is the spark-submit config files
-# vol 2 is the local catalog specs
+# vol 2 is the local catalog specs - this  is required to 
 # vol 3 is the output of the joined connection
-docker run -p 4040:4040 -e "CORTEX_TOKEN=xxxxxxxxx" --entrypoint="python" \
+docker run -p 4040:4040 -e "CONN_AWS_SECRET=xxxxx" -e "CORTEX_TOKEN=xxxxxxxxx" --entrypoint="python" \
 -v $(pwd)/main-app/src/main/resources/conf:/opt/myconf \
 -v $(pwd)/main-app/src:/opt/spark/work-dir/src \
 -v $(pwd)/main-app/build:/opt/spark/work-dir/build \
 profiles-example submit_job.py /opt/myconf/local.json
+```
 
+```
 # Take a look around at the container
-docker run -p 4040:4040 -e "CORTEX_TOKEN=xxxxxxxxx" --entrypoint="" \
+docker run -p 4040:4040 -e "CONN_AWS_SECRET=xxxxx" -e "CORTEX_TOKEN=xxxxxxxxx" --entrypoint="" \
 -v $(pwd)/main-app/src/main/resources/conf:/opt/myconf \
 -v $(pwd)/main-app/src:/opt/spark/work-dir/src \
 -v $(pwd)/main-app/build:/opt/spark/work-dir/build \
 -it profiles-example /bin/bash
 ```
+
 ### Run spark-submit in standalone (local) mode attached to dci-dev
 
-Need to set env vars
-- CORTEX_TOKEN=xxxx <-- for connecting to api-server
-- STORAGE_TYPE=s3
-- AWS_ACCESS_KEY_ID=changeme
-- AWS_SECRET_KEY=changeme
-- S3_ENDPOINT=http://host.docker.internal:9000  <-- exposes host port
-- CONN_AWS_SECRET=xxxxx <-- secret for aws remote
+The config file for this example is under: `main-app/src/main/resources/conf/dci-dev.json`. The config uses spark standalone mode,
+but interacts with an actual Cortex Fabric instance (dci-dev) for the Catalog resources.
 
-Will need to expose minio by port forwarding 9000
+Prerequisites:
+- Access to Cortex Fabric instance and knowledge of backend configuration (Cortex Catalog/Manged Content)
+
+Steps:
+0. Generate a CORTEX_TOKEN (to connect to the Fabric)
+1. Update the Spark config file to set arguments for the example to run (e.g. `--project`, which connections to join,
+   output connection). The default example is Joining two connections and saves the result in another connection (see
+   `main-app/src/main/java/com/c12e/cortex/examples/JoinConnections.java`).
+3. If still running the join-connections example, then ensure the connections (left, right, and output) exist in
+   Cortex. **NOTE: The underlying file for the output connection does not need to exist, but the connection must be
+   defined in Cortex.**
+4. Set the below environment variables, to run against the cluster (thse may vary depending on the connections & cluster)
+    * For Fabric authentication
+        - `CORTEX_TOKEN=xxxx`
+    * For Cortex backend storage (i.e. Catalog/Managed Content)
+        - `STORAGE_TYPE=s3`
+        - `AWS_ACCESS_KEY_ID=xxxxx`
+        - `AWS_SECRET_KEY=xxxxx`
+        - `S3_ENDPOINT=http://host.docker.internal:9000`, exposes the host port (this should be the exact value used by dci-dev)
+    * For the `JoinConnections` example
+        - `CONN_AWS_SECRET=xxxxx`, this should be the secret key for the AWS remote S3 Connection
+
+You will need to expose minio by port forwarding 9000, run:
 ```
 docker run -p 4040:4040 -e "CORTEX_TOKEN=$(echo $CORTEX_TOKEN)" \
 -e "STORAGE_TYPE=s3" \
@@ -93,6 +117,7 @@ docker run -p 4040:4040 -e "CORTEX_TOKEN=$(echo $CORTEX_TOKEN)" \
 -v $(pwd)/main-app/src/main/resources/conf:/opt/myconf \
 profiles-example submit_job.py /opt/myconf/dci-dev.json
 ```
+
 
 ### Run spark-submit in cluster mode attached to dci-dev
 This will run the driver and any configured executors directly on the cluster
