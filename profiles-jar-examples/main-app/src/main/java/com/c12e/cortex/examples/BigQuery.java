@@ -55,6 +55,8 @@ public class BigQuery extends  BaseCommand implements Runnable {
                 .option("credentials", System.getenv("BIGQUERY_CRED"))
                 .option("table", "bigquery-public-data.samples.shakespeare").load();
 
+        ds.show(1);
+
         fabricSession.write().writeConnection(ds, project, sink).mode(SaveMode.Overwrite).save();
 
     }

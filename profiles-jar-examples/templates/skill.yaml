@@ -1,0 +1,21 @@
+camel: 1.0.0
+name: profiles-example
+title: Fabric profiles example
+description: Fabric profiles example
+inputs:
+  - name: params
+    title: input
+    parameters:
+      $ref: ProfilesExampleReq
+
+    routing:
+      all:
+        action: profiles-example
+        runtime: cortex/jobs
+        output: response
+
+outputs:
+  - name: response
+    title: Job result
+    parameters:
+      $ref: ProfilesExampleRes

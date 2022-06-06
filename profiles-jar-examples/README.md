@@ -35,8 +35,11 @@ Some useful links:
 ## Build Commands
 
 ```
-# Clean Build and Create Docker Image
+# Docker Image
 make create-app-image
+
+# Clean Build and Create Docker Image
+make clean build create-app-image
 
 # Clean and Build Projects
 make build
@@ -53,6 +56,13 @@ image. The image uses spark-submit to run the application. Sample spark-submit c
 
 The logging configuration for the example application is under `main-app/src/main/resources/spark-conf/logback.xml`.
 
+### Run CLI
+* `make build`
+* `cd main-app/build/distributions`
+* `unzip cortex-profiles-1.0.0-SNAPSHOT.zip`
+* `cd cortex-profiles-1.0.0-SNAPSHOT`
+* `./bin/cortex-profiles join-conns -p mctest30 -l member-base-file -r member-flu-risk-file -w member-joined-file`
+
 ### Run spark-submit in standalone (local) mode
 
 The sample spark-submit config file is under:  `main-app/src/main/resources/conf/local.json`. The config uses a local
@@ -63,16 +73,16 @@ spark session and local (mock) clients for interacting with Cortex (see the volu
 # vol 2 is the local catalog specs - this  is required to 
 # vol 3 is the output of the joined connection
 docker run -p 4040:4040 -e "CONN_AWS_SECRET=xxxxx" -e "CORTEX_TOKEN=xxxxxxxxx" --entrypoint="python" \
--v $(pwd)/main-app/src/main/resources/conf:/opt/myconf \
+-v $(pwd)/main-app/src/main/resources/conf:/app/conf \
 -v $(pwd)/main-app/src:/opt/spark/work-dir/src \
 -v $(pwd)/main-app/build:/opt/spark/work-dir/build \
-profiles-example submit_job.py /opt/myconf/local.json
+profiles-example submit_job.py "{\"payload\" : {\"config\": \"/app/conf/local.json\"}}"
 ```
 
 ```
 # Take a look around at the container
 docker run -p 4040:4040 -e "CONN_AWS_SECRET=xxxxx" -e "CORTEX_TOKEN=xxxxxxxxx" --entrypoint="" \
--v $(pwd)/main-app/src/main/resources/conf:/opt/myconf \
+-v $(pwd)/main-app/src/main/resources/conf:/app/conf \
 -v $(pwd)/main-app/src:/opt/spark/work-dir/src \
 -v $(pwd)/main-app/build:/opt/spark/work-dir/build \
 -it profiles-example /bin/bash
@@ -116,8 +126,8 @@ docker run -p 4040:4040 -e "CORTEX_TOKEN=$(echo $CORTEX_TOKEN)" \
 -e "S3_ENDPOINT=http://host.docker.internal:9000" \
 -e "CONN_AWS_SECRET=$(echo $CONN_AWS_SECRET)" \
 --entrypoint="python" \
--v $(pwd)/main-app/src/main/resources/conf:/opt/myconf \
-profiles-example submit_job.py /opt/myconf/dci-dev.json
+-v $(pwd)/main-app/src/main/resources/conf:/app/conf \
+profiles-example submit_job.py "{\"payload\" : {\"config\": \"/app/conf/dci-dev.json\"}}"
 ```
 
 
@@ -134,9 +144,9 @@ I ran into issue with this due to my kube config needing the aws executable
 docker run -p 4040:4040 -e "CORTEX_TOKEN=$(echo $CORTEX_TOKEN)" \
 --entrypoint="python" \
 --env KUBECONFIG=/kube/config \
--v $(pwd)/main-app/src/main/resources/conf:/opt/myconf \
+-v $(pwd)/main-app/src/main/resources/conf:/app/conf \
 -v ~/.kube/config:/kube/config \
-profiles-example submit_job.py /opt/myconf/dci-dev-local-cluster.json
+profiles-example submit_job.py "{\"payload\" : {\"config\": \"/app/conf/dci-dev-local-cluster.json\"}}"
 ```
 Running outside the container:
 1. `docker export CONTAINER_ID > container.tar`
@@ -150,6 +160,32 @@ Running outside the container:
 
 ### Run spark-submit in cluster mode as skill
 
+Need to set env vars
+* DOCKER_PREGISTRY_URL=xxxx <-- private registry url
+* PROJECT_NAME=xxxx <-- for the skill, action and types save
+* CORTEX_TOKEN=xxxx <-- for connecting to api-server
+
+```
+# Building and pushing the skill container, saving the skill and the types
+make deploy-skill
+
+# Tag the latest create-app-image built container
+make tag-container
+
+# Push the container
+make push-container
+
+# Deploy the action and save the skill
+make skill-save
+
+# Save types
+make types-save
+
+# Invoke the skill with payload
+make tests
+```
+#### Update the payload.json file with the right params before invoking the skill
+
 
 ### For CData example
 * Get CData driver jars from http://cdatabuilds.s3.amazonaws.com/support/JDBC_JARS_21.0.8059.zip
@@ -158,14 +194,14 @@ Running outside the container:
 * For database password, SSL certs, service account JSON file update `CData.java` example and add secrets through env var or file
 * Docker command to run in local
 ```
-docker run -p 4040:4040 -e "CORTEX_TOKEN=xxxxxxxxx" -e "CDATA_OEM_KEY=<CData OEM Key>"  -e "CDATA_PRODUCT_CHECKSUM=<CData product checksum>"  --entrypoint="python" -v $(pwd)/main-app/src/main/resources/conf:/opt/myconf -v $(pwd)/main-app/src:/opt/spark/work-dir/src -v $(pwd)/main-app/build:/opt/spark/work-dir/build profiles-example submit_job.py /opt/myconf/local.json
+docker run -p 4040:4040 -e "CORTEX_TOKEN=xxxxxxxxx" -e "CDATA_OEM_KEY=<CData OEM Key>"  -e "CDATA_PRODUCT_CHECKSUM=<CData product checksum>"  --entrypoint="python" -v $(pwd)/main-app/src/main/resources/conf:/app/conf -v $(pwd)/main-app/src:/opt/spark/work-dir/src -v $(pwd)/main-app/build:/opt/spark/work-dir/build profiles-example submit_job.py "{\"payload\" : {\"config\": \"/app/conf/local.json\"}}"
 ```
 * We can't use cortex-cdata-plugin to create JDBC connection or parsing cortex connection because Spark SQL has specific requirement for JDBC https://spark.apache.org/docs/latest/sql-data-sources-jdbc.html
 
 #### Notes on CData BigQuery connection
 Get GCP Service Account JSON as described in https://docs.google.com/document/d/1T1u8RMZhDYMIXHk7v3lLF2rzag7xLTr5CLHC-49UiYU/edit#heading=h.756ioo8pxy08. and put into `profiles-examples/main-app/src/main/resources/credentials`
 ```
-docker run -p 4040:4040 -e "CORTEX_TOKEN=xxxxxxxxx" -e "CDATA_OEM_KEY=<CData OEM Key>"  -e "CDATA_PRODUCT_CHECKSUM=<CData product checksum>"  --entrypoint="python" -v $(pwd)/main-app/src/main/resources/credentials/:/secure-storage/ -v $(pwd)/main-app/src/main/resources/conf:/opt/myconf -v $(pwd)/main-app/src:/opt/spark/work-dir/src -v $(pwd)/main-app/build:/opt/spark/work-dir/build profiles-example submit_job.py /opt/myconf/local.json
+docker run -p 4040:4040 -e "CORTEX_TOKEN=xxxxxxxxx" -e "CDATA_OEM_KEY=<CData OEM Key>"  -e "CDATA_PRODUCT_CHECKSUM=<CData product checksum>"  --entrypoint="python" -v $(pwd)/main-app/src/main/resources/credentials/:/secure-storage/ -v $(pwd)/main-app/src/main/resources/conf:/app/conf -v $(pwd)/main-app/src:/opt/spark/work-dir/src -v $(pwd)/main-app/build:/opt/spark/work-dir/build profiles-example submit_job.py "{\"payload\" : {\"config\": \"/app/conf/local.json\"}}"
 ```
 Currently, CData BigQuery JDBC connection is failing with
 ```
@@ -183,5 +219,5 @@ Looks like Spark is passing `port` implicitly
 * Get GCP Service Account JSON as described in https://docs.google.com/document/d/1T1u8RMZhDYMIXHk7v3lLF2rzag7xLTr5CLHC-49UiYU/edit#heading=h.756ioo8pxy08. and put into `profiles-examples/main-app/src/main/resources/credentials`
 * Docker command to run in local
 ```
-docker run -p 4040:4040 -e "CORTEX_TOKEN=xxxxxxxxx" --entrypoint="python" -v $(pwd)/main-app/src/main/resources/credentials/:/secure-storage/ -v $(pwd)/main-app/src/main/resources/conf:/opt/myconf -v $(pwd)/main-app/src:/opt/spark/work-dir/src -v $(pwd)/main-app/build:/opt/spark/work-dir/build profiles-example submit_job.py /opt/myconf/local.json
+docker run -p 4040:4040 -e "CORTEX_TOKEN=xxxxxxxxx" --entrypoint="python" -v $(pwd)/main-app/src/main/resources/credentials/:/secure-storage/ -v $(pwd)/main-app/src/main/resources/conf:/app/conf -v $(pwd)/main-app/src:/opt/spark/work-dir/src -v $(pwd)/main-app/build:/opt/spark/work-dir/build profiles-example submit_job.py "{\"payload\" : {\"config\": \"/app/conf/local-bigquery.json\"}}"
 ```

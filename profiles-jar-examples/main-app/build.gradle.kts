@@ -48,6 +48,15 @@ tasks.test {
 }
 
 project.setProperty("mainClassName", "com.c12e.cortex.examples.Application")
+distributions {
+    main {
+        contents {
+            from("src/main/resources") {
+                into("src/main/resources")
+            }
+        }
+    }
+}
 /*
 tasks.create("docker-install", DockerBuildImage::class) {
     inputDir.set(file("docker"))

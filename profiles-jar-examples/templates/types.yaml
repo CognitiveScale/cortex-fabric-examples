@@ -1,0 +1,20 @@
+types:
+  - camel: 1.0.0
+    name: ProfilesExampleReq
+    title: Profiles Example Request
+    description: Represents a request of Profiles Example input
+    parameters:
+      - name: input
+        type: object
+        description: Input Params
+        required: false
+
+  - camel: 1.0.0
+    name: ProfilesExampleRes
+    title: Profiles Example Response
+    description: Represents a response of Profiles Example
+    parameters:
+      - name: output
+        type: object
+        description: Job Execution Logs
+        required: false
