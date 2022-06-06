@@ -51,7 +51,7 @@ public class DataSourceRW extends  BaseCommand implements Runnable {
         SparkSession session = getSparkSession(getDefaultProps());
 
         //create local secrets map for use in non-cluster env
-        //checkRequiredSecrets();
+        checkRequiredSecrets();
         LocalSecretClient.LocalSecrets localSecrets = new LocalSecretClient.LocalSecrets();
         localSecrets.setSecretsForProject(project, new HashMap() {{
                     put("aws-secret", System.getenv(AWS_CONNECTION_SECRET_ENV));

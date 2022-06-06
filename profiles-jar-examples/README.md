@@ -87,14 +87,15 @@ Prerequisites:
 - Access to Cortex Fabric instance and knowledge of backend configuration (Cortex Catalog/Manged Content)
 
 Steps:
-0. Generate a CORTEX_TOKEN (to connect to the Fabric)
+0. Generate a CORTEX_TOKEN
 1. Update the Spark config file to set arguments for the example to run (e.g. `--project`, which connections to join,
    output connection). The default example is Joining two connections and saves the result in another connection (see
    `main-app/src/main/java/com/c12e/cortex/examples/JoinConnections.java`).
 3. If still running the join-connections example, then ensure the connections (left, right, and output) exist in
    Cortex. **NOTE: The underlying file for the output connection does not need to exist, but the connection must be
    defined in Cortex.**
-4. Set the below environment variables, to run against the cluster (thse may vary depending on the connections & cluster)
+4. Update the name of the secret used by the example for your connections. The default secret name is `aws_secret`
+5. Set the below environment variables, to run against the cluster (thse may vary depending on the connections & cluster)
     * For Fabric authentication
         - `CORTEX_TOKEN=xxxx`
     * For Cortex backend storage (i.e. Catalog/Managed Content)
