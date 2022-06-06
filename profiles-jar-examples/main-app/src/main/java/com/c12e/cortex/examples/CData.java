@@ -36,6 +36,14 @@ public class CData extends  BaseCommand implements Runnable {
     @CommandLine.Spec
     private CommandLine.Model.CommandSpec cmdSpec;
 
+    private static final String CDATA_KEY_ENV = "CDATA_OEM_KEY";
+
+    private static void checkRequiredSecrets() {
+        if (System.getenv(CDATA_KEY_ENV) == null) {
+            System.err.println(String.format("Missing environment variable '%s' for local secrets client", CDATA_KEY_ENV));
+            System.exit(2);
+        }
+    }
 
 
     /**
@@ -48,9 +56,10 @@ public class CData extends  BaseCommand implements Runnable {
         session.conf().getAll().toStream().print();
 
         //create local secrets map for use in non-cluster env
+        //checkRequiredSecrets();
         LocalSecretClient.LocalSecrets localSecrets = new LocalSecretClient.LocalSecrets();
         localSecrets.setSecretsForProject(project, new HashMap() {{
-                    put("oem_key", System.getenv("CDATA_OEM_KEY"));
+                    put("oem_key", System.getenv(CDATA_KEY_ENV));
                 }}
         );
         System.setProperty("product_checksum", System.getenv("CDATA_PRODUCT_CHECKSUM"));

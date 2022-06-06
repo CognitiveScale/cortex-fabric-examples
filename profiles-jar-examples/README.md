@@ -103,7 +103,8 @@ Steps:
         - `AWS_SECRET_KEY=xxxxx`
         - `S3_ENDPOINT=http://host.docker.internal:9000`, exposes the host port (this should be the exact value used by dci-dev)
     * For the `JoinConnections` example
-        - `CONN_AWS_SECRET=xxxxx`, this should be the secret key for the AWS remote S3 Connection
+       - `CONN_AWS_SECRET=xxxxx`, this should be the secret key that can access the AWS remote S3 Connection. (This is
+         because a mock client is used for secret access, because secrets are only accessible from WITHIN the cluster).
 
 You will need to expose minio by port forwarding 9000, run:
 ```

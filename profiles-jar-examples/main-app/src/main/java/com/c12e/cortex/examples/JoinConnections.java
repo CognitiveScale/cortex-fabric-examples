@@ -39,7 +39,14 @@ public class JoinConnections extends  BaseCommand implements Runnable {
     @CommandLine.Spec
     private CommandLine.Model.CommandSpec cmdSpec;
 
+    private static final String AWS_CONNECTION_SECRET_ENV = "CONN_AWS_SECRET";
 
+    private static void checkRequiredSecrets() {
+        if (System.getenv(AWS_CONNECTION_SECRET_ENV) == null) {
+            System.err.println(String.format("Missing environment variable '%s' for local secrets client", AWS_CONNECTION_SECRET_ENV));
+            System.exit(2);
+        }
+    }
 
     /**
      * Code to run for a command
@@ -51,9 +58,10 @@ public class JoinConnections extends  BaseCommand implements Runnable {
         session.conf().getAll().toStream().print();
 
         //create local secrets map for use in non-cluster env
+        //checkRequiredSecrets();
         LocalSecretClient.LocalSecrets localSecrets = new LocalSecretClient.LocalSecrets();
-        localSecrets.setSecretsForProject("mctest30", new HashMap() {{
-                    put("aws-secret", System.getenv("CONN_AWS_SECRET"));
+        localSecrets.setSecretsForProject(project, new HashMap() {{
+                    put("aws-secret", System.getenv(AWS_CONNECTION_SECRET_ENV));
                 }}
         );
 
