@@ -1,0 +1,23 @@
+{
+    "pyspark": {
+        "pyspark_bin": "bin/spark-submit",
+        "app_command": [
+            "sql-join-conns",
+            "-p",
+            "lalit",
+            "-c",
+            "/app/conf/data-ingestion-config.json"
+        ],
+        "app_location": "local:///app/libs/app.jar",
+        "options": {
+            "--master": "local[*]",
+            "--class": "com.c12e.cortex.examples.Application",
+            "--conf": {
+                "spark.fabric.client.phoenix.url": "http://cortex-internal.cortex.svc.cluster.local/fabric/v4/graphql",
+                "spark.fabric.catalog.impl": "com.c12e.cortex.phoenix.profiles.spark.catalog.FabricRemoteCatalog",
+                "spark.driver.memory": "4g",
+                "spark.kubernetes.driver.limit.cores": "4"
+            }
+        }
+    }
+}

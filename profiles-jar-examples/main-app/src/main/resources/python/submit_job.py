@@ -8,7 +8,7 @@ import yaml
 import sys
 import json
 
-def get_runtime_args(config, token):
+def get_runtime_args(config, token, url):
     pyspark_args = config['pyspark']
     options = pyspark_args['options']
     args = [os.environ['SPARK_HOME'] + "/" + pyspark_args['pyspark_bin']]
@@ -26,6 +26,9 @@ def get_runtime_args(config, token):
     args.append(f"spark.kubernetes.driverEnv.CORTEX_TOKEN={token}")
     args.append('--conf')
     args.append(f"spark.fabric.phoenix.token={token}")
+    if url:
+        args.append('--conf')
+        args.append(f"spark.fabric.client.phoenix.url={url}/fabric/v4/graphql")
     args.append(pyspark_args['app_location'])
     for x in pyspark_args['app_command']:
         args.append(x)
@@ -92,9 +95,9 @@ class LogMessage:
 if __name__ == '__main__':
     try:
         # pool values from args
-        token = os.environ['CORTEX_TOKEN']
-
         payload = json.loads(sys.argv[1])
+        token = payload.get('token') or os.environ['CORTEX_TOKEN']
+        print(payload)
         input_params = payload['payload']
 
         n = len(sys.argv)
@@ -104,7 +107,7 @@ if __name__ == '__main__':
         spark_config = get_config_file(config_file_loc)
 
         # create spark-submit call
-        run_args = get_runtime_args(spark_config, token)
+        run_args = get_runtime_args(spark_config, token, payload.get('apiEndpoint'))
 
         print(run_args)
 

@@ -19,6 +19,7 @@ import picocli.CommandLine.Command;
  */
 @Command(name = "profiles-example", version = "v1.0", mixinStandardHelpOptions = true, subcommands = {
         JoinConnections.class,
+        JoinMultiDatasource.class,
         JoinSpark.class,
         CData.class,
         BigQuery.class,
