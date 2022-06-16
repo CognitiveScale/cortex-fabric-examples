@@ -10,7 +10,7 @@ inputs:
     routing:
       all:
         action: hw/sc-chatbot
-        runtime: cortex/functions
+        runtime: cortex/daemons
         output: response
 
 outputs:
