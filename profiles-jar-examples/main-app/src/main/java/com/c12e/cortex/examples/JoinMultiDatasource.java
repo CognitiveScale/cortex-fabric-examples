@@ -47,6 +47,7 @@ public class JoinMultiDatasource extends  BaseCommand implements Runnable {
      */
     @Override
     public void run() {
+        System.out.println(new Date());
         //get spark session
         SparkSession session = getSparkSession(getDefaultProps());
         session.conf().getAll().toStream().print();
@@ -78,7 +79,7 @@ public class JoinMultiDatasource extends  BaseCommand implements Runnable {
             if (!Objects.isNull(select) && select.length > 0) ds = ds.selectExpr(select);
             if (!Objects.isNull(filter) && filter.length() > 0) ds = ds.filter(filter);
             if (!Objects.isNull(limit) && limit > 0) ds = ds.limit(limit);
-
+            
             ds.createOrReplaceTempView(name);
         }
         long start = System.currentTimeMillis();
@@ -113,5 +114,6 @@ public class JoinMultiDatasource extends  BaseCommand implements Runnable {
 
         Dataset<Row> dataSourceDs = fabricSession.read().readConnection(project, output).load();
         System.out.println("Saved DS: " + dataSourceDs.count());
+        System.out.println(new Date());
     }
 }

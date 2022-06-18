@@ -1,6 +1,7 @@
 .PHONY: clean build create-app-image
-
-TAG := latest
+PROJECT_NAME=lalit
+DOCKER_PREGISTRY_URL=gcr.io/fabric-qa
+TAG := v1
 DOCKER_IMAGE := profiles-example
 URL=$(shell cat ~/.cortex/config | jq .profiles[.currentProfile].url)
 ifndef DOCKER_PREGISTRY_URL
@@ -12,7 +13,7 @@ create-app-image:
 	docker build --build-arg base_img=c12e/spark-template:profile-jar-base-6.3.0-M.1 -t profiles-example:latest -f ./main-app/build/resources/main/Dockerfile ./main-app/build
 
 build: clean
-	./gradlew build
+	./gradlew build -x test
 
 clean:
 	./gradlew clean
@@ -27,11 +28,14 @@ push-container: check-env
 skill-save: check-env
 	cortex actions deploy --actionName ${DOCKER_IMAGE} --actionType job --docker ${SPARK_CONTAINER} --project ${PROJECT_NAME} --cmd '["scuttle", "python", "submit_job.py"]' --podspec ./templates/podspec.yaml
 	cortex skills save -y templates/skill.yaml --project ${PROJECT_NAME}
+	sleep 10
 
 types-save: check-env
 	cortex types save -y templates/types.yaml --project ${PROJECT_NAME}
 
 deploy-skill: tag-container push-container types-save skill-save
+
+all: clean build create-app-image deploy-skill invoke
 
 invoke: check-env
 	cortex skills invoke --params-file templates/payload.json profiles-example params --project ${PROJECT_NAME}

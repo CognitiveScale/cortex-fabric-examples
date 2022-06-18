@@ -102,9 +102,11 @@ if __name__ == '__main__':
 
         n = len(sys.argv)
         # TODO throw error if wrong amount of args
-        config_file_loc = input_params.get("config")
-        # get resource files from filesystem
-        spark_config = get_config_file(config_file_loc)
+        spark_config = input_params.get("spark_config")
+        if not spark_config:
+            # get resource files from filesystem
+            config_file_loc = input_params.get("config")
+            spark_config = get_config_file(config_file_loc)
 
         # create spark-submit call
         run_args = get_runtime_args(spark_config, token, payload.get('apiEndpoint'))
