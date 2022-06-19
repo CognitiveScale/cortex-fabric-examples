@@ -1,26 +1,33 @@
 {
-  "connections": [
+  "profiles": [
     {
-      "name": "T_MBR_MEDD_PA_CASE",
-      "filter": "MBR_ACCT_GID > '${filter_value}'",
-      "limit": 5
-    },
-    {
-      "name": "V_MBR_MEDD_PA_PRDCTV",
-      "filter": "CASE_NBR > '${filter_value}'",
-      "limit": 5
-    },
-    {
-      "name": "V_RXC_PRIOR_ATHZN",
-      "filter": "MBR_ACCT_GID > '${filter_value}'",
-      "limit": 5
+      "connections": [
+        {
+          "name": "T_MBR_MEDD_PA_CASE",
+          "filter": "MBR_ACCT_GID > '${filter_value}'",
+          "limit": 5
+        },
+        {
+          "name": "V_MBR_MEDD_PA_PRDCTV",
+          "filter": "CASE_NBR > '${filter_value}'",
+          "limit": 5
+        },
+        {
+          "name": "V_RXC_PRIOR_ATHZN",
+          "filter": "MBR_ACCT_GID > '${filter_value}'",
+          "limit": 5
+        }
+      ],
+      "join": {
+        "query": "SELECT * FROM T_MBR_MEDD_PA_CASE INNER JOIN V_MBR_MEDD_PA_PRDCTV USING ( CASE_NBR ) INNER JOIN V_RXC_PRIOR_ATHZN USING ( MBR_ACCT_GID ) WHERE MBR_ACCT_GID > '${filter_value}' LIMIT 5"
+      },
+      "variables": {
+        "filter_value": "0"
+      }
     }
   ],
-  "join": {
-    "query": "SELECT * FROM T_MBR_MEDD_PA_CASE INNER JOIN V_MBR_MEDD_PA_PRDCTV USING ( CASE_NBR ) INNER JOIN V_RXC_PRIOR_ATHZN USING ( MBR_ACCT_GID ) WHERE MBR_ACCT_GID > '${filter_value}' LIMIT 5"
-  },
-  "variables": {
-    "filter_value": "0"
+  "input": {
+    "connection": "gcs-input"
   },
   "output": {
     "connection": "gcs-output"
