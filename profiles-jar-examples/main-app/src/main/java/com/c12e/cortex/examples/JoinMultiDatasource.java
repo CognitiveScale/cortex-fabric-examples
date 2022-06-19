@@ -111,7 +111,7 @@ public class JoinMultiDatasource extends  BaseCommand implements Runnable {
 
         List<Map> profiles = (List<Map>) config.get("profiles");
 
-        // Fetch parquet uri
+        // Fetch batchDir uri
         String connectionName = (String) (((Map) ((List) profiles.get(0).get("connections")).get(0)).get("name"));
         String parquetUri = fabricSession.getContext().getFabricCatalog().getConnection(project, connectionName).getParamMap().get("uri");
         String batchDir = this.getParent(parquetUri, "/");
@@ -174,9 +174,8 @@ public class JoinMultiDatasource extends  BaseCommand implements Runnable {
             Dataset<Row> dataSourceDs = fabricSession.read().readConnection(project, output).load();
             System.out.println("Saved DS: " + dataSourceDs.count());
             System.out.println(new Date());
-
-            // Write checkpoint
-            writeCheckpoint(batchDir);
         }
+        // Write checkpoint
+        writeCheckpoint(batchDir);
     }
 }
