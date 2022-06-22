@@ -6,24 +6,26 @@ This example Skill is a template for JDBC and CDATA connection implemented as Co
 * Docker daemon running  
 * Cortex CLI configured to target Cortex DCI  
 * Jar build of https://github.com/CognitiveScale/cortex-cdata-plugin in lib directory (included)
-* Add JDBC/CDATA driver jar to classpath by any of the below methods
+* CDATA driver jars are available in Cortex Managed Content. Add any required JDBC driver jar to classpath by any of the below methods
   > Add to build.gradle
   
   > Copy to project's lib directory
   
-  > Upload to Cortex managed content in `shared` project and add `managed_content_key` custom parameter in cortex connection 
+  > Upload to Cortex managed content in `shared` project with key `.cortex/cdata/<driver_class_name>`
   > (discouraged as this required instrumentation to add jar to classpath at runtime)
   > To use this run application wit javaagent
 
 * Cortex Connection created in the Cortex DCI (in the project where we will deploy the Skill)
 * **For CDATA Connections:**
-    * OEM Key and product checksum configured in `shared` project Secret (`cdata-oem-key` and `cdata-prdct-checksum`Secrets)
+    * CDATA license keys installed. Check OEM Key and product checksum configured in `shared` project Secret (`cdata-oem-key` and `cdata-prdct-checksum`Secrets)
     * Plugin properties JSON prepared as per CDATA documentation and saved as Secret in the project
       > Follow (CDATA JDBC doc)[https://cdn.cdata.com/help/OWG/jdbc/pg_JDBCconnectcode.htm] of respective database to get driver class name, JDBC URL and prepare plugin properties
+      > For example BigQuery has `cdata.jdbc.googlebigquery.GoogleBigQueryDriver` driver class
+      > 
+      > BigQuery plugin properties JSON example (on Workload Identity k8s cluster with permissions to execute BigQuery queries): `{"AuthScheme": "GCPInstanceAccount", "ProjectId": "fabric-qa", "DatasetId": "covid19_weathersource_co"}`
       >
       > List of supported databases https://cdn.cdata.com/help/
-      > 
-      > Snowflake example `{"User":"user1","Password":"****","Url":"https://<tenant1>.snowflakecomputing.com", "Warehouse":"WH1"}`
+
 > This is based on https://sparkjava.com to serve HTTP server. `Main.Java` setts up the route and runs the server.
 
 > `Example` is the interface to plug different JDBC based frameworks. For example Hikari connection pool (HikariExample) and Hibernate (HibernateExample)
@@ -57,8 +59,15 @@ A `make.bat` batch file is provided to do these steps.
   > Below commands will build and push Docker image, deploy Cortex Action and Skill, and then invoke Skill to test.
 * `make build`
 * `make push`
-* `make deploy`
+  * `make deploy`
   
-   Skills that are deployed may be invoked (run) either independently or within an agent. Update `test/payload.json` with `query` as per database name and `connection_name`, and run `make tests` to invoke the deployed Skill.
+     Skills that are deployed may be invoked (run) either independently or within an agent. Update `test/payload.json` with `query` as per database name and `connection_name`, and run `make tests` to invoke the deployed Skill.
+    
+      Example payload for BigQuery connection
+      ```
+    {
+        "query": "SELECT * FROM `bigquery-public-data.covid19_weathersource_com.postal_code_day_forecast` WHERE forecast_date = '2022-06-21' LIMIT 10"
+    }
+    ```
 
 For more details about how to build skills go to [Cortex Fabric Documentation - Development - Develop Skills](https://cognitivescale.github.io/cortex-fabric/docs/development/define-skills)
