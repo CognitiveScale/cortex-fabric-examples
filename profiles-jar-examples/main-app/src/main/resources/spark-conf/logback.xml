@@ -10,7 +10,7 @@
   ~  limitations under the License.
   -->
 
-<configuration>
+<configuration packagingData="false"> <!-- enable packagingData to include name/version of jar in stack traces-->
 
   <appender name="ROOT" class="ch.qos.logback.core.ConsoleAppender">
     <!-- encoders are assigned the type
@@ -20,7 +20,15 @@
     </encoder>
   </appender>
 
-  <root level="WARN">
-    <appender-ref ref="ROOT" />
+  <logger name="org.apache.spark" level="warn"></logger>
+  <logger name="org.apache.spark.sql.execution.CacheManager" level="error"></logger>
+  <logger name="org.apache.spark.ui.SparkUI" level="info"></logger>
+  <logger name="com.c12e.cortex.phoenix" level="debug"></logger>
+  <logger name="com.c12e.cortex.profiles" level="debug"></logger>
+  <logger name="org.apache.parquet" level="warn"></logger>
+  <logger name="org.apache.hadoop" level="warn"></logger>
+
+  <root level="info">
+    <appender-ref ref="ROOT"/>
   </root>
 </configuration>
