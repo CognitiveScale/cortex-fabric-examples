@@ -1,4 +1,7 @@
 {
+  "batchDirList": [
+    "gs://cvs-synthetic/day1"
+  ],
   "profiles": [
     {
       "connections": [
@@ -26,9 +29,6 @@
       }
     }
   ],
-  "input": {
-    "connection": "gcs-input"
-  },
   "output": {
     "connection": "gcs-output"
   }

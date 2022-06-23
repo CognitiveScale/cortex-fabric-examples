@@ -48,7 +48,12 @@ public class JoinMultiDatasource extends  BaseCommand implements Runnable {
     private static final ObjectMapper mapper = new ObjectMapper();
     private final String checkpointFileName = "checkpoint.yml";
 
+    private String prepareConnectionUri(String connectionUri, String baseDir) {
+        return baseDir + "/" + new File(connectionUri).getName();
+    }
+
     private Boolean isProcessed(String checkpointDir) {
+        System.out.println("Checking for processed batch...");
         Configuration conf = new Configuration();
         try {
             FileSystem hdfs = FileSystem.get(new URI(checkpointDir), conf);
@@ -61,13 +66,13 @@ public class JoinMultiDatasource extends  BaseCommand implements Runnable {
     }
 
     private void writeCheckpoint(String checkpointDir) {
+        System.out.println("Writing checkpoint...");
         Configuration conf = new Configuration();
         try {
             FileSystem hdfs = FileSystem.get(new URI(checkpointDir), conf);
             Path file = new Path(checkpointDir + "/" + checkpointFileName);
             if (hdfs.exists(file)) {
-                System.out.println("Checkpoint file already exists, skipping...");
-                return;
+                throw new RuntimeException("Checkpoint filee already exists, shouldn't have continued in the first place.");
             }
             OutputStream os = hdfs.create(file);
             BufferedWriter br = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
@@ -77,11 +82,6 @@ public class JoinMultiDatasource extends  BaseCommand implements Runnable {
         } catch (IOException | URISyntaxException e) {
             e.printStackTrace();
         }
-    }
-
-    public String getParent(String path, String delimiter) {
-        int index = path.lastIndexOf(delimiter);
-        return path.substring(0, index);
     }
 
     /**
@@ -109,73 +109,84 @@ public class JoinMultiDatasource extends  BaseCommand implements Runnable {
             throw new RuntimeException(String.format("Config file path %s not found", configFilePath), e);
         }
 
+        List<String> batchDirs = (List<String>) config.get("batchDirList");
         List<Map> profiles = (List<Map>) config.get("profiles");
 
-        // Fetch batchDir uri
-        String connectionName = (String) (((Map) ((List) profiles.get(0).get("connections")).get(0)).get("name"));
-        String parquetUri = fabricSession.getContext().getFabricCatalog().getConnection(project, connectionName).getParamMap().get("uri");
-        String batchDir = this.getParent(parquetUri, "/");
-
-        // Skip processing if already processed.
-        if (this.isProcessed(batchDir)) {
-            System.out.println(String.format("This batch is already processed, skipping...", batchDir));
-            return; // TODO: Once we have the base dir, skip the batch and move ahead (until last batch is witnessed)
-        }
-
-        // Iterate over profiles in config
-        for (Map profile : profiles) {
-            String queryTemplate = (String) ((Map)profile.get("join")).get("query");
-            List<Map> connections = (List<Map>) profile.get("connections");
-
-            //load the two connections from fabric through the api-server
-            for (Map connection : connections) {
-                String name = (String) connection.get("name");
-                Integer limit = (Integer) connection.get("limit");
-                String[] select = (String[]) connection.get("select");
-                String filter = (String) connection.get("filter");
-
-                Dataset<Row> ds = fabricSession.read().readConnection(project, name).load();
-                if (!Objects.isNull(select) && select.length > 0) ds = ds.selectExpr(select);
-                if (!Objects.isNull(filter) && filter.length() > 0) ds = ds.filter(filter);
-                if (!Objects.isNull(limit) && limit > 0) ds = ds.limit(limit);
-
-                ds.createOrReplaceTempView(name);
+        for (String batchDir: batchDirs) {
+            // Skip processing if already processed.
+            if (this.isProcessed(batchDir)) {
+                System.out.println(String.format("This batch is already processed, skipping...", batchDir));
+                continue;
             }
-            long start = System.currentTimeMillis();
-            Dataset<Row> ds = session.sql(queryTemplate);
-            System.out.println("Join performed in " + (System.currentTimeMillis() - start));
 
-            // *** Handle duplicate columns after join ***
-            // drop duplicate column names (update this as per use case. if duplicate column name are not duplicates, rename instead of drop)
-            List<String> duplicates = Arrays.stream(ds.columns()).collect(Collectors.groupingBy(Function.identity()))
-                    .entrySet()
-                    .stream()
-                    .filter(e -> e.getValue().size() > 1)
-                    .map(Map.Entry::getKey)
-                    .collect(Collectors.toList());
-            // mark repeated column for drop
-            List<String> newColumns = new ArrayList<>();
-            for (String col : ds.columns()) {
-                // if repeated and added in new columns then mark for drop
-                if (duplicates.contains(col) && newColumns.contains(col)) {
-                    newColumns.add(col + "_delete");
-                } else {
-                    newColumns.add(col);
+            System.out.println("Batch not procssed, continuing...");
+
+            // Iterate over profiles in config
+            for (Map profile : profiles) {
+                String queryTemplate = (String) ((Map)profile.get("join")).get("query");
+                List<Map> connections = (List<Map>) profile.get("connections");
+
+                //load the two connections from fabric through the api-server
+                for (Map connection : connections) {
+                    String name = (String) connection.get("name");
+                    Integer limit = (Integer) connection.get("limit");
+                    String[] select = (String[]) connection.get("select");
+                    String filter = (String) connection.get("filter");
+
+                    String connectionUri = fabricSession.getContext().getFabricCatalog().getConnection(project, name).getParamMap().get("uri");
+                    String preparedConnectionUri = this.prepareConnectionUri(connectionUri, batchDir);
+                    System.out.println("Reading from connection: " + preparedConnectionUri);
+                    Dataset<Row> ds = fabricSession.read().readConnection(project, name).option("uri", preparedConnectionUri).load();
+                    if (!Objects.isNull(select) && select.length > 0) ds = ds.selectExpr(select);
+                    if (!Objects.isNull(filter) && filter.length() > 0) ds = ds.filter(filter);
+                    if (!Objects.isNull(limit) && limit > 0) ds = ds.limit(limit);
+
+                    ds.createOrReplaceTempView(name);
                 }
+                long start = System.currentTimeMillis();
+                Dataset<Row> ds = session.sql(queryTemplate);
+                System.out.println("Join performed in " + (System.currentTimeMillis() - start));
+
+                start = System.currentTimeMillis();
+                // *** Handle duplicate columns after join ***
+                // drop duplicate column names (update this as per use case. if duplicate column name are not duplicates, rename instead of drop)
+                List<String> duplicates = Arrays.stream(ds.columns()).collect(Collectors.groupingBy(Function.identity()))
+                        .entrySet()
+                        .stream()
+                        .filter(e -> e.getValue().size() > 1)
+                        .map(Map.Entry::getKey)
+                        .collect(Collectors.toList());
+                // mark repeated column for drop
+                List<String> newColumns = new ArrayList<>();
+                for (String col : ds.columns()) {
+                    // if repeated and added in new columns then mark for drop
+                    if (duplicates.contains(col) && newColumns.contains(col)) {
+                        newColumns.add(col + "_delete");
+                    } else {
+                        newColumns.add(col);
+                    }
+                }
+                // drop columns marked for drop
+                ds = ds.toDF(newColumns.toArray(new String[0]))
+                        .drop(duplicates.stream().map(c -> c + "_delete").collect(Collectors.toList()).toArray(new String[0]));
+                System.out.println("Drop repeated columns performed in " + (System.currentTimeMillis() - start));
+
+                start = System.currentTimeMillis();
+                String output = (String) ((Map) config.get("output")).get("connection");
+                fabricSession.write().writeConnection(ds, project, output).mode(SaveMode.Overwrite).save();
+                System.out.println("Write to connection '" + output + "' performed in " + (System.currentTimeMillis() - start));
+
+//                Dataset<Row> dataSourceDs = fabricSession.read().readConnection(project, output).load();
+//                System.out.println("Saved DS: " + dataSourceDs.count());
+//                System.out.println(new Date());
+
+                // TODO: Next steps:
+                // write to datasource .writeDataSource
+                // build profile schemas <>
             }
-            // drop columns marked for drop
-            ds = ds.toDF(newColumns.toArray(new String[0]))
-                    .drop(duplicates.stream().map(c -> c + "_delete").collect(Collectors.toList()).toArray(new String[0]));
-            System.out.println("Drop repeated columns performed in " + (System.currentTimeMillis() - start));
-
-            String output = (String) ((Map) config.get("output")).get("connection");
-            fabricSession.write().writeConnection(ds, project, output).mode(SaveMode.Overwrite).save();
-
-            Dataset<Row> dataSourceDs = fabricSession.read().readConnection(project, output).load();
-            System.out.println("Saved DS: " + dataSourceDs.count());
-            System.out.println(new Date());
+            // Write checkpoint
+            writeCheckpoint(batchDir);
+            return; // Exit the loop to process the next batch at next scheduled interval
         }
-        // Write checkpoint
-        writeCheckpoint(batchDir);
     }
 }
