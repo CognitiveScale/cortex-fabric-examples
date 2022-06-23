@@ -12,7 +12,7 @@
 
 package com.c12e.cortex.examples;
 
-import com.c12e.cortex.phoenix.profiles.spark.FabricSession;
+import com.c12e.cortex.profiles.CortexSession;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SaveMode;
@@ -39,13 +39,13 @@ public class JoinSpark extends BaseCommand implements Runnable {
     @Override
     public void run() {
         SparkSession session = getSparkSession(getDefaultProps());
-        FabricSession fabricSession = FabricSession.newSession(session);
+        CortexSession cortexSession = CortexSession.newSession(session);
         Dataset<Row> leftConn = session.read().csv(leftLocation);
         Dataset<Row> rightConn = session.read().csv(rightLocation);
 
         //inner join
         Dataset<Row> ds = leftConn.join(rightConn, "member_id");
-        fabricSession.write().writeConnection(ds, project, "member-base-file")
+        cortexSession.write().connection(ds, project, "member-base-file")
                 .mode(SaveMode.Overwrite).option("uri", writeLocation).save();
     }
 }

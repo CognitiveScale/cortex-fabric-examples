@@ -18,7 +18,7 @@
             "--class": "com.c12e.cortex.examples.Application",
             "--conf": {
                 "spark.fabric.client.phoenix.url": "https://api.dci-dev.dev-eks.insights.ai/fabric/v4/graphql",
-                "spark.fabric.catalog.impl": "com.c12e.cortex.phoenix.profiles.spark.catalog.FabricRemoteCatalog",
+                "spark.fabric.catalog.impl": "com.c12e.cortex.profiles.catalog.CortexRemoteCatalog",
             }
         }
     }

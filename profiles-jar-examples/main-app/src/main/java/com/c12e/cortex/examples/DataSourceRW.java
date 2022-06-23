@@ -12,11 +12,13 @@
 
 package com.c12e.cortex.examples;
 
-import com.c12e.cortex.phoenix.profiles.spark.FabricSession;
-import com.c12e.cortex.phoenix.profiles.spark.client.LocalSecretClient;
-import com.c12e.cortex.phoenix.spark.DataSource;
+import com.c12e.cortex.profiles.CortexSession;
+import com.c12e.cortex.profiles.client.LocalSecretClient;
+import com.c12e.cortex.phoenix.DataSource;
+import io.delta.tables.DeltaTable;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
+import org.apache.spark.sql.SaveMode;
 import org.apache.spark.sql.SparkSession;
 import picocli.CommandLine;
 
@@ -58,21 +60,21 @@ public class DataSourceRW extends  BaseCommand implements Runnable {
                 }}
         );
 
-        //create fabric session
-        FabricSession fabricSession = getFabricSession(session, localSecrets);
+        //create cortex session
+        CortexSession cortexSession = getCortexSession(session, localSecrets);
 
         //read data source
-        DataSource dataSource = fabricSession.catalog().getDataSource(project, dataSourceName);
+        DataSource dataSource = cortexSession.catalog().getDataSource(project, dataSourceName);
 
 
         //load the dataset from the connection
-        Dataset<Row> connDs = fabricSession.read().readConnection(project, dataSource.getConnection().getName()).load();
+        Dataset<Row> connDs = cortexSession.read().connection(project, dataSource.getConnection().getName()).load();
 
         //write to the datasource
-        fabricSession.write().writeDataSource(connDs, project, dataSourceName).save();
+        cortexSession.write().dataSource(connDs, project, dataSourceName).mode(SaveMode.Overwrite).save();
 
         //read from the datasource
-        Dataset<Row> dataSourceDs = fabricSession.read().readDataSource(project, dataSourceName).load();
+        DeltaTable deltaTable = cortexSession.read().dataSource(project, dataSourceName).load();
 
         //do some verification
     }

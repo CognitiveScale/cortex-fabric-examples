@@ -1,5 +1,5 @@
 # Profiles JAR Examples
-Example project utilizing the Fabric Profiles Spark JAR - WIP.
+Example project utilizing the Cortex Profiles SDK.
 
 The project has a main CLI entrypoint with subcommands for running different examples. Additional modules can be added
 to the main-app to facilitate your specific workflow.
@@ -91,10 +91,10 @@ docker run -p 4040:4040 -e "CONN_AWS_SECRET=xxxxx" -e "CORTEX_TOKEN=xxxxxxxxx" -
 ### Run spark-submit in standalone (local) mode attached to dci-dev
 
 The config file for this example is under: `main-app/src/main/resources/conf/dci-dev.json`. The config uses spark standalone mode,
-but interacts with an actual Cortex Fabric instance (dci-dev) for the Catalog resources.
+but interacts with an actual Cortex cluster (dci-dev) for the Catalog resources.
 
 Prerequisites:
-- Access to Cortex Fabric instance and knowledge of backend configuration (Cortex Catalog/Manged Content)
+- Access to Cortex cluster instance and knowledge of backend configuration (Cortex Catalog/Manged Content)
 
 Steps:
 0. Generate a CORTEX_TOKEN
@@ -106,7 +106,7 @@ Steps:
    defined in Cortex.**
 4. Update the name of the secret used by the example for your connections. The default secret name is `aws_secret`
 5. Set the below environment variables, to run against the cluster (thse may vary depending on the connections & cluster)
-    * For Fabric authentication
+    * For Cortex authentication
         - `CORTEX_TOKEN=xxxx`
     * For Cortex backend storage (i.e. Catalog/Managed Content)
         - `STORAGE_TYPE=s3`

@@ -14,6 +14,7 @@ package com.c12e.cortex.examples;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.junitpioneer.jupiter.SetEnvironmentVariable;
 import picocli.CommandLine;
 
 import java.io.PrintWriter;
@@ -22,7 +23,6 @@ import java.io.StringWriter;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ProfilesExamplesTest {
-
 
     @Test
     public void testJoinConnections() {
@@ -45,6 +45,7 @@ public class ProfilesExamplesTest {
     }
 
     @Test
+    @SetEnvironmentVariable(key = "CONN_AWS_SECRET", value = "xxxx")
     public void testDataSourceRw() {
         Application app = new Application();
         CommandLine cmd = new CommandLine(app);

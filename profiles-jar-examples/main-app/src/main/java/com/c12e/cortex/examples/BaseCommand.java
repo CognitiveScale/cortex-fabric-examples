@@ -12,11 +12,15 @@
 
 package com.c12e.cortex.examples;
 
-import com.c12e.cortex.phoenix.profiles.spark.FabricSession;
-import com.c12e.cortex.phoenix.profiles.spark.client.FabricSecretsClient;
-import com.c12e.cortex.phoenix.profiles.spark.client.LocalSecretClient;
-import com.c12e.cortex.phoenix.profiles.spark.intercept.TracingTimingMethodInterceptor;
-import com.c12e.cortex.phoenix.spark.LocalCatalog;
+import com.c12e.cortex.profiles.CortexSession;
+import com.c12e.cortex.profiles.client.CortexSecretsClient;
+import com.c12e.cortex.profiles.client.LocalSecretClient;
+import com.c12e.cortex.profiles.intercept.TracingTimingMethodInterceptor;
+import com.c12e.cortex.phoenix.LocalCatalog;
+import com.c12e.cortex.phoenix.LocalCatalog;
+import com.c12e.cortex.profiles.CortexSession;
+import com.c12e.cortex.profiles.client.LocalSecretClient;
+import com.c12e.cortex.profiles.intercept.TracingTimingMethodInterceptor;
 import com.google.inject.Guice;
 import org.apache.spark.SparkConf;
 import org.apache.spark.sql.SparkSession;
@@ -33,12 +37,9 @@ public class BaseCommand {
      */
     protected Map<String, String> getDefaultProps() {
         Map<String, String> defaults = new HashMap<>();
-        defaults.put(FabricSession.CATALOG_KEY, LocalCatalog.class.getName());
-        defaults.put(FabricSession.PHOENIX_TOKEN_KEY, "xxxxxx");
-        defaults.put(FabricSession.METHOD_PROXY_KEY, TracingTimingMethodInterceptor.class.getName());
-        defaults.put(FabricSession.PHOENIX_CLIENT_URL_KEY, "");
-        defaults.put(FabricSession.SECRET_CLIENT_URL_KEY, "");
-        defaults.put(FabricSession.LOCAL_CATALOG_DIR_KEY, "src/main/resources/spec/");
+        defaults.put(CortexSession.CATALOG_KEY, LocalCatalog.class.getName());
+        defaults.put(CortexSession.METHOD_PROXY_KEY, TracingTimingMethodInterceptor.class.getName());
+        defaults.put(CortexSession.LOCAL_CATALOG_DIR_KEY, "src/main/resources/spec/");
         defaults.put("spark.app.name", "CortexProfilesExample");
         defaults.put("spark.master", "local[*]");
         defaults.put("spark.ui.enabled", "true");
@@ -78,28 +79,28 @@ public class BaseCommand {
     }
 
     /**
-     * Retrieve the fabric session, may include a mock secrets client if it is not in a cluster
+     * Retrieve the cortex session, may include a mock secrets client if it is not in a cluster
      * @param session - the spark session
      * @param localSecrets - the map of project -> path/value for secrets
      * @return
      */
-    protected FabricSession getFabricSession(SparkSession session, LocalSecretClient.LocalSecrets localSecrets) {
+    protected CortexSession getCortexSession(SparkSession session, LocalSecretClient.LocalSecrets localSecrets) {
 
-        FabricSession fabricSession;
+        CortexSession cortexSession;
         // third connection needs to access secrets when connected to dci-dev
         // bypassing when hitting remotely as service is only exposed on the cluster
         try {
             String master = session.conf().get("spark.kubernetes.driver.master");
             //in a cluster, the default secrets service can connect through the internal service apis
-            fabricSession = FabricSession.newSession(session);
+            cortexSession = CortexSession.newSession(session);
         }catch(NoSuchElementException e) {
             //use the local secret service as we are not in a cluster and need access to a connection secret
-            //create a new FabricSession through the Guice createInjector method
-            fabricSession = Guice.createInjector(
-                    new LocalMockedSecretsModule(session, new HashMap<>(), localSecrets)).getInstance(FabricSession.class);
+            //create a new CortexSession through the Guice createInjector method
+            cortexSession = Guice.createInjector(
+                    new LocalMockedSecretsModule(session, new HashMap<>(), localSecrets)).getInstance(CortexSession.class);
         }
 
-        return fabricSession;
+        return cortexSession;
     }
 
 
@@ -109,7 +110,7 @@ public class BaseCommand {
      *
      * outside of testing a new Guice module should not be instantiated
      */
-    public static class LocalMockedSecretsModule extends FabricSession.FabricSessionModule {
+    public static class LocalMockedSecretsModule extends CortexSession.CortexSessionModule {
 
         public LocalSecretClient.LocalSecrets localSecrets;
         public LocalMockedSecretsModule(SparkSession sparkSession, Map<String, String> sessionOptions, LocalSecretClient.LocalSecrets localSecrets) {
@@ -121,7 +122,7 @@ public class BaseCommand {
         protected void configure() {
             super.configure();
             //overrides annotations
-            bind(FabricSecretsClient.class).toInstance(new LocalSecretClient(localSecrets));
+            bind(CortexSecretsClient.class).toInstance(new LocalSecretClient(localSecrets));
         }
     }
 
