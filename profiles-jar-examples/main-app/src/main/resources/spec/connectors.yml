@@ -18,9 +18,9 @@ spec:
 apiVersion: cognitivescale.io/v1
 kind: Connection
 metadata:
-  name: "member-flu-risk-file"
+  name: "member-feedback-file"
 spec:
-  title: Member Flu File
+  title: Member Feedback File
   connectionType: file
   contentType: csv
   allowRead: true
@@ -30,6 +30,20 @@ spec:
       value: ./src/main/resources/data/feedback_100_v14.csv
     - name: csv/header
       value: true
+---
+apiVersion: cognitivescale.io/v1
+kind: Connection
+metadata:
+  name: "member-flu-risk-file"
+spec:
+  title: Member Flu File
+  connectionType: file
+  contentType: parquet
+  allowRead: true
+  allowWrite: false
+  params:
+    - name: uri
+      value: ./src/main/resources/data/member_flu_risk_100_v14.parquet
 ---
 apiVersion: cognitivescale.io/v1
 kind: Connection
