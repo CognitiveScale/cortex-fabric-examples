@@ -25,7 +25,7 @@ def get_runtime_args(config, token):
     args.append('--conf')
     args.append(f"spark.kubernetes.driverEnv.CORTEX_TOKEN={token}")
     args.append('--conf')
-    args.append(f"spark.fabric.phoenix.token={token}")
+    args.append(f"spark.cortex.phoenix.token={token}")
     args.append(pyspark_args['app_location'])
     for x in pyspark_args['app_command']:
         args.append(x)
