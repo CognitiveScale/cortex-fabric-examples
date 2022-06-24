@@ -12,8 +12,8 @@
 
 package com.c12e.cortex.examples;
 
-import com.c12e.cortex.phoenix.profiles.spark.FabricSession;
-import com.c12e.cortex.phoenix.profiles.spark.client.LocalSecretClient;
+import com.c12e.cortex.profiles.CortexSession;
+import com.c12e.cortex.profiles.client.LocalSecretClient;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SaveMode;
@@ -64,15 +64,15 @@ public class CData extends  BaseCommand implements Runnable {
         );
         System.setProperty("product_checksum", System.getenv("CDATA_PRODUCT_CHECKSUM"));
 
-        //create fabric session
-        FabricSession fabricSession = getFabricSession(session, localSecrets);
+        //create cortex session
+        CortexSession cortexSession = getCortexSession(session, localSecrets);
         //read connection
-        Dataset<Row> ds = fabricSession.read().readConnection(project, source).load();
+        Dataset<Row> ds = cortexSession.read().connection(project, source).load();
 
         //TODO Perform some type of transform
 
         //write to a datasource
-        fabricSession.write().writeConnection(ds, project, sink).mode(SaveMode.Overwrite).save();
+        cortexSession.write().connection(ds, project, sink).mode(SaveMode.Overwrite).save();
 
         //TODO add CDATA jar to build dependencies
 

@@ -12,9 +12,12 @@
 
 package com.c12e.cortex.examples;
 
+import com.c12e.cortex.phoenix.DataSource;
+import com.c12e.cortex.phoenix.ProfileSchema;
 import com.c12e.cortex.profiles.CortexSession;
 import com.c12e.cortex.profiles.client.LocalSecretClient;
-import com.c12e.cortex.phoenix.DataSource;
+import com.c12e.cortex.profiles.module.job.BuildProfileJob;
+import com.c12e.cortex.profiles.module.job.IngestDataSourceJob;
 import io.delta.tables.DeltaTable;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
@@ -24,13 +27,13 @@ import picocli.CommandLine;
 
 import java.util.HashMap;
 
-@CommandLine.Command(name = "ds-rw", description = "Example DataSource Read and Write", mixinStandardHelpOptions = true)
-public class DataSourceRW extends  BaseCommand implements Runnable {
+@CommandLine.Command(name = "build-profile", description = "Example Profile Build", mixinStandardHelpOptions = true)
+public class BuildProfile extends  BaseCommand implements Runnable {
     @CommandLine.Option(names = {"-p", "--project"}, description = "Project to use", required = true)
     String project;
 
-    @CommandLine.Option(names = {"-d", "--data-source"}, description = "DataSource Name", required = true)
-    String dataSourceName;
+    @CommandLine.Option(names = {"-ps", "--profile-schema"}, description = "ProfileSchema Name", required = true)
+    String profileSchemaName;
 
     @CommandLine.Spec
     private CommandLine.Model.CommandSpec cmdSpec;
@@ -63,20 +66,25 @@ public class DataSourceRW extends  BaseCommand implements Runnable {
         //create cortex session
         CortexSession cortexSession = getCortexSession(session, localSecrets);
 
-        //read data source
-        DataSource dataSource = cortexSession.catalog().getDataSource(project, dataSourceName);
+        //get profileschema from the catalog
+        ProfileSchema profileSchema = cortexSession.catalog().getProfileSchema(project, profileSchemaName);
 
+        //build primary datasource
+        IngestDataSourceJob ingestMemberBase = cortexSession.job().ingestDataSource(project, profileSchema.getPrimarySource().getName(), cortexSession.getContext());
+        ingestMemberBase.performFeatureCatalogCalculations = () -> true;
+        ingestMemberBase.run();
 
-        //load the dataset from the connection
-        Dataset<Row> connDs = cortexSession.read().connection(project, dataSource.getConnection().getName()).load();
+        //build all joined datasources
+        profileSchema.getJoins().forEach(join -> {
+            IngestDataSourceJob ingestJoin = cortexSession.job().ingestDataSource(project, join.getName(), cortexSession.getContext());
+            ingestJoin.performFeatureCatalogCalculations = () -> true;
+            ingestJoin.run();
+        });
 
-        //write to the datasource
-        cortexSession.write().dataSource(connDs, project, dataSourceName).mode(SaveMode.Overwrite).save();
-
-        //read from the datasource
-        DeltaTable deltaTable = cortexSession.read().dataSource(project, dataSourceName).load();
-
-        //do some verification
+        //build profile
+        BuildProfileJob buildProfileJob = cortexSession.job().buildProfile(project, profileSchemaName, cortexSession.getContext());
+        buildProfileJob.performFeatureCatalogCalculations = () -> true;
+        buildProfileJob.run();
     }
 }
 

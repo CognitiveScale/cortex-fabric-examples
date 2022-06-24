@@ -12,7 +12,7 @@
 
 package com.c12e.cortex.examples;
 
-import com.c12e.cortex.phoenix.profiles.spark.FabricSession;
+import com.c12e.cortex.profiles.CortexSession;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SaveMode;
@@ -48,16 +48,16 @@ public class BigQuery extends  BaseCommand implements Runnable {
         //get spark session
         SparkSession session = getSparkSession(getDefaultProps());
         session.conf().getAll().toStream().print();
-        //create fabric session
-        FabricSession fabricSession = FabricSession.newSession(session);
+        //create cortex session
+        CortexSession cortexSession = CortexSession.newSession(session);
         //read from bigquery table
-        Dataset<Row> ds = session.read().format("bigquery").option("parentProject", "fabric-qa")
+        Dataset<Row> ds = session.read().format("bigquery").option("parentProject", "cortex-qa")
                 .option("credentials", System.getenv("BIGQUERY_CRED"))
                 .option("table", "bigquery-public-data.samples.shakespeare").load();
 
         ds.show(1);
 
-        fabricSession.write().writeConnection(ds, project, sink).mode(SaveMode.Overwrite).save();
+        cortexSession.write().connection(ds, project, sink).mode(SaveMode.Overwrite).save();
 
     }
 }
