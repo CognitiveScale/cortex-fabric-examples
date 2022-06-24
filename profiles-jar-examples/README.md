@@ -11,6 +11,9 @@ to the main-app to facilitate your specific workflow.
 ### Milestone 1
   * Connector and DataSource work
 
+### Milestone 2
+  * Streaming DataSource and Profile work
+
 ## Prerequisites
 1. Java 11 (use openjdk, see link in References section)
 1. JFrog Artifactory credentials (shared in LastPass with everyone in `Shared-Engineering` folder)

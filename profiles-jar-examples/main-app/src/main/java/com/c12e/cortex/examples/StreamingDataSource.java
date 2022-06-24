@@ -16,6 +16,8 @@ import com.c12e.cortex.phoenix.DataSource;
 import com.c12e.cortex.profiles.CortexSession;
 import com.c12e.cortex.profiles.client.LocalSecretClient;
 import com.c12e.cortex.profiles.module.CortexDataSourcePair;
+import com.c12e.cortex.profiles.module.CortexDeltaMergeBuilder;
+import com.c12e.cortex.profiles.module.datasource.CortexDataSourceStreamWriter;
 import io.delta.tables.DeltaTable;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
@@ -59,11 +61,9 @@ public class StreamingDataSource extends  BaseCommand implements Runnable {
         //get spark session
         SparkSession session = getSparkSession(getDefaultProps());
 
-        //create local secrets map for use in non-cluster env
-        checkRequiredSecrets();
         LocalSecretClient.LocalSecrets localSecrets = new LocalSecretClient.LocalSecrets();
         localSecrets.setSecretsForProject(project, new HashMap() {{
-                    put("aws-secret", System.getenv(AWS_CONNECTION_SECRET_ENV));
+                    put("aws-secret", "none");
                 }}
         );
 
@@ -78,39 +78,61 @@ public class StreamingDataSource extends  BaseCommand implements Runnable {
         DataSource dataSource = cortexSession.catalog().getDataSource(project, dataSourceName);
 
         CortexDataSourcePair dsPair = cortexSession.readStream().readConnection(project, dataSource.getConnection().getName()).load();
-        cortexSession.writeStream().writeDataSource(dsPair, project, dataSourceName).performAggregation(false).mode(SaveMode.Overwrite).save();
+
+        logger.info("Starting stream");
+        CortexDataSourceStreamWriter writer = cortexSession.writeStream().writeDataSource(dsPair, project, dataSourceName);
+
+        //don't perform feature catalog calculations
+        writer.performFeatureCatalogCalculations(false);
+        //don't perform groupBy on micro-batch
+        writer.performAggregation(false);
+
+        //supported modes
+        writer.deltaMerge(CortexDeltaMergeBuilder.getInstance());
+        //writer.mode(SaveMode.Overwrite);
+        //writer.mode(SaveMode.Append);
+
+        writer.save();
+
+
+        logger.info("Finished process");
     }
 
     public class TestStreamQueryListener extends  StreamingQueryListener {
+        SparkSession sparkSession;
+        Long countBeforeStop = 3L;
 
-            SparkSession sparkSession;
+        public TestStreamQueryListener(SparkSession sparkSession) {
+            this.sparkSession = sparkSession;
+        }
 
-            public TestStreamQueryListener(SparkSession sparkSession) {
-                this.sparkSession = sparkSession;
-            }
+        @Override
+        public void onQueryStarted(QueryStartedEvent event) {
+            logger.info("STREAMING LISTENER: Streaming Query started");
+        }
 
-            @Override
-            public void onQueryStarted(QueryStartedEvent event) {
-                logger.info("Streaming Query started");
-            }
-
-            @Override
-            public void onQueryProgress(QueryProgressEvent event) {
-                logger.info("Streaming Query in progress");
-                if (event.progress().numInputRows() == 0) {
-                    logger.info("Initiating Streaming Query stop");
+        @Override
+        public void onQueryProgress(QueryProgressEvent event) {
+            logger.info("STREAMING LISTENER: Streaming Query in progress");
+            if (event.progress().numInputRows() == 0) {
+                countBeforeStop--;
+                if(countBeforeStop == 0){
+                    logger.info("STREAMING LISTENER: Initiating Streaming Query stop");
                     try {
                         sparkSession.sqlContext().streams().get(event.progress().id()).stop();
                     } catch (TimeoutException e) {
-                        logger.error("Timeout error in query", e);
+                        logger.error("STREAMING LISTENER: Timeout error in query", e);
                     }
                 }
             }
+            logger.info(event.progress().prettyJson());
+            logger.info("STREAMING LISTENER: No processing occurred in last poll, stopping in {} poll intervals", countBeforeStop);
+        }
 
-            @Override
-            public void onQueryTerminated(QueryTerminatedEvent event) {
-                logger.info("STREAMING LISTENER: onQueryTerminated");
-            }
+        @Override
+        public void onQueryTerminated(QueryTerminatedEvent event) {
+            logger.info("STREAMING LISTENER: onQueryTerminated");
+        }
     }
 }
 
