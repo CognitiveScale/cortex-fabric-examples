@@ -110,7 +110,7 @@ if __name__ == '__main__':
 
         cmd = subprocess.Popen(run_args, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
         pod = ''
-        container_name = 'fabric-action'
+        container_name = 'spark-kubernetes-driver'
         container_state = ''
         exit_code = '0'
         termination_reason = ''
