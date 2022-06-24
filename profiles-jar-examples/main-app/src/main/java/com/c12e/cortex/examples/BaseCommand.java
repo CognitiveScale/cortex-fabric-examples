@@ -60,7 +60,6 @@ public class BaseCommand {
         defaults.put("spark.sql.catalog.spark_catalog", "org.apache.spark.sql.delta.catalog.DeltaCatalog");
         defaults.put("spark.databricks.delta.schema.autoMerge.enabled", "true");
         defaults.put("spark.databricks.delta.merge.repartitionBeforeWrite.enabled", "true");
-        defaults.put("spark.kubernetes.local.dirs.tmpfs", "true");
         return defaults;
     }
 
