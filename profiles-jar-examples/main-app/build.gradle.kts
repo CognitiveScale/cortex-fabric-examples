@@ -21,8 +21,8 @@ plugins {
 
 dependencies {
     //project deps
-    implementation(platform("com.c12e.cortex.profiles:parent:6.3.0-M.2"))
-    implementation("com.c12e.cortex.profiles:profiles-cli:6.3.0-M.2")
+    implementation(platform("com.c12e.cortex.profiles:platform-dependencies:6.3.0-M.2"))
+    implementation("com.c12e.cortex.profiles:profiles-sdk:6.3.0-M.2")
     implementation("com.google.cloud.spark:spark-bigquery-with-dependencies_2.12:0.25.0")
     // CLI framework
     annotationProcessor("info.picocli:picocli-codegen:4.6.3")
