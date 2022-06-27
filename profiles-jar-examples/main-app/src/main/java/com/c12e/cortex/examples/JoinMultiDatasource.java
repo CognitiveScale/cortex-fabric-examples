@@ -12,8 +12,8 @@
 
 package com.c12e.cortex.examples;
 
-import com.c12e.cortex.phoenix.profiles.spark.FabricSession;
-import com.c12e.cortex.phoenix.profiles.spark.client.LocalSecretClient;
+import com.c12e.cortex.profiles.CortexSession;
+import com.c12e.cortex.profiles.client.LocalSecretClient;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -96,7 +96,7 @@ public class JoinMultiDatasource extends  BaseCommand implements Runnable {
 
         //create fabric session
         LocalSecretClient.LocalSecrets localSecrets = new LocalSecretClient.LocalSecrets();
-        FabricSession fabricSession = getFabricSession(session, localSecrets);
+        CortexSession cortexSession = getCortexSession(session, localSecrets);
 
         HashMap config;
         try {
@@ -133,10 +133,10 @@ public class JoinMultiDatasource extends  BaseCommand implements Runnable {
                     String[] select = (String[]) connection.get("select");
                     String filter = (String) connection.get("filter");
 
-                    String connectionUri = fabricSession.getContext().getFabricCatalog().getConnection(project, name).getParamMap().get("uri");
+                    String connectionUri = cortexSession.getContext().getCortexCatalog().getConnection(project, name).getParamMap().get("uri");
                     String preparedConnectionUri = this.prepareConnectionUri(connectionUri, batchDir);
                     System.out.println("Reading from connection: " + preparedConnectionUri);
-                    Dataset<Row> ds = fabricSession.read().readConnection(project, name).option("uri", preparedConnectionUri).load();
+                    Dataset<Row> ds = cortexSession.read().connection(project, name).option("uri", preparedConnectionUri).load();
                     if (!Objects.isNull(select) && select.length > 0) ds = ds.selectExpr(select);
                     if (!Objects.isNull(filter) && filter.length() > 0) ds = ds.filter(filter);
                     if (!Objects.isNull(limit) && limit > 0) ds = ds.limit(limit);
@@ -173,7 +173,7 @@ public class JoinMultiDatasource extends  BaseCommand implements Runnable {
 
                 start = System.currentTimeMillis();
                 String output = (String) ((Map) config.get("output")).get("connection");
-                fabricSession.write().writeConnection(ds, project, output).mode(SaveMode.Overwrite).save();
+                cortexSession.write().connection(ds, project, output).mode(SaveMode.Overwrite).save();
                 System.out.println("Write to connection '" + output + "' performed in " + (System.currentTimeMillis() - start));
 
 //                Dataset<Row> dataSourceDs = fabricSession.read().readConnection(project, output).load();
