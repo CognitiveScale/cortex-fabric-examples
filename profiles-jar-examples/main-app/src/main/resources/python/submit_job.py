@@ -25,7 +25,7 @@ def get_runtime_args(config, token, url):
     args.append('--conf')
     args.append(f"spark.kubernetes.driverEnv.CORTEX_TOKEN={token}")
     args.append('--conf')
-    args.append(f"spark.fabric.phoenix.token={token}")
+    args.append(f"spark.cortex.phoenix.token={token}")
     if url:
         args.append('--conf')
         args.append(f"spark.fabric.client.phoenix.url={url}/fabric/v4/graphql")
@@ -115,7 +115,7 @@ if __name__ == '__main__':
 
         cmd = subprocess.Popen(run_args, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
         pod = ''
-        container_name = 'fabric-action'
+        container_name = 'spark-kubernetes-driver'
         container_state = ''
         exit_code = '0'
         termination_reason = ''

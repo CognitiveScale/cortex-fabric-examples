@@ -15,7 +15,7 @@
       "--master": "local[*]",
       "--class": "com.c12e.cortex.examples.Application",
       "--conf": {
-        "spark.fabric.catalog.local.dir": "/opt/spark/work-dir/src/main/resources/spec"
+        "spark.cortex.catalog.local.dir": "/opt/spark/work-dir/src/main/resources/spec"
       }
     }
   }

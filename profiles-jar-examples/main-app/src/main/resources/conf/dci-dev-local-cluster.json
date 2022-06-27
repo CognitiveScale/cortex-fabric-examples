@@ -19,9 +19,9 @@
             "--name": "amp-cli",
             "--class": "com.c12e.cortex.examples.Application",
             "--conf": {
-                "spark.fabric.client.phoenix.url": "http://cortex-api.cortex.svc.cluster.local:8080/fabric/v4/graphql",
-                "spark.fabric.client.secrets.url": "http://cortex-accounts.cortex.svc.cluster.local:5000",
-                "spark.fabric.catalog.impl": "com.c12e.cortex.phoenix.profiles.spark.catalog.FabricRemoteCatalog",
+                "spark.cortex.client.phoenix.url": "http://cortex-api.cortex.svc.cluster.local:8080/fabric/v4/graphql",
+                "spark.cortex.client.secrets.url": "http://cortex-accounts.cortex.svc.cluster.local:5000",
+                "spark.cortex.catalog.impl": "com.c12e.cortex.profiles.catalog.CortexRemoteCatalog",
                 "spark.executor.cores": 1,
                 "spark.executor.instances": 2,
                 "spark.executor.memory": "4g",

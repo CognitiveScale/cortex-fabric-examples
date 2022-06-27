@@ -12,8 +12,8 @@
 
 package com.c12e.cortex.examples;
 
-import com.c12e.cortex.phoenix.profiles.spark.FabricSession;
-import com.c12e.cortex.phoenix.profiles.spark.client.LocalSecretClient;
+import com.c12e.cortex.profiles.CortexSession;
+import com.c12e.cortex.profiles.client.LocalSecretClient;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SaveMode;
@@ -65,11 +65,11 @@ public class JoinConnections extends  BaseCommand implements Runnable {
                 }}
         );
 
-        //create fabric session
-        FabricSession fabricSession = getFabricSession(session, localSecrets);
-        //load the two connections from fabric through the api-server
-        Dataset<Row> leftConn = fabricSession.read().readConnection(project, leftConnection).load();
-        Dataset<Row> rightConn = fabricSession.read().readConnection(project, rightConnection).load();
+        //create cortex session
+        CortexSession cortexSession = getCortexSession(session, localSecrets);
+        //load the two connections from cortex through the api-server
+        Dataset<Row> leftConn = cortexSession.read().connection(project, leftConnection).load();
+        Dataset<Row> rightConn = cortexSession.read().connection(project, rightConnection).load();
 
         //inner join
         Dataset<Row> ds = leftConn.join(rightConn, "member_id");
@@ -77,7 +77,7 @@ public class JoinConnections extends  BaseCommand implements Runnable {
 
 
         //write to a third connection as a data sink
-        fabricSession.write().writeConnection(ds, project, writeConnection).mode(SaveMode.Overwrite).save();
+        cortexSession.write().connection(ds, project, writeConnection).mode(SaveMode.Overwrite).save();
     }
 }
 

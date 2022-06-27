@@ -18,9 +18,9 @@ spec:
 apiVersion: cognitivescale.io/v1
 kind: Connection
 metadata:
-  name: "member-flu-risk-file"
+  name: "member-feedback-file"
 spec:
-  title: Member Flu File
+  title: Member Feedback File
   connectionType: file
   contentType: csv
   allowRead: true
@@ -30,6 +30,20 @@ spec:
       value: ./src/main/resources/data/feedback_100_v14.csv
     - name: csv/header
       value: true
+---
+apiVersion: cognitivescale.io/v1
+kind: Connection
+metadata:
+  name: "member-flu-risk-file"
+spec:
+  title: Member Flu File
+  connectionType: file
+  contentType: parquet
+  allowRead: true
+  allowWrite: false
+  params:
+    - name: uri
+      value: ./src/main/resources/data/member_flu_risk_100_v14.parquet
 ---
 apiVersion: cognitivescale.io/v1
 kind: Connection
@@ -115,3 +129,39 @@ spec:
   params:
     - name: uri
       value: file:///opt/spark/work-dir/build/tmp/test-data/sink-ds/
+---
+apiVersion: cognitivescale.io/v1
+kind: Connection
+metadata:
+  name: member-base-s3-stream
+spec:
+  title: Member Base S3 File
+  connectionType: s3FileStream
+  contentType: csv
+  allowRead: true
+  allowWrite: false
+  params:
+    - name: uri
+      value: s3a://cortex-examples/data/data-streaming/members_100_v14.csv
+    - name: publicKey
+      value: csuser
+    - name: secretKey
+      value: cortexfabric
+    - name: s3Endpoint
+      value: http://localhost:9000
+    - name: sslEnabled
+      value: false
+    - name: pathStyleAccess
+      value: true
+    - name: csv/header
+      value: true
+    - name: streamReadDir
+      value: s3a://cortex-examples/data/data-streaming
+    - name: isTriggered
+      value: false
+    - name: pollInterval
+      value: 10
+    - name: csv/multiline
+      value: true
+    - name: csv/header
+      value: true

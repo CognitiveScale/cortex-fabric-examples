@@ -23,7 +23,9 @@ import picocli.CommandLine.Command;
         JoinSpark.class,
         CData.class,
         BigQuery.class,
-        DataSourceRW.class
+        DataSourceRW.class,
+        BuildProfile.class,
+        StreamingDataSource.class
 })
 public class Application {
     public static void main(String[] args) {
