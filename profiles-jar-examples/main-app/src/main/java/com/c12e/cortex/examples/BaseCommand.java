@@ -47,7 +47,7 @@ public class BaseCommand {
         defaults.put("spark.ui.prometheus.enabled", "true");
         defaults.put("spark.sql.streaming.metricsEnabled", "true");
         defaults.put("spark.executor.processTreeMetrics.enabled", "true");
-//        TOD these might not be needed as they're included in `metrics.properties`
+//        TODO these might not be needed as they're included in `metrics.properties`
         defaults.put("spark.metrics.conf.*.sink.prometheusServlet.class", "org.apache.spark.metrics.sink.PrometheusServlet");
         defaults.put("spark.metrics.conf.*.sink.prometheusServlet.path", "/metrics/prometheus");
         defaults.put("spark.metrics.conf.master.sink.prometheusServlet.path", "/metrics/master/prometheus");
