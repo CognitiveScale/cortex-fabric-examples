@@ -20,7 +20,8 @@ to the main-app to facilitate your specific workflow.
 
 ## Developer Setup
 1. Install IntelliJ IDEA with the latest Kotlin plugin enabled
-1. Put JFrog Artifactory credentials in `$USER_HOME/.gradle/gradle.properties` file. See `gradle.properties.template` for instructions.
+2. Put JFrog Artifactory credentials in `$USER_HOME/.gradle/gradle.properties` file. See `gradle.properties.template` for instructions.
+3. To run tests successfully, set `CONN_AWS_SECRET` to anything in your environment (just needs to exist)
 
 ## Recommended JVM Settings
 These can also be set/controlled through the `~/.gradle/gradle.properties` file that needs to be setup.
