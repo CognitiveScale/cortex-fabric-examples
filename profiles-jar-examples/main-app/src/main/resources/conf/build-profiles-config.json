@@ -1,0 +1,32 @@
+{
+  "batchDirList": [
+    "gs://cvs-synthetic/day1"
+  ],
+  "profiles": [
+    {
+      "dataSources": [
+        {
+          "name": "T_MBR_MEDD_PA_CASE",
+          "filter": "MBR_ACCT_GID > '${filter_value}'",
+          "limit": 0,
+          "profileSchemaName": "tmbrmeddpacase"
+        },
+        {
+          "name": "V_MBR_MEDD_PA_PRDCTV",
+          "filter": "CASE_NBR > '${filter_value}'",
+          "limit": 0,
+          "profileSchemaName": "V_MBR_MEDD_PA_PRDCTV"
+        },
+        {
+          "name": "V_RXC_PRIOR_ATHZN",
+          "filter": "MBR_ACCT_GID > '${filter_value}'",
+          "limit": 0,
+          "profileSchemaName": "V_RXC_PRIOR_ATHZN"
+        }
+      ],
+      "variables": {
+        "filter_value": "0"
+      }
+    }
+  ]
+}
