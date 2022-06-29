@@ -1,6 +1,6 @@
 {
   "batchDirList": [
-    "gs://cvs-synthetic/day1"
+    "gs://cvs-synthetic/10Mil"
   ],
   "profiles": [
     {

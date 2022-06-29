@@ -123,7 +123,7 @@ public class NoJoinBuildProfileExample extends  BaseCommand implements Runnable 
                     String dataSourceName = (String) dataSource.get("name");
                     String filterExpr = (String) dataSource.get("filter");
                     Integer limit = (Integer) dataSource.get("limit");
-                    String profileSchemaName = (String) profile.get("profileSchemaName");
+                    String profileSchemaName = (String) dataSource.get("profileSchemaName");
 
                     // Ingest data source
                     IngestDataSourceJob ingestDataSourceJob = cortexSession.job().ingestDataSource(project, dataSourceName, cortexSession.getContext());

@@ -1,7 +1,7 @@
 .PHONY: clean build create-app-image
 PROJECT_NAME=lalit
-DOCKER_PREGISTRY_URL=gcr.io/fabric-qa
-TAG := v1
+#DOCKER_PREGISTRY_URL=gcr.io/fabric-qa
+TAG := vM7
 DOCKER_IMAGE := profiles-example
 URL=$(shell cat ~/.cortex/config | jq .profiles[.currentProfile].url)
 ifndef DOCKER_PREGISTRY_URL

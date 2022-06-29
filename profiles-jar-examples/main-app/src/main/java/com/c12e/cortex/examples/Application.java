@@ -25,7 +25,8 @@ import picocli.CommandLine.Command;
         BigQuery.class,
         DataSourceRW.class,
         BuildProfile.class,
-        StreamingDataSource.class
+        StreamingDataSource.class,
+        NoJoinBuildProfileExample.class
 })
 public class Application {
     public static void main(String[] args) {
