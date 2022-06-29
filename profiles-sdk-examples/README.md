@@ -1,227 +1,114 @@
-# Profiles JAR Examples
-Example project utilizing the Cortex Profiles SDK.
+# Cortex Profiles SDK
 
-The project has a main CLI entrypoint with subcommands for running different examples. Additional modules can be added
-to the main-app to facilitate your specific workflow.
+The Cortex Profiles SDK is collection of Java libraries, examples, and templates for utilizing Cortex Fabric in a Spark
+based environment, whether that be on your local machine or in a Cortex Fabric Cluster.
 
-#### TODO
-* additional unit tests
-* scripting work and templating of profile jar version and created docker image
+These examples are structured in step-by-step way to display the array of possible usages of currently available features in the Cortex Profiles SDK.
 
-### Milestone 1
-  * Connector and DataSource work
 
-### Milestone 2
-  * Streaming DataSource and Profile work
+1. [Overview](#overview)
+2. [Installation and Setup](#installation-and-setup)
+    1. [Recommended JVM Settings](#recommended-jvm-settings)
+    2. [JFrog Artifactory Setup](#jfrog-artifactory-setup)
+    3. [Developer Setup](#developer-setup)
+3. [Examples](#examples)
+4. [FAQ](#faq)
+5. [Version Compatibility](#version-compatibility)
+6. [Resources](#resources)
 
-## Prerequisites
-1. Java 11 (use openjdk, see link in References section)
-1. JFrog Artifactory credentials (shared in LastPass with everyone in `Shared-Engineering` folder)
+## Overview
 
-## Developer Setup
-1. Install IntelliJ IDEA with the latest Kotlin plugin enabled
-2. Put JFrog Artifactory credentials in `$USER_HOME/.gradle/gradle.properties` file. See `gradle.properties.template` for instructions.
-3. To run tests successfully, set `CONN_AWS_SECRET` to anything in your environment (just needs to exist)
+<!-- TODO: Need to create an alternative image to better display the image. Want to replace  Fabric -> Cortex and outer "Fabric Session" w/ "Cortex Profiles SDK" -->
+![Cortex Profiles SDK Overview](./docs/profiles-sdk-overview.jpeg)
 
-## Recommended JVM Settings
+The core of the Profiles SDK is a library that exposes an interface to Cortex for utilizing Spark for custom processing
+of Profile relate data. The entrypoint to the Profiles SDK is the `CortexSession`, a session based API around Spark and the `SparkSession`.
+The Profiles SDK (`CortexSession`) provides
+  - an extensible dependency injected platform that allows for process, module, and environment (local vs in Cortex cluster) specific configuration
+  - stream and batch processing support for Cortex Data Sources and Connections <!-- and Profiles? -->
+  - access to Cortex Phoenix job flows for ingesting DataSources and building Profiles
+  - access to [Cortex Catalog](./docs/catalog.md)
+  - access to Cortex Backend Storage (e.g. Managed Content and Profiles)
+  - Spark property based configuration options, see [config.md](./docs/config.md)
+  - [Cortex Skill Template](TODO) with [Spark-Submit](TODO) backed cluster launching
+  - a [Version Compatibility](#version-compatibility) check with platform dependencies
+
+## Installation and Setup
+
+The Cortex Profiles SDK consists of:
+* The Profiles SDK Jar (`com.c12e.cortex.profiles:profiles-sdk:6.3.0-M.2`)
+* Platform Dependencies Jar (`com.c12e.cortex.profiles:platform-dependencies:6.3.0-M.2`)
+* Example Materials and Templates located in this repo
+
+The Profile SDK Jar's can be pulled from CognitiveScale's JFrog Artifactory, if access has been shared with
+you. Follow the [JFrog Artifactory Developer Setup](./docs/dev.md#jfrog-artifactory-setup).
+
+<!-- TODO(LA): Users can pull a docker image which contains the JAR and compatible Spark and Hadoop dependencies. Instructions on
+using and extracting the JAR from the docker image can be found [here](TODO). -->
+
+### Recommended JVM Settings
+
 These can also be set/controlled through the `~/.gradle/gradle.properties` file that needs to be setup.
 ```
 export GRADLE_OPTS="-Dorg.gradle.jvmargs='-Xmx2g -XX:MaxMetaspaceSize=512m -XX:+UseG1GC -XX:+UseStringDeduplication -XX:+OptimizeStringConcat'"
 ```
 
-## References
-Some useful links:
+### JFrog Artifactory Setup
 
-* [Spark Submit](https://spark.apache.org/docs/latest/submitting-applications.html)
-* [Spark On Kubernetes](https://spark.apache.org/docs/latest/running-on-kubernetes.html)
+1. Java 11 (use Openjdk, see the link in [Resources](#resources) section)
+1. JFrog Artifactory credentials (shared in LastPass with everyone in `Shared-Engineering` folder)
+1. Install IntelliJ IDEA with the latest Kotlin plugin enabled ([Intellij IDEA](https://www.jetbrains.com/idea/))
+1. Put JFrog Artifactory credentials in `$USER_HOME/.gradle/gradle.properties` file. See `gradle.properties.template` for instructions.
+
+### Developer Setup
+
+See [dev.md](./docs/dev.md#local-developer-setup) how to work with a local (developer) installation of the Cortex Profiles SDK.
+
+## Examples
+
+Examples are structured to build upon themselves and grow in complexity. Each provides their own instructions for running as well as tutorial context.
+
+* [Local Cortex Clients](./local-clients/README.md)
+
+<!--
+* [DataSources & Connections](./connections-and-datasources/README.md) - introduces reading/writing Connections & DataSources (from local or remote?)
+* [Joining Connections](./joining-connections/README.md) - introduces working with multiple connections, joining them
+* [DataSource & Connection Streaming](./streaming/README.md) - introduces streaming sources (separate from DS & Connections Example b.c. streaming involves a dataset pair (static + stream) & allows for Streaming Listener and)
+* [Building Profiles Local](./build-profiles/README.md) -
+* [Running as a Skill](./skill-example/README.md) -
+    -->
+
+## FAQ
+* How are users installing this? 
+  - See [Installation and Setup](#installation-and-setup)
+* Is this installed or configured in [Cortex Charts](https://github.com/CognitiveScale/cortex-charts)?
+  - Nope, the SDK is entirely separate from Cortex Charts (though some configuration options may be similar).
+* Is this a sort of Standalone tool? (like the Cortex CLI)
+  - Yes and no! The core of the Cortex Profiles SDK is a standalone library, that has platform (pluggable) Spark and hadoop dependencies. The SDK is its own standalone tool, but it will not stand on its own.
+* Spark has a number of levers identified in their docs, which ones are most critical for the Profiles SDK?
+  - For configuration option reference, see [here](docs/config.md). (This is missing guidance on tuning, but we can add as we iterate).
+* Is the code annotated to point out the customization areas/options? 
+  - The generated API documentation includes Spark (Cortex) Configuration options and will describe related
+    configuration properties and abilities. The initial documentation is minimal in certain areas, but bill we itreated on.
+    For a full list of configuration options see [config.md](docs/config.md)
+
+## Version Compatibility
+
+<!-- TODO: Crossed out because this check shouldn't happen automatically? -->
+~~The Profiles Library contains version compatibility check to verify compatible Spark and Hadoop are provided in the environment.~~
+
+| Profiles SDK Version | Cortex Version | Spark Version | Hadoop Version | Delta Version |
+|----------------------|----------------|---------------|----------------|---------------|
+| 6.3.0                | 6.3.0          | 3.2.1         | 3.3.1          | 1.1.0         |
+
+Additionally, refer to the [Cortex Compatibility Matrix](https://cognitivescale.github.io/cortex-fabric/docs/getting-started/compatibility-matrix)
+
+## Resources
+* [Java 11 Installer](https://adoptopenjdk.net/archive.html?variant=openjdk11&jvmVariant=hotspot)
 * [Spark Configurations](https://spark.apache.org/docs/latest/index.html)
+* [Cortex Fabric](https://cognitivescale.github.io/cortex-fabric/)
+* [Cortex Fabric Glossary](https://cognitivescale.github.io/cortex-fabric/docs/reference-guides/glossary)
+* [Cortex Fabric GraphQL API Reference](https://cognitivescale.github.io/cortex-fabric/graphql-6.2.2/index.html)
+* [Cortex Profiles SDK API Documentation](TODO)
+* [Cortex Compatibility Matrix](https://cognitivescale.github.io/cortex-fabric/docs/getting-started/compatibility-matrix)
 
-## Build Commands
-
-```
-# Docker Image
-make create-app-image
-
-# Clean Build and Create Docker Image
-make clean build create-app-image
-
-# Clean and Build Projects
-make build
-
-# Lots of dead layers occur during build process, clean up once in a while
-docker system prune
-```
-
-## Run Commands
-
-The application can be run in a Docker image using compatible Spark & Hadoop dependencies provided by the base Docker
-image. The image uses spark-submit to run the application. Sample spark-submit configs are under
-`main-app/src/main/resources/conf/`. These samples are used below.
-
-The logging configuration for the example application is under `main-app/src/main/resources/spark-conf/logback.xml`.
-
-### Run CLI
-* `make build`
-* `cd main-app/build/distributions`
-* `unzip cortex-profiles-1.0.0-SNAPSHOT.zip`
-* `cd cortex-profiles-1.0.0-SNAPSHOT`
-* `./bin/cortex-profiles join-conns -p mctest30 -l member-base-file -r member-flu-risk-file -w member-joined-file`
-
-### Run spark-submit in standalone (local) mode
-
-The sample spark-submit config file is under:  `main-app/src/main/resources/conf/local.json`. The config uses a local
-spark session and local (mock) clients for interacting with Cortex (see the volume mounts for 'Catalog').
-
-```
-# vol 1 is the spark-submit config files
-# vol 2 is the local catalog specs - this  is required to 
-# vol 3 is the output of the joined connection
-docker run -p 4040:4040 -e "CONN_AWS_SECRET=xxxxx" -e "CORTEX_TOKEN=xxxxxxxxx" --entrypoint="python" \
--v $(pwd)/main-app/src/main/resources/conf:/app/conf \
--v $(pwd)/main-app/src:/opt/spark/work-dir/src \
--v $(pwd)/main-app/build:/opt/spark/work-dir/build \
-profiles-example submit_job.py "{\"payload\" : {\"config\": \"/app/conf/local.json\"}}"
-```
-
-```
-# Take a look around at the container
-docker run -p 4040:4040 -e "CONN_AWS_SECRET=xxxxx" -e "CORTEX_TOKEN=xxxxxxxxx" --entrypoint="" \
--v $(pwd)/main-app/src/main/resources/conf:/app/conf \
--v $(pwd)/main-app/src:/opt/spark/work-dir/src \
--v $(pwd)/main-app/build:/opt/spark/work-dir/build \
--it profiles-example /bin/bash
-```
-
-### Run spark-submit in standalone (local) mode attached to dci-dev
-
-The config file for this example is under: `main-app/src/main/resources/conf/dci-dev.json`. The config uses spark standalone mode,
-but interacts with an actual Cortex cluster (dci-dev) for the Catalog resources.
-
-Prerequisites:
-- Access to Cortex cluster instance and knowledge of backend configuration (Cortex Catalog/Manged Content)
-
-Steps:
-0. Generate a CORTEX_TOKEN
-1. Update the Spark config file to set arguments for the example to run (e.g. `--project`, which connections to join,
-   output connection). The default example is Joining two connections and saves the result in another connection (see
-   `main-app/src/main/java/com/c12e/cortex/examples/JoinConnections.java`).
-3. If still running the join-connections example, then ensure the connections (left, right, and output) exist in
-   Cortex. **NOTE: The underlying file for the output connection does not need to exist, but the connection must be
-   defined in Cortex.**
-4. Update the name of the secret used by the example for your connections. The default secret name is `aws_secret`
-5. Set the below environment variables, to run against the cluster (thse may vary depending on the connections & cluster)
-    * For Cortex authentication
-        - `CORTEX_TOKEN=xxxx`
-    * For Cortex backend storage (i.e. Catalog/Managed Content)
-        - `STORAGE_TYPE=s3`
-        - `AWS_ACCESS_KEY_ID=xxxxx`
-        - `AWS_SECRET_KEY=xxxxx`
-        - `S3_ENDPOINT=http://host.docker.internal:9000`, exposes the host port (this should be the exact value used by dci-dev)
-    * For the `JoinConnections` example
-       - `CONN_AWS_SECRET=xxxxx`, this should be the secret key that can access the AWS remote S3 Connection. (This is
-         because a mock client is used for secret access, because secrets are only accessible from WITHIN the cluster).
-
-You will need to expose minio by port forwarding 9000, run:
-```
-docker run -p 4040:4040 -e "CORTEX_TOKEN=$(echo $CORTEX_TOKEN)" \
--e "STORAGE_TYPE=s3" \
--e "AWS_ACCESS_KEY_ID=$(echo $AWS_ACCESS_KEY_ID)" \
--e "AWS_SECRET_KEY=$(echo $AWS_SECRET_KEY)" \
--e "S3_ENDPOINT=http://host.docker.internal:9000" \
--e "CONN_AWS_SECRET=$(echo $CONN_AWS_SECRET)" \
---entrypoint="python" \
--v $(pwd)/main-app/src/main/resources/conf:/app/conf \
-profiles-example submit_job.py "{\"payload\" : {\"config\": \"/app/conf/dci-dev.json\"}}"
-```
-
-
-### Run spark-submit in cluster mode attached to dci-dev
-This will run the driver and any configured executors directly on the cluster
-1. proxy to cluster: `kubectl proxy --port=6443`
-2. Update profiles-examples/main-app/src/main/resources/Dockerfile entrypoint with scuttle: `ENTRYPOINT [ "scuttle", "/opt/entrypoint.sh" ]`
-3. Run `make create-app-image`
-4. Your docker image will need pushed to the cluster
-
-Running from the container:
-I ran into issue with this due to my kube config needing the aws executable
-```
-docker run -p 4040:4040 -e "CORTEX_TOKEN=$(echo $CORTEX_TOKEN)" \
---entrypoint="python" \
---env KUBECONFIG=/kube/config \
--v $(pwd)/main-app/src/main/resources/conf:/app/conf \
--v ~/.kube/config:/kube/config \
-profiles-example submit_job.py "{\"payload\" : {\"config\": \"/app/conf/dci-dev-local-cluster.json\"}}"
-```
-Running outside the container:
-1. `docker export CONTAINER_ID > container.tar`
-2. `mkdir container && cd container && mv ../container.tar .`
-3. `tar -xvf container.tar`
-4. `cd opt/spark`
-5. `export SPARK_HOME=$(pwd)`
-6. `cd work-dir`
-7. update dci-dev-local-cluster.json `"--master": "k8s://http://host.docker.internal:6443"` -> `"--master": "k8s://http://localhost:6443"`
-8. `python(3) submit_job.py /path/to/dci-dev-local-cluster.json`
-
-### Run spark-submit in cluster mode as skill
-
-Need to set env vars
-* DOCKER_PREGISTRY_URL=xxxx <-- private registry url
-* PROJECT_NAME=xxxx <-- for the skill, action and types save
-* CORTEX_TOKEN=xxxx <-- for connecting to api-server
-
-```
-# Building and pushing the skill container, saving the skill and the types
-make deploy-skill
-
-# Tag the latest create-app-image built container
-make tag-container
-
-# Push the container
-make push-container
-
-# Deploy the action and save the skill
-make skill-save
-
-# Save types
-make types-save
-
-# Invoke the skill with payload
-make tests
-```
-#### Update the payload.json file with the right params before invoking the skill
-
-
-### For CData example
-* Get CData driver jars from http://cdatabuilds.s3.amazonaws.com/support/JDBC_JARS_21.0.8059.zip
-* Add required driver jars and CData Spark SQL jar to `profiles-examples/main-app/src/main/resources/lib`
-* Update `query`, `url`, `driver` in CData/JDBC spec `connectors.yml`. Get these syntax details from CData documentation https://cdn.cdata.com/help/RVF/jdbc/pg_JDBCconnectcode.htm
-* For database password, SSL certs, service account JSON file update `CData.java` example and add secrets through env var or file
-* Docker command to run in local
-```
-docker run -p 4040:4040 -e "CORTEX_TOKEN=xxxxxxxxx" -e "CDATA_OEM_KEY=<CData OEM Key>"  -e "CDATA_PRODUCT_CHECKSUM=<CData product checksum>"  --entrypoint="python" -v $(pwd)/main-app/src/main/resources/conf:/app/conf -v $(pwd)/main-app/src:/opt/spark/work-dir/src -v $(pwd)/main-app/build:/opt/spark/work-dir/build profiles-example submit_job.py "{\"payload\" : {\"config\": \"/app/conf/local.json\"}}"
-```
-* We can't use cortex-cdata-plugin to create JDBC connection or parsing cortex connection because Spark SQL has specific requirement for JDBC https://spark.apache.org/docs/latest/sql-data-sources-jdbc.html
-
-#### Notes on CData BigQuery connection
-Get GCP Service Account JSON as described in https://docs.google.com/document/d/1T1u8RMZhDYMIXHk7v3lLF2rzag7xLTr5CLHC-49UiYU/edit#heading=h.756ioo8pxy08. and put into `profiles-examples/main-app/src/main/resources/credentials`
-```
-docker run -p 4040:4040 -e "CORTEX_TOKEN=xxxxxxxxx" -e "CDATA_OEM_KEY=<CData OEM Key>"  -e "CDATA_PRODUCT_CHECKSUM=<CData product checksum>"  --entrypoint="python" -v $(pwd)/main-app/src/main/resources/credentials/:/secure-storage/ -v $(pwd)/main-app/src/main/resources/conf:/app/conf -v $(pwd)/main-app/src:/opt/spark/work-dir/src -v $(pwd)/main-app/build:/opt/spark/work-dir/build profiles-example submit_job.py "{\"payload\" : {\"config\": \"/app/conf/local.json\"}}"
-```
-Currently, CData BigQuery JDBC connection is failing with
-```
- java.sql.SQLException: 'port' is not a valid connection property.
-        at XcoreXgooglebigqueryX210X8059.qrc.a(Unknown Source)
-        at XcoreXgooglebigqueryX210X8059.qrc.b(Unknown Source)
-        at cdata.jdbc.googlebigquery.GoogleBigQueryDriver.connect(Unknown Source)
-        at org.apache.spark.sql.execution.datasources.jdbc.connection.BasicConnectionProvider.getConnection(BasicConnectionProvider.scala:49)
-        at org.apache.spark.sql.execution.datasources.jdbc.connection.ConnectionProvider$.create(ConnectionProvider.scala:77)
-```
-Looks like Spark is passing `port` implicitly
-
-### BigQuery example
-* Download BigQuery Spark connector https://repo1.maven.org/maven2/com/google/cloud/spark/spark-bigquery-with-dependencies_2.12/0.25.0/spark-bigquery-with-dependencies_2.12-0.25.0.jar in `profiles-examples/main-app/src/main/resources/lib`
-* Get GCP Service Account JSON as described in https://docs.google.com/document/d/1T1u8RMZhDYMIXHk7v3lLF2rzag7xLTr5CLHC-49UiYU/edit#heading=h.756ioo8pxy08. and put into `profiles-examples/main-app/src/main/resources/credentials`
-* Docker command to run in local
-```
-docker run -p 4040:4040 -e "CORTEX_TOKEN=xxxxxxxxx" --entrypoint="python" -v $(pwd)/main-app/src/main/resources/credentials/:/secure-storage/ -v $(pwd)/main-app/src/main/resources/conf:/app/conf -v $(pwd)/main-app/src:/opt/spark/work-dir/src -v $(pwd)/main-app/build:/opt/spark/work-dir/build profiles-example submit_job.py "{\"payload\" : {\"config\": \"/app/conf/local-bigquery.json\"}}"
-```
