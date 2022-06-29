@@ -1,32 +1,59 @@
 {
   "batchDirList": [
-    "gs://cvs-synthetic/10Mil"
+    "gs://cvs-synthetic/day1"
   ],
   "profiles": [
     {
       "dataSources": [
         {
           "name": "T_MBR_MEDD_PA_CASE",
-          "filter": "MBR_ACCT_GID > '${filter_value}'",
-          "limit": 0,
           "profileSchemaName": "tmbrmeddpacase"
         },
         {
           "name": "V_MBR_MEDD_PA_PRDCTV",
-          "filter": "CASE_NBR > '${filter_value}'",
-          "limit": 0,
           "profileSchemaName": "V_MBR_MEDD_PA_PRDCTV"
         },
         {
           "name": "V_RXC_PRIOR_ATHZN",
-          "filter": "MBR_ACCT_GID > '${filter_value}'",
-          "limit": 0,
           "profileSchemaName": "V_RXC_PRIOR_ATHZN"
         }
-      ],
-      "variables": {
-        "filter_value": "0"
-      }
+      ]
+    },
+    {
+      "dataSources": [
+        {
+          "name": "T_DGTL_SEG_PS_HSEHO",
+          "profileSchemaName": "T_DGTL_SEG_PS_HSEHO"
+        },
+        {
+          "name": "T_PHMCY_CLM",
+          "profileSchemaName": "T_PHMCY_CLM"
+        },
+        {
+          "name": "T_MBR_ACCT_DENORM",
+          "profileSchemaName": "T_MBR_ACCT_DENORM"
+        },
+        {
+          "name": "V_MBR_CMNCT_PRFR_DTL",
+          "profileSchemaName": "V_MBR_CMNCT_PRFR_DTL"
+        }
+      ]
+    },
+    {
+      "dataSources": [
+        {
+          "name": "V_CC_PSV_CALL_DATA",
+          "profileSchemaName": "V_CC_PSV_CALL_DATA"
+        },
+        {
+          "name": "V_MCDH_ITGR_CALL_RSN",
+          "profileSchemaName": "V_MCDH_ITGR_CALL_RSN"
+        },
+        {
+          "name": "V_CC_PSV_CALL_NOTE",
+          "profileSchemaName": "V_CC_PSV_CALL_NOTE"
+        }
+      ]
     }
   ]
 }

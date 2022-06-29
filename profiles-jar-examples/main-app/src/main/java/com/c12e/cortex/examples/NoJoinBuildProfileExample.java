@@ -121,19 +121,20 @@ public class NoJoinBuildProfileExample extends  BaseCommand implements Runnable 
                 for (Map dataSource: dataSources) {
                     // Build primary data source
                     String dataSourceName = (String) dataSource.get("name");
-                    String filterExpr = (String) dataSource.get("filter");
-                    Integer limit = (Integer) dataSource.get("limit");
                     String profileSchemaName = (String) dataSource.get("profileSchemaName");
+
+                    System.out.println("Ingesting Processing DataSource: " + dataSourceName);
 
                     // Ingest data source
                     IngestDataSourceJob ingestDataSourceJob = cortexSession.job().ingestDataSource(project, dataSourceName, cortexSession.getContext());
-                    ingestDataSourceJob.performFeatureCatalogCalculations = () -> true;
-                    ingestDataSourceJob.formatDatasetForDataSource = (ds) -> ds.filter(filterExpr);
+                    ingestDataSourceJob.performFeatureCatalogCalculations = () -> false;
                     ingestDataSourceJob.run();
+
+                    System.out.println("Building profile for DataSource: " + dataSourceName);
 
                     // Build profile
                     BuildProfileJob buildProfileJob = cortexSession.job().buildProfile(project, profileSchemaName, cortexSession.getContext());
-                    buildProfileJob.performFeatureCatalogCalculations = () -> true;
+                    buildProfileJob.performFeatureCatalogCalculations = () -> false;
                     buildProfileJob.run();
                 }
 
