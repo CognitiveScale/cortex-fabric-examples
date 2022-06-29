@@ -1,8 +1,8 @@
 {
   "payload": {
-    "query": "select * from \"SNOWFLAKE_SAMPLE_DATA\".\"WEATHER\".\"DAILY_14_TOTAL\" limit 1"
+    "query": "SELECT * FROM `bigquery-public-data.covid19_weathersource_com.postal_code_day_forecast` WHERE forecast_date = '2022-06-21' LIMIT 10"
   },
   "properties": {
-    "connection_name": "cdata-snowflake"
+    "connection_name": "cdata-bigquery"
   }
 }

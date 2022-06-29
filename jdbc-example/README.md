@@ -5,28 +5,30 @@ This example Skill is a template for JDBC and CDATA connection implemented as Co
 #### Prerequisites:
 * Docker daemon running  
 * Cortex CLI configured to target Cortex DCI  
-* Jar build of https://github.com/CognitiveScale/cortex-cdata-plugin in lib directory (included)
-* CDATA driver jars are available in Cortex Managed Content. Add any required JDBC driver jar to classpath by any of the below methods
+* Jar build of https://github.com/CognitiveScale/cortex-cdata-plugin in lib directory (Already included in this example `lib` directory)
+* Cortex 6.3 onwards, CDATA driver jars are already preloaded in DCI and available in `shared` project's Cortex Managed Content under reserved key prefix `.cortex/cdata/`
+* Prior to Cortex 6.3, user need to add CData driver jars, same as other JDBC driver jars
   > Add to build.gradle
   
   > Copy to project's lib directory
   
-  > Upload to Cortex managed content in `shared` project with key `.cortex/cdata/<driver_class_name>`
+  > Upload to Cortex managed content in `shared` project
   > (discouraged as this required instrumentation to add jar to classpath at runtime)
-  > To use this run application wit javaagent
+  > To use this run application with javaagent
 
-* Cortex Connection created in the Cortex DCI (in the project where we will deploy the Skill)
 * **For CDATA Connections:**
-    * CDATA license keys installed. Check OEM Key and product checksum configured in `shared` project Secret (`cdata-oem-key` and `cdata-prdct-checksum`Secrets)
-    * Plugin properties JSON prepared as per CDATA documentation and saved as Secret in the project
-      > Follow (CDATA JDBC doc)[https://cdn.cdata.com/help/OWG/jdbc/pg_JDBCconnectcode.htm] of respective database to get driver class name, JDBC URL and prepare plugin properties
-      > For example BigQuery has `cdata.jdbc.googlebigquery.GoogleBigQueryDriver` driver class
-      > 
-      > BigQuery plugin properties JSON example (on Workload Identity k8s cluster with permissions to execute BigQuery queries): `{"AuthScheme": "GCPInstanceAccount", "ProjectId": "fabric-qa", "DatasetId": "covid19_weathersource_co"}`
-      >
+    * CDATA license keys are already installed in Cortex DCI. Check OEM Key and product checksum configured in `shared` project Secret (`cdata-oem-key` and `cdata-prdct-checksum`Secrets)
+    * Get CDATA driver class name:
+      * Get it from CDATA documentation. Example for BigQuery https://cdn.cdata.com/help/DBG/jdbc/pg_connectionj.htm. Or,
+      * For Cortex 6.3 onwards, driver name can be listed through Cortex CLI. Example for BigQuery `cortex content list --project shared --profile cvsgke --query "[?contains(Key,'**bigquery**')].Key"` and copy value excluding key prefix `.cortex/cdata/`, like `cdata.jdbc.googlebigquery.GoogleBigQueryDriver`
+    * Plugin properties JSON prepared as per CDATA documentation and saved as Secret in the project. This will be used while creating connection later.
+      > BigQuery plugin properties JSON example (on Workload Identity enabled k8s cluster with permissions to execute BigQuery queries): `{"AuthScheme": "GCPInstanceAccount", "ProjectId": "fabric-qa", "DatasetId": "covid19_weathersource_co"}` Update `ProjectId` and `DatasetId`
+      > Build connection properties from CDATA docs for respective database https://cdn.cdata.com/help/DBG/jdbc/pg_connectionj.htm
       > List of supported databases https://cdn.cdata.com/help/
 
-> This is based on https://sparkjava.com to serve HTTP server. `Main.Java` setts up the route and runs the server.
+* Create Cortex Connection of type `JDBC CDATA` or `JDBC Generic` in the Cortex DCI (in the project where we will deploy the Skill)
+
+> This Cortex Skill is based on https://sparkjava.com to serve HTTP server. `Main.Java` sets up the route and runs the server.
 
 > `Example` is the interface to plug different JDBC based frameworks. For example Hikari connection pool (HikariExample) and Hibernate (HibernateExample)
 > Default is HikariExample, edit Main.java to use HibernateExample. HibernateExample comes with example entity class `Employee` mapped, update this class for desired entities and Hibernate configuration. 
@@ -59,15 +61,15 @@ A `make.bat` batch file is provided to do these steps.
   > Below commands will build and push Docker image, deploy Cortex Action and Skill, and then invoke Skill to test.
 * `make build`
 * `make push`
-  * `make deploy`
-  
-     Skills that are deployed may be invoked (run) either independently or within an agent. Update `test/payload.json` with `query` as per database name and `connection_name`, and run `make tests` to invoke the deployed Skill.
+* `make deploy`
+* `make tests`  
+   Skills that are deployed may be invoked (run) either independently or within an agent. Update `test/payload.json` with `query` as per database and `connection_name`, and run `make tests` to invoke the deployed Skill.
     
-      Example payload for BigQuery connection
-      ```
-    {
-        "query": "SELECT * FROM `bigquery-public-data.covid19_weathersource_com.postal_code_day_forecast` WHERE forecast_date = '2022-06-21' LIMIT 10"
-    }
+    Example payload for BigQuery connection in Skill composed in an Agent 
     ```
+  {
+      "query": "SELECT * FROM `bigquery-public-data.covid19_weathersource_com.postal_code_day_forecast` WHERE forecast_date = '2022-06-21' LIMIT 10"
+  }
+  ```
 
 For more details about how to build skills go to [Cortex Fabric Documentation - Development - Develop Skills](https://cognitivescale.github.io/cortex-fabric/docs/development/define-skills)
