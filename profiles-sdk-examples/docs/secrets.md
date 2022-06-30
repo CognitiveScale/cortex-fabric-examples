@@ -1,7 +1,7 @@
 # Secrets
 
 When packaged in an Agent the Profiles SDK (`CortexSession`) will have access to Cortex Secrets in the cluster. However,
-secrets are not exposed to application running outside the Cortex cluster. Although this may seem like a limitation, the
+secrets are not exposed to applications running outside the Cortex cluster. Although this may seem like a limitation, the
 Profiles SDK includes a local mock client for providing secrets.
 
 This mock client may be useful when:
@@ -21,17 +21,18 @@ To use a local Secret client you will need to:
 <!-- It is possible to bind a Secret client using an explicit Guice binding, but that is pulling the covers back too much (requires Guice knowledge) -->
 For example, you would set `spark.cortex.clients.secrets.impl` to `com.example.app.CustomSecretsClient` for the following custom implementation:
 ```java
-package com.example.app;
-
-public class CustomSecretsClient extends LocalSecretsClient {
+public class CustomSecretsClient extends LocalSecretClient {
     // LocalSecrets stores a map of secret key and values for each project
-    private LocalSecrets localSecrets = new LocalSecretsClient.LocalSecrets();
+    private static final LocalSecretClient.LocalSecrets localSecrets = new LocalSecretClient.LocalSecrets();
+    static {{
+        localSecrets.setSecretsForProject("local", Map.of(
+                // load secret from environment variables to avoid hardcoding
+                "secret", System.getenv().getOrDefault("MY_ENVIRONMENT_VARIABLE", "default"),
+                "plaintext-secret", "****"
+        ));
+    }}
     public CustomSecretsClient() {
         super(localSecrets);
-        localSecrets.setSecretsForProject("project", Map.of(
-                "secret-key", "secret-value",
-                "secret-from-env", System.getenv("MY_ENVIRONMENT_VARIABLE") // load secret from environment variables
-        ));
     }
 }
 ```

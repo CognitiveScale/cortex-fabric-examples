@@ -24,14 +24,14 @@ These examples are structured in step-by-step way to display the array of possib
 The core of the Profiles SDK is a library that exposes an interface to Cortex for utilizing Spark for custom processing
 of Profile relate data. The entrypoint to the Profiles SDK is the `CortexSession`, a session based API around Spark and the `SparkSession`.
 The Profiles SDK (`CortexSession`) provides
-  - an extensible dependency injected platform that allows for process, module, and environment (local vs in Cortex cluster) specific configuration
-  - stream and batch processing support for Cortex Data Sources and Connections <!-- and Profiles? -->
-  - access to Cortex Phoenix job flows for ingesting DataSources and building Profiles
-  - access to [Cortex Catalog](./docs/catalog.md)
-  - access to Cortex Backend Storage (e.g. Managed Content and Profiles)
-  - Spark property based configuration options, see [config.md](./docs/config.md)
-  - [Cortex Skill Template](TODO) with [Spark-Submit](TODO) backed cluster launching
-  - a [Version Compatibility](#version-compatibility) check with platform dependencies
+- an extensible dependency injected platform that allows for process, module, and environment (local vs in Cortex cluster) specific configuration
+- access to [Cortex Catalog](./docs/catalog.md)
+- access to Cortex Backend Storage (e.g. Managed Content and Profiles)
+- stream and batch processing support for Cortex Data Sources and Connections <!-- and Profiles? -->
+- access to Cortex Phoenix job flows for ingesting DataSources and building Profiles
+- Spark property based configuration options, see [config.md](./docs/config.md)
+- a [Cortex Skill Template](./templates) with a [Spark-Submit](TODO) based launch script
+- a [Version Compatibility](#version-compatibility) check with platform dependencies
 
 ## Installation and Setup
 
