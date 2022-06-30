@@ -1,6 +1,6 @@
 # Cortex Profiles SDK
 
-The Cortex Profiles SDK is collection of Java libraries, examples, and templates for utilizing Cortex Fabric in a Spark
+The Cortex Profiles SDK is collection of Java/Kotlin libraries, examples, and templates for utilizing Cortex Fabric in a Spark
 based environment, whether that be on your local machine or in a Cortex Fabric Cluster.
 
 These examples are structured in step-by-step way to display the array of possible usages of currently available features in the Cortex Profiles SDK.
@@ -91,6 +91,13 @@ Examples are structured to build upon themselves and grow in complexity. Each pr
   - The generated API documentation includes Spark (Cortex) Configuration options and will describe related
     configuration properties and abilities. The initial documentation is minimal in certain areas, but bill we itreated on.
     For a full list of configuration options see [config.md](docs/config.md)
+* Have the ingest/build commands changed? Options?
+  - Changed as compared to the what, the UI? The commands themsellvs
+* Does this use the [Cortex CLI](https://www.npmjs.com/package/cortex-cli) or ~~Phoenix CLI (AMP CLI)~~?
+    - No, neither are used by nor required by the Profiles SDK. The Cortex CLI is a separate tool that would facilitate
+      developing with the Profiles SDK for generating Tokens and creating Cortex Resources. ~~The Phoenix CLI is not
+      public facing, and the Profiles SDK is will eventually overcome/replace the Phoenix CLI, as it supports the same
+      functionality with more flexible configuration.
 
 ## Version Compatibility
 
@@ -111,4 +118,5 @@ Additionally, refer to the [Cortex Compatibility Matrix](https://cognitivescale.
 * [Cortex Fabric GraphQL API Reference](https://cognitivescale.github.io/cortex-fabric/graphql-6.2.2/index.html)
 * [Cortex Profiles SDK API Documentation](TODO)
 * [Cortex Compatibility Matrix](https://cognitivescale.github.io/cortex-fabric/docs/getting-started/compatibility-matrix)
+* [Cortex CLI](https://www.npmjs.com/package/cortex-cli)
 

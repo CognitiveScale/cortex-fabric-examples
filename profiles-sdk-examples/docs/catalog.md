@@ -28,6 +28,9 @@ The `CortexRemoteCatalog` implementation requires:
 These configuration options need only be set when running outside the Cortex cluster (i.e. locally). This can be useful
 to utilize DataSources and Connections defined in the Cortex Cluster locally.
 
+**Disclaimer**: The `CortexRemoteCatalog` implementation is being developed and not all methods (GraphQL endpoints) are
+currently supported. Unsupported methods will throw a `NotImplementedError` or `RuntimeException`.
+
 ### Managed Content and Profile Data
 <!-- TODO(LA): Not sure about this section? Seems like something most "users" won't be able to do. -->
 
@@ -46,8 +49,13 @@ your solution because
 - Local files can be used for datasets, which need not require Secrets or authentication in general (NOTE: remote connections are supported).
 - Authentication to Cortex is not required
 
-**Disclaimer**: The `LocalCatalog` implementation is actively being developed and not all methods (GraphQL endpoints) are currently supported. Unsupported methods will throw a `NotImplementedError`.
+**Disclaimer**: The `LocalCatalog` implementation is being developed and not all methods (GraphQL endpoints) are currently supported. Unsupported methods will throw a `NotImplementedError`.
 See [Supported Resources](#supported-resources) for which Cortex resources can be used with the `LocalCatalog`.
+
+**NOTE: The `LocalCatalog` implementation is currently project-unaware**, in that:
+- Resources are keyed based on their name and are not necessarily scoped to a project
+- a default `"local"` project is included
+<!-- FeatureSets are only loaded into the "local" project (inconsistency). -->
 
 Implementation: `com.c12e.cortex.phoenix.LocalCatalog` <!-- TODO: Link to javadoc -->
 
