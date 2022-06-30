@@ -1,4 +1,0 @@
-pandas==1.2.4
-cortex-python==6.1.0
-delta-spark==1.1.0
-pyyaml==5.3.1
