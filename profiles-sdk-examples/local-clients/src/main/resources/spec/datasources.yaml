@@ -1,0 +1,60 @@
+---
+apiVersion: cognitivescale.io/v1
+kind: DataSource
+metadata:
+  name: member-base-ds
+spec:
+  kind: batch
+  primaryKey: member_id
+  connection:
+    name: member-base-file
+  attributes:
+    - member_id
+    - state_code
+    - city
+    - state
+    - zip_code
+    - gender
+    - segment
+    - member_health_plan
+    - is_PCP_auto_assigned
+    - pcp_tax_id
+    - phone
+    - do_not_call
+    - channel_pref
+    - age
+    - last_flu_shot_date
+    - pcp_name
+---
+apiVersion: cognitivescale.io/v1
+kind: DataSource
+metadata:
+  name: member-feedback-file-ds
+spec:
+  kind: batch
+  primaryKey: member_id
+  connection:
+    name: member-feedback-file
+  attributes:
+    - call_made
+    - call_ignored
+    - member_id
+    - intervention_date
+    - comms_ignored
+    - comms_viewed
+    - feedback_id
+    - feedback_date
+---
+apiVersion: cognitivescale.io/v1
+kind: DataSource
+metadata:
+  name: member-flu-risk-file-ds
+spec:
+  kind: batch
+  primaryKey: member_id
+  connection:
+    name: member-flu-risk-file
+  attributes:
+    - flu_risk_score
+    - date
+    - member_id

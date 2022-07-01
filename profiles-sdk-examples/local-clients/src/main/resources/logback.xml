@@ -1,0 +1,35 @@
+<!--
+  ~ Copyright 2022 Cognitive Scale, Inc. All Rights Reserved.
+  ~
+  ~  See LICENSE.txt for details.
+  ~
+  ~  Unless required by applicable law or agreed to in writing, software
+  ~  distributed under the License is distributed on an "AS IS" BASIS,
+  ~  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~  See the License for the specific language governing permissions and
+  ~  limitations under the License.
+  -->
+
+<configuration packagingData="false"> <!-- enable packagingData to include name/version of jar in stack traces-->
+
+  <appender name="ROOT" class="ch.qos.logback.core.ConsoleAppender">
+    <!-- encoders are assigned the type
+         ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+    <encoder>
+      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <logger name="org.apache.spark" level="warn"></logger>
+  <logger name="org.apache.spark.sql.execution.CacheManager" level="error"></logger>
+  <logger name="org.apache.spark.ui.SparkUI" level="info"></logger>
+  <logger name="com.c12e.cortex.phoenix" level="debug"></logger>
+  <logger name="com.c12e.cortex.profiles" level="debug"></logger>
+  <logger name="com.c12e.cortex.examples" level="debug"></logger>
+  <logger name="org.apache.parquet" level="warn"></logger>
+  <logger name="org.apache.hadoop" level="warn"></logger>
+
+  <root level="info">
+    <appender-ref ref="ROOT"/>
+  </root>
+</configuration>

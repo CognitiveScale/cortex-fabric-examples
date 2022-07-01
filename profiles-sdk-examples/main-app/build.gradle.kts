@@ -20,14 +20,19 @@ plugins {
 }
 
 dependencies {
-    //project deps
+    // project dependencies
     implementation(platform("com.c12e.cortex.profiles:platform-dependencies:6.3.0-M.2"))
     implementation("com.c12e.cortex.profiles:profiles-sdk:6.3.0-M.2")
     implementation("com.google.cloud.spark:spark-bigquery-with-dependencies_2.12:0.25.0")
+
+    // other examples
+    implementation(project(":local-clients"))
+
     // CLI framework
+    implementation("info.picocli:picocli:4.6.3")
     annotationProcessor("info.picocli:picocli-codegen:4.6.3")
 
-    //test deps
+    // test dependencies
     testImplementation(platform("org.junit:junit-bom:5.8.2"))
     testImplementation("org.junit.jupiter:junit-jupiter")
     testImplementation("org.junit-pioneer:junit-pioneer:1.7.1")

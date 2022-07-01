@@ -12,3 +12,4 @@
 
 rootProject.name = "profiles-jar-examples"
 include("main-app")
+include("local-clients")

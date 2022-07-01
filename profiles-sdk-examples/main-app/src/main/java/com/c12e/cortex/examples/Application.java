@@ -14,22 +14,24 @@ package com.c12e.cortex.examples;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 
+import com.c12e.cortex.examples.local.DataSourceRW;
+import com.c12e.cortex.examples.local.JoinConnections;
+
 /**
  * CLI application entrypoint for interacting with the example application.
  */
 @Command(name = "profiles-example", version = "v1.0", mixinStandardHelpOptions = true, subcommands = {
-        JoinConnections.class,
-        JoinSpark.class,
-        CData.class,
-        BigQuery.class,
         DataSourceRW.class,
-        BuildProfile.class,
-        StreamingDataSource.class
+        JoinConnections.class,
+        //JoinSpark.class,
+        //CData.class,
+        //BigQuery.class,
+        //BuildProfile.class,
+        //StreamingDataSource.class
 })
 public class Application {
     public static void main(String[] args) {
         int exitCode = new CommandLine(new Application()).execute(args);
         System.exit(exitCode);
     }
-
 }
