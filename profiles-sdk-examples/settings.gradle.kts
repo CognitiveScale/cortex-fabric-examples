@@ -13,3 +13,5 @@
 rootProject.name = "profiles-jar-examples"
 include("main-app")
 include("local-clients")
+include("join-connections")
+include("datasource-refresh")

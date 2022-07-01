@@ -14,8 +14,8 @@ package com.c12e.cortex.examples;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 
-import com.c12e.cortex.examples.local.DataSourceRW;
-import com.c12e.cortex.examples.local.JoinConnections;
+import com.c12e.cortex.examples.datasource.DataSourceRW;
+import com.c12e.cortex.examples.joinconn.JoinConnections;
 
 /**
  * CLI application entrypoint for interacting with the example application.
@@ -23,7 +23,6 @@ import com.c12e.cortex.examples.local.JoinConnections;
 @Command(name = "profiles-example", version = "v1.0", mixinStandardHelpOptions = true, subcommands = {
         DataSourceRW.class,
         JoinConnections.class,
-        //JoinSpark.class,
         //CData.class,
         //BigQuery.class,
         //BuildProfile.class,

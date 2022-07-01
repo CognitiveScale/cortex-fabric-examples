@@ -27,7 +27,7 @@ public class SessionExample {
         return CortexSession.newSession(sparkSession);
     }
 
-    protected CortexSession getCortexSessionFromExplicitOptions() {
+    public CortexSession getCortexSessionFromExplicitOptions() {
         Map<String, String> options = Map.of(
                 // specify a local catalog implementation with the directory pointing
                 CortexSession.CATALOG_KEY, LocalCatalog.class.getCanonicalName(),

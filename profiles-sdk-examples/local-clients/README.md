@@ -1,6 +1,6 @@
 # Local Clients
 
-This example application is intended to introduce working the Cortex Profiles SDK in local development environment. This
+This example is intended to introduce working with the Cortex Profiles SDK in local development environment. This
 example specifically introduces:
 - creating a `CortexSession` with [Spark](https://spark.apache.org/docs/latest/index.html) in local mode
 - using a local Cortex Catalog
@@ -68,7 +68,7 @@ See [SessionExample.java](src/main/java/com/c12e/cortex/examples/local/SessionEx
 
 **NOTE**: While the Cortex Catalog is accessible from the `CortexSession`, it is not the entrypoint for reading and writing data!
 
-### Connections
+#### Connections
 
 `Connections` for the local catalog are defined in [connections.yaml](./src/main/resources/spec/connections.yaml). There
 are 4 connections defined which are each associated with local csv/parquet [files](./src/main/resources/data):
@@ -77,12 +77,9 @@ are 4 connections defined which are each associated with local csv/parquet [file
 - [member-flu-risk-file](./src/main/resources/data/member_flu_risk_100_v14.parquet) - contains a predicted member flu risk score
 - member-joined-file - this Connection will contain the results of merging the other Connections
 
-See [JoinConnections.java](./src/main/java/com/c12e/cortex/examples/local/JoinConnections.java) for a full example.
-```bash
-./gradlew main-app:run --args="join-connections -p local -l member-base-file -r member-feedback-file -w member-joined-file -c member_id"
-```
+See [join-connections](../join-connections/README.md) for an example of using Connections.
 
-### Data Sources
+#### Data Sources
 
 `DataSources` in the local Catalog are defined in [datasources.yaml](./src/main/resources/spec/datasources.yaml). There
 are 3 DataSources defined in the Catalog, each associated with a corresponding connection:
@@ -90,31 +87,7 @@ are 3 DataSources defined in the Catalog, each associated with a corresponding c
 - member-feedback-file-ds
 - member-flu-risk-file-ds
 
-See [DataSourcesRW.java](./src/main/java/com/c12e/cortex/examples/local/DataSourceRW.java) for an example of refreshing
-a DataSource.
-
-Run this example from the parent directory:
-```bash
-./gradlew main-app:run --args="datasource-refresh -p local -d member-base-ds"
-```
-
-Run this example in a docker container:
-```bash
-make clean build create-app-image
-
-docker run -p 4040:4040 --entrypoint="python" -e CORTEX_TOKEN="xxx" \
-  -v $(pwd)/local-clients/src/main/resources/conf:/app/conf \
-  -v $(pwd)/main-app/src:/opt/spark/work-dir/src \
-  -v $(pwd)/main-app/build:/opt/spark/work-dir/build \
-profiles-example submit_job.py "{ \"payload\" : { \"config\" : \"/app/conf/spark-conf.json\" } }"
-```
-
-Notes:
-* The `CORTEX_TOKEN` environment variable is required by the Spark Submit wrapper
-* Port 4040 is forwarded from the container to expose the Spark UI
-* The 1st volume mount is sharing the options 
-* The 2cd volume mount shares the LocalCatalog contents with the container, and the Spark-submit python script
-* The 3rd volume mount is the output of the joined connection
+See [datasource-refresh](../datasource-refresh/README.md) for an example of refreshing  a DataSource.
 
 ### Secrets
 
@@ -134,19 +107,9 @@ internally when using Connections.
 
 See [CustomSecretsClient.java](src/main/java/com/c12e/cortex/examples/local/CustomSecretsClient.java) for an example of the above.
 
-## Instructions
 
-To run the example locally w/ gradle (from the parent directory): 
-```
-# run JoinConnections example
-./gradlew main-app:run --args="join-connections -p local -l member-base-file -r member-feedback-file -w member-joined-file -c member_id"
+<!-- TODO:
+### Local Cortex Backend
 
-# run DataSource refresh example
-./gradlew main-app:run --args="datasource-refresh -p local -d member-base-ds"
-```
-
-<!-- To run this example in a docker image: -->
-The Spark Configuration for this example is available at [spark-conf.json](./src/main/resources/spark-conf.json).
-
-## Resources
-* [Picocli](https://picocli.info/)
+See [config.md](../docs/config.md).
+-->

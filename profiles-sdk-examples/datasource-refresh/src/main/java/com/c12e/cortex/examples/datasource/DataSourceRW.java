@@ -1,5 +1,6 @@
-package com.c12e.cortex.examples.local;
+package com.c12e.cortex.examples.datasource;
 
+import com.c12e.cortex.examples.local.SessionExample;
 import com.c12e.cortex.profiles.CortexSession;
 import com.c12e.cortex.phoenix.DataSource;
 import io.delta.tables.DeltaTable;

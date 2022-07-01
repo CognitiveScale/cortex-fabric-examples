@@ -1,5 +1,6 @@
-package com.c12e.cortex.examples.local;
+package com.c12e.cortex.examples.joinconn;
 
+import com.c12e.cortex.examples.local.SessionExample;
 import com.c12e.cortex.profiles.CortexSession;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
@@ -28,9 +29,6 @@ public class JoinConnections implements Runnable {
     @Option(names = { "-c", "--column" }, description = "Name of Column to join Connections on", required = true)
     String joinColumn;
 
-    /**
-     * Code to run for a command
-     */
     @Override
     public void run() {
         // create a Cortex Session and perform the join
