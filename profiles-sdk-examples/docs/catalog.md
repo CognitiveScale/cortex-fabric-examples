@@ -67,7 +67,10 @@ Implementation: `com.c12e.cortex.phoenix.LocalCatalog` <!-- TODO: Link to javado
 
 See [./config.md](./config.md#local-development) for more information on configuration options.
 
+
 ### Local File Setup
+
+Below instructions are setting up a local catalog directory.
 
 * Create a directory to contain all Cortex Resources -  `mkdir spec/`
 * [Resources](#supported-resources) are defined in YAML files with only a single type of per file
@@ -354,6 +357,16 @@ Reference:
 
 TODO: Add note that credentials need to be set locally?
 -->
+
+### Local Managed Content and Profile Data
+
+<!-- TODO(LA): Not sure about this section? Seems like something most users might not want to do. -->
+
+The Profiles SDK supports configuring a local filesystem as the backend Cortex Storage. To use a local filesystem as the
+backend storage set the corresponding [configuration properties](./config.md#cortex-backend-storage).
+
+This is useful when working locally, but may require additional setup. For example, a `DataSource` or `ProfileSchema`
+may be defined in the Local Catalog but the corresponding data may not already exist in the `Profiles Bucket`.
 
 ## Resources
 * [Cortex Fabric GraphQL API Reference](https://cognitivescale.github.io/cortex-fabric/graphql-6.2.2/index.html)

@@ -66,13 +66,15 @@ See [dev.md](./docs/dev.md#local-developer-setup) how to work with a local (deve
 
 ## Examples
 
-Examples are structured to build upon themselves and grow in complexity. Each provides their own instructions for running as well as tutorial context.
+Examples are structured to build upon themselves and grow in complexity. Each provides their own instructions for
+running as well as additional context. The top level [main-app](./main-app/README.md) is a CLI wrapper around the other
+examples:
 
 * [Local Cortex Clients](./local-clients/README.md)
+* [Join Connections](./join-connections)
+* [DataSource Refresh](./datasource-refresh)
 
 <!--
-* [DataSources & Connections](./connections-and-datasources/README.md) - introduces reading/writing Connections & DataSources (from local or remote?)
-* [Joining Connections](./joining-connections/README.md) - introduces working with multiple connections, joining them
 * [DataSource & Connection Streaming](./streaming/README.md) - introduces streaming sources (separate from DS & Connections Example b.c. streaming involves a dataset pair (static + stream) & allows for Streaming Listener and)
 * [Building Profiles Local](./build-profiles/README.md) -
 * [Running as a Skill](./skill-example/README.md) -

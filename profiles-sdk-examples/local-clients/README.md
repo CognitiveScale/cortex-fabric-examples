@@ -3,14 +3,9 @@
 This example is intended to introduce working with the Cortex Profiles SDK in local development environment. This
 example specifically introduces:
 - creating a `CortexSession` with [Spark](https://spark.apache.org/docs/latest/index.html) in local mode
-- using a local Cortex Catalog
-- using a local Secrets Client
+- using a local [Cortex Catalog](../docs/catalog.md)
+- using a local [Cortex Secret Client](../docs/secrets.md)
 - loading Cortex configuration properties from a Spark Config file
-- reading and writing Cortex DataSources and Connections
-
-The logging configuration for this project is controlled by the [logback.xml](./src/main/resources/logback.xml) file.
-This example is structured as standalone Java application that can also be run from the parent application. In addition,
-all resources and data used by this application are defined in this module.
 
 ## Introduction
 
@@ -35,8 +30,8 @@ See [SessionExample.java](src/main/java/com/c12e/cortex/examples/local/SessionEx
 ### Catalog
 
 The application is configured to use a local Cortex Catalog with the catalog directory pointing to `spec/` in
-the [application resources](./src/main/resources/spec). The configuration options can be seen in
-the [spark-conf.json](./src/main/resources/spark-conf.json) file.
+the [application resources](../main-app/src/main/resources/spec). The configuration options can be seen in
+the `spark-conf.json` files in other examples, e.g.
 
 ```json
 {
@@ -51,6 +46,7 @@ The `CortexSession` exposes a client to the [Cortex Catalog](../docs/catalog.md)
 ```java
 public void useCortexCatalog(CortexSession cortexSession) {
     Catalog catalog = cortexSession.catalog();
+    
     // get a connection
     Connection connection = catalog.getConnection("project", "conn-name");
     System.out.println(connection.getName());
@@ -107,9 +103,7 @@ internally when using Connections.
 
 See [CustomSecretsClient.java](src/main/java/com/c12e/cortex/examples/local/CustomSecretsClient.java) for an example of the above.
 
-
-<!-- TODO:
 ### Local Cortex Backend
 
-See [config.md](../docs/config.md).
--->
+The example is configured to use the local filesystem (`./main-app/build/test-data`) as the backend storage implementation for Cortex.
+See [Local Managed Content and Profile Data](../docs/catalog.md#local-managed-content-and-profile-data) for more details.

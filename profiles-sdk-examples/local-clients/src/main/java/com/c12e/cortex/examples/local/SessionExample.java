@@ -44,18 +44,19 @@ public class SessionExample {
         return CortexSession.newSession(sparkSession, options);
     }
 
-    public List<Connection> useCortexCatalog(CortexSession cortexSession) {
-        Catalog catalog = cortexSession.catalog();
-
-        // get, delete and re-create a data source in the Cortex Catalog
-        //DataSource ds = catalog.getDataSource("project", "data-source-name");
-        //catalog.deleteDataSource("project", "data-source-name");
-        //catalog.saveDataSource(ds);
-        //catalog.saveDataSource(ds);
-
+    public List<Connection> listConnectionsInCatalog(CortexSession cortexSession) {
         // list the connections in a project
+        Catalog catalog = cortexSession.catalog();
         List<Connection> connections = new ArrayList<>();
         catalog.listConnections("project").forEach(connections::add);
         return connections;
+    }
+
+    public void recreateDataSource(CortexSession cortexSession) {
+        // get, delete and re-create a data source in the Cortex Catalog
+        Catalog catalog = cortexSession.catalog();
+        DataSource ds = catalog.getDataSource("project", "data-source-name");
+        catalog.deleteDataSource("project", "data-source-name");
+        catalog.saveDataSource(ds);
     }
 }
