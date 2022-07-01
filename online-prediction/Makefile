@@ -1,5 +1,5 @@
 IMAGE_TAG=latest
-SKILL_NAME=$(notdir $(CURDIR))
+SKILL_NAME=${SKILL_NAME:-$(notdir $(CURDIR))}
 DOCKER_IMAGE_URL=${DOCKER_PREGISTRY_URL}/${SKILL_NAME}:${IMAGE_TAG}
 
 init: check-env
