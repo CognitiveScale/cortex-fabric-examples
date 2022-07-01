@@ -90,7 +90,7 @@ Refer to the instructions in each example.
 The [Skill Template](./templates) directory contains files for packaging as [Cortex Job Skill](./templates/skill.yaml), where:
 * The input to the skill is a JSON Payload with the path to [Spark Configuration File](https://spark.apache.org/docs/latest/submitting-applications.html) mounted in the container. See [payload.json](./templates/payload.json).
 * The output of the skill is the output of the Job
-* The [docker image](./main-app/src/main/resources/Dockerfile) created for the `main-app` will
+* The [docker image](./main-app/src/main/resources/Dockerfile) for the `main-app` uses a [Spark Submit](https://spark.apache.org/docs/latest/submitting-applications.html) wrapper to execute the job
 
 **Before creating the skill**, you will need to:
 * verify `main-app/src/main/resources/conf/spark-conf.json` configuration file is running the intended example. For example, the below config file specifies the command to run the `join-connections` example,
