@@ -72,8 +72,9 @@ running as well as additional context. The top level [main-app](./main-app/READM
 examples:
 
 * [Local Cortex Clients](./local-clients/README.md)
-* [Join Connections](./join-connections)
-* [DataSource Refresh](./datasource-refresh)
+* [Join Connections](./join-connections/README.md)
+* [DataSource Refresh](./datasource-refresh/README.md)
+* [Build Profiles](./build-profiles/README.md)
 
 
 Refer to the instructions in each example.
