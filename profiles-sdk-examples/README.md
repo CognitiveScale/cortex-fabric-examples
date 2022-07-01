@@ -30,8 +30,9 @@ The Profiles SDK (`CortexSession`) provides
 - stream and batch processing support for Cortex Data Sources and Connections <!-- and Profiles? -->
 - access to Cortex Phoenix job flows for ingesting DataSources and building Profiles
 - Spark property based configuration options, see [config.md](./docs/config.md)
-- a [Cortex Skill Template](./templates) with a [Spark-Submit](TODO) based launch script
-- a [Version Compatibility](#version-compatibility) check with platform dependencies
+- a [Cortex Skill Template](./templates) with a [Spark-Submit](TODO) based launcher
+- configurable provider for Cortex [Secrets](./docs/secrets.md)
+<!-- - a [Version Compatibility](#version-compatibility) check with platform dependencies -->
 
 ## Installation and Setup
 
@@ -74,11 +75,13 @@ examples:
 * [Join Connections](./join-connections)
 * [DataSource Refresh](./datasource-refresh)
 
-<!--
-* [DataSource & Connection Streaming](./streaming/README.md) - introduces streaming sources (separate from DS & Connections Example b.c. streaming involves a dataset pair (static + stream) & allows for Streaming Listener and)
-* [Building Profiles Local](./build-profiles/README.md) -
-* [Running as a Skill](./skill-example/README.md) -
-    -->
+<!-- TODO(LA):
+* Fix missing classpath for CustomSecretsClient when running in a docker container (need to include all values in a jar)
+* Add instructions to join-connections example for running locally against dci-dev.
+* Document the Template for wrapping the application as a skill
+* Port DataSource/Connection streaming examples to their own module
+* Port Build Profiles (jobs) as their own module
+-->
 
 ## FAQ
 * How are users installing this? 
