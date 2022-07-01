@@ -80,6 +80,7 @@ Refer to the instructions in each example.
 * Fix missing classpath for CustomSecretsClient when running in a docker container (need to include all values in a jar)
 * Add instructions to join-connections example for running locally against dci-dev.
 * Port DataSource/Connection streaming examples to their own module
+* Instructions for adding an example/putting in your own example
 -->
 
 ## Skill Template

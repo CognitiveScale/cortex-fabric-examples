@@ -13,7 +13,7 @@ using pre-built Job flows for:
 - Ingesting a DataSource (`IngestDataSourceJob`)
 - Building Profiles (`BuildProfileJob`)
 
-These Jobs flows provide existing functionality, similar to what happens when creating these resources in the Cortex Console.
+These jobs flows provide existing functionality, similar to what happens when creating these resources in the Cortex Console.
 
 ## Running Locally
 
