@@ -66,24 +66,33 @@ See [SessionExample.java](src/main/java/com/c12e/cortex/examples/local/SessionEx
 
 #### Connections
 
-`Connections` for the local catalog are defined in [connections.yaml](./src/main/resources/spec/connections.yaml). There
-are 4 connections defined which are each associated with local csv/parquet [files](./src/main/resources/data):
-- [member-base-file](./src/main/resources/data/members_100_v14.csv) - contains base member information
-- [member-feedback-file](./src/main/resources/data/feedback_100_v14.csv) - contains member feedback information
-- [member-flu-risk-file](./src/main/resources/data/member_flu_risk_100_v14.parquet) - contains a predicted member flu risk score
+`Connections` for the local catalog are defined in [connections.yaml](../main-app/src/main/resources/spec/connections.yml). There
+are 4 connections defined which are each associated with local csv/parquet [files](../main-app/src/main/resources/data):
+- [member-base-file](../main-app/src/main/resources/data/members_100_v14.csv) - contains base member information
+- [member-feedback-file](../main-app/src/main/resources/data/feedback_100_v14.csv) - contains member feedback information
+- [member-flu-risk-file](../main-app/src/main/resources/data/member_flu_risk_100_v14.parquet) - contains a predicted member flu risk score
 - member-joined-file - this Connection will contain the results of merging the other Connections
 
 See [join-connections](../join-connections/README.md) for an example of using Connections.
 
 #### Data Sources
 
-`DataSources` in the local Catalog are defined in [datasources.yaml](./src/main/resources/spec/datasources.yaml). There
+`DataSources` in the local Catalog are defined in [datasources.yml](../main-app/src/main/resources/spec/datasources.yml). There
 are 3 DataSources defined in the Catalog, each associated with a corresponding connection:
 - member-base-ds
 - member-feedback-file-ds
 - member-flu-risk-file-ds
 
 See [datasource-refresh](../datasource-refresh/README.md) for an example of refreshing  a DataSource.
+
+#### Profile Schemas
+
+`ProfileSchemas` in the local Catalog are defined in [profileSchemas.yml](../main-app/src/main/resources/spec/profileSchemas.yml). There
+are 2 ProfileSchemas defined in the catalog:
+- `member-profile`, this `ProfileSchema` represents a member and is the result of joining the `member-base-ds` and `member-flu-risk-file-ds` DataSouces.
+- `member-profile-no-job`
+
+See [build-profiles](../build-profiles/README.md) for an example of using ProfileSchemas.
 
 ### Secrets
 

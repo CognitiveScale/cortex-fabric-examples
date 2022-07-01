@@ -32,12 +32,7 @@ docker run -p 4040:4040 --entrypoint="python" -e CORTEX_TOKEN="xxx" \
 profiles-example submit_job.py "{ \"payload\" : { \"config\" : \"/app/conf/spark-conf.json\" } }"
 ```
 
-Notes:
-* The `CORTEX_TOKEN` environment variable is required by the Spark Submit wrapper
-* Port 4040 is forwarded from the container to expose the Spark UI
-* The 1st volume mount is sharing the options
-* The 2cd volume mount shares the LocalCatalog contents with the container, and the Spark-submit python script
-* The 3rd volume mount is the output of the joined connection
+
 
 ## Running locally against a Cortex Cluster
 

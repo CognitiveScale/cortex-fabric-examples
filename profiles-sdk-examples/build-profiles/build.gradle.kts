@@ -32,7 +32,7 @@ tasks.getByName<Test>("test") {
     useJUnitPlatform()
 }
 
-project.setProperty("mainClassName", "com.c12e.cortex.examples.datasource.DataSourceRW")
+project.setProperty("mainClassName", "com.c12e.cortex.examples.profiles.BuildProfile")
 distributions {
     main {
         contents {

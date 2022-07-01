@@ -16,7 +16,11 @@ When working locally it is useful to set:
 * `spark.cortex.storage.storageType` - Set this to `"file"` to use a local directory to mock Cortex Backend Storage
 * `spark.cortex.storage.file.baseDir` - Base directory when working with a local directory
 
-Example usage of the above configuration options can be found: "TOOD"
+* `spark.ui.enabled`
+* `spark.ui.prometheus.enabled`
+* `spark.sql.streaming.metricsEnabled`
+
+Example usage of the above configuration options can be found [../local-clients](../local-clients/README.md).
 
 ### Using a remote Catalog
 

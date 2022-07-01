@@ -29,6 +29,7 @@ dependencies {
     implementation(project(":local-clients"))
     implementation(project(":join-connections"))
     implementation(project(":datasource-refresh"))
+    implementation(project(":build-profiles"))
 
     // CLI framework
     implementation("info.picocli:picocli:4.6.3")
