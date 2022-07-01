@@ -27,11 +27,11 @@ The Profiles SDK (`CortexSession`) provides
 - an extensible dependency injected platform that allows for process, module, and environment (local vs in Cortex cluster) specific configuration
 - access to [Cortex Catalog](./docs/catalog.md)
 - access to Cortex Backend Storage (e.g. Managed Content and Profiles)
+- configurable provider for Cortex [Secrets](./docs/secrets.md)
 - stream and batch processing support for Cortex Data Sources and Connections <!-- and Profiles? -->
 - access to Cortex Phoenix job flows for ingesting DataSources and building Profiles
 - Spark property based configuration options, see [config.md](./docs/config.md)
 - a [Cortex Skill Template](./templates) with a [Spark-Submit](TODO) based launcher
-- configurable provider for Cortex [Secrets](./docs/secrets.md)
 <!-- - a [Version Compatibility](#version-compatibility) check with platform dependencies -->
 
 ## Installation and Setup
@@ -43,9 +43,6 @@ The Cortex Profiles SDK consists of:
 
 The Profile SDK Jar's can be pulled from CognitiveScale's JFrog Artifactory, if access has been shared with
 you. Follow the [JFrog Artifactory Developer Setup](./docs/dev.md#jfrog-artifactory-setup).
-
-<!-- TODO(LA): Users can pull a docker image which contains the JAR and compatible Spark and Hadoop dependencies. Instructions on
-using and extracting the JAR from the docker image can be found [here](TODO). -->
 
 ### Recommended JVM Settings
 
@@ -76,14 +73,13 @@ examples:
 * [DataSource Refresh](./datasource-refresh/README.md)
 * [Build Profiles](./build-profiles/README.md)
 
-
+[picocli](https://picocli.info/) is used by each example to create a minimal CLI application for running the example.
 Refer to the instructions in each example.
 
 <!-- TODO(LA):
 * Fix missing classpath for CustomSecretsClient when running in a docker container (need to include all values in a jar)
 * Add instructions to join-connections example for running locally against dci-dev.
 * Port DataSource/Connection streaming examples to their own module
-* Port Build Profiles (jobs) as their own module
 -->
 
 ## Skill Template
@@ -91,7 +87,10 @@ Refer to the instructions in each example.
 The [Skill Template](./templates) directory contains files for packaging as [Cortex Job Skill](./templates/skill.yaml), where:
 * The input to the skill is a JSON Payload with the path to [Spark Configuration File](https://spark.apache.org/docs/latest/submitting-applications.html) mounted in the container. See [payload.json](./templates/payload.json).
 * The output of the skill is the output of the Job
-* The [docker image](./main-app/src/main/resources/Dockerfile) for the `main-app` uses a [Spark Submit](https://spark.apache.org/docs/latest/submitting-applications.html) wrapper to execute the job
+* The [docker image](./main-app/src/main/resources/Dockerfile) for the `main-app` uses
+  a [Spark Submit](https://spark.apache.org/docs/latest/submitting-applications.html) based wrapper to trigger the Spark
+  application. The resources for the spark-submit wrapper is in the [main-app/src/main/resources/python/](./main-app/src/main/resources/python)
+  and is necessary for packaging as a Skill.
 
 **Before creating the skill**, you will need to:
 * verify `main-app/src/main/resources/conf/spark-conf.json` configuration file is running the intended example. For example, the below config file specifies the command to run the `join-connections` example,
@@ -165,12 +164,10 @@ make invoke
   - The generated API documentation includes Spark (Cortex) Configuration options and will describe related
     configuration properties and abilities. The initial documentation is minimal in certain areas, but bill we itreated on.
     For a full list of configuration options see [config.md](docs/config.md)
-* Have the ingest/build commands changed? Options?
-  - Changed as compared to the what, the UI? The commands themsellvs
 * Does this use the [Cortex CLI](https://www.npmjs.com/package/cortex-cli) or ~~Phoenix CLI (AMP CLI)~~?
     - No, neither are used by nor required by the Profiles SDK. The Cortex CLI is a separate tool that would facilitate
-      developing with the Profiles SDK for generating Tokens and creating Cortex Resources. ~~The Phoenix CLI is not
-      public facing, and the Profiles SDK is will eventually overcome/replace the Phoenix CLI, as it supports the same
+      developing with the Profiles SDK for generating Tokens and creating Cortex Resources. The Phoenix CLI is not
+      public facing, and the Profiles SDK will eventually overcome/replace the Phoenix CLI as it supports the same
       functionality with more flexible configuration.
 
 ## Version Compatibility

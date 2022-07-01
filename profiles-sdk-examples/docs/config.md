@@ -2,9 +2,14 @@
 
 Cortex configuration properties can be specified in the [Spark Configurations](https://spark.apache.org/docs/latest/index.html).
 
-## Recommended Configuration options
+Configuration options will be specific to your use case and may depend on:
+- how/where you intend to run your application
+- what resources are available in the target environment 
+- what you're use case is doing
 
-TODO: general spark config guidance
+## Spark Configuration Guidance
+
+TODO: General Spark configuration guidance (Spark UI, Debugging, metrics)?
 
 ### Local Development
 
@@ -13,12 +18,8 @@ When working locally it is useful to set:
 * `spark.cortex.catalog.local.dir` to the Local Catalog Directory
 * `spark.cortex.clients.secrets.impl` to the local Secrets Client Implementation
 * `spark.cortex.proxy.impl` to a Guice MethodInterceptor implementation
-* `spark.cortex.storage.storageType` - Set this to `"file"` to use a local directory to mock Cortex Backend Storage
-* `spark.cortex.storage.file.baseDir` - Base directory when working with a local directory
-
-* `spark.ui.enabled`
-* `spark.ui.prometheus.enabled`
-* `spark.sql.streaming.metricsEnabled`
+* `spark.cortex.storage.storageType` to `"file"` to use a local directory to mock Cortex Backend Storage
+* `spark.cortex.storage.file.baseDir` to the base directory when working with a local directory
 
 Example usage of the above configuration options can be found [../local-clients](../local-clients/README.md).
 
@@ -42,7 +43,7 @@ The required spark Config properties depend on the DCIs configuration, see:
 
 ## Cortex Config options
 
-Below is a full table of options (examples are defaults), **not all of these need be set**
+Below is a full table of options (examples are defaults).
 
 Cortex Config Options:
 
