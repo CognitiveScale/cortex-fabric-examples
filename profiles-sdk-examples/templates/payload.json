@@ -1,5 +1,5 @@
 {
   "payload" : {
-    "config": "/app/conf/dci-dev-local-cluster.json"
+    "config": "/app/conf/spark-conf.json"
   }
 }

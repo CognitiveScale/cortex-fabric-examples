@@ -63,7 +63,7 @@ export GRADLE_OPTS="-Dorg.gradle.jvmargs='-Xmx2g -XX:MaxMetaspaceSize=512m -XX:+
 
 ### Developer Setup
 
-See [dev.md](./docs/dev.md#local-developer-setup) how to work with a local (developer) installation of the Cortex Profiles SDK.
+See [dev.md](./docs/dev.md) how to work with a local (developer) installation of the Cortex Profiles SDK.
 
 ## Examples
 
@@ -75,13 +75,81 @@ examples:
 * [Join Connections](./join-connections)
 * [DataSource Refresh](./datasource-refresh)
 
+
+Refer to the instructions in each example.
+
 <!-- TODO(LA):
 * Fix missing classpath for CustomSecretsClient when running in a docker container (need to include all values in a jar)
 * Add instructions to join-connections example for running locally against dci-dev.
-* Document the Template for wrapping the application as a skill
 * Port DataSource/Connection streaming examples to their own module
 * Port Build Profiles (jobs) as their own module
 -->
+
+## Skill Template
+
+The [Skill Template](./templates) directory contains files for packaging as [Cortex Job Skill](./templates/skill.yaml), where:
+* The input to the skill is a JSON Payload with the path to [Spark Configuration File](https://spark.apache.org/docs/latest/submitting-applications.html) mounted in the container. See [payload.json](./templates/payload.json).
+* The output of the skill is the output of the Job
+* The [docker image](./main-app/src/main/resources/Dockerfile) created for the `main-app` will
+
+**Before creating the skill**, you will need to:
+* verify `main-app/src/main/resources/conf/spark-conf.json` configuration file is running the intended example. For example, the below config file specifies the command to run the `join-connections` example,
+* verify the `payload.json` file points the correct Spark configuration file ([spark-conf.json](./main-app/src/main/resources/conf/spark-conf.json))
+
+```json
+{
+    "pyspark": {
+        "pyspark_bin": "bin/spark-submit",
+        "app_command": [
+            "join-connections",
+            "-p",
+            "local",
+            "-l",
+            "member-base",
+            "-r",
+            "member-flu-risk",
+            "-w",
+            "member-joined"
+        ],
+        "app_location": "local:///app/libs/app.jar",
+        "options": {
+            "--master": "local[*]",
+            "--class": "com.c12e.cortex.examples.Application",
+            "--conf": {
+                "spark.cortex.client.phoenix.url": "https://api.dci-dev.dev-eks.insights.ai/fabric/v4/graphql",
+                "spark.cortex.catalog.impl": "com.c12e.cortex.profiles.catalog.CortexRemoteCatalog",
+            }
+        }
+    }
+}
+
+```
+
+To build the skill, you will need to set the environment variables the follow the corresponding make commands:
+* `DOCKER_PREGISTRY_URL=xxxx` <-- Private Registry Url accessible from Cortex
+* `PROJECT_NAME=xxxx` <-- name of the project to save the skill, action and types
+* `CORTEX_TOKEN=xxxx` <-- for connecting to api-server
+
+Make Commands:
+```
+# Building and pushing the skill container, saving the skill and the types
+make deploy-skill
+
+# Tag the latest create-app-image built container
+make tag-container
+
+# Push the container
+make push-container
+
+# Deploy the action and save the skill
+make skill-save
+
+# Save types
+make types-save
+
+# Invoke the skill with payload
+make invoke
+```
 
 ## FAQ
 * How are users installing this? 
