@@ -11,5 +11,5 @@ COPY ./resources/main/spark-conf /opt/spark/conf
 COPY ./resources/main/lib/*.jar /opt/spark/jars/
 COPY ./resources/main/conf /app/conf
 
-ENTRYPOINT [ "/opt/entrypoint.sh" ]
+ENTRYPOINT [ "scuttle", "/opt/entrypoint.sh" ]
 USER ${spark_uid}

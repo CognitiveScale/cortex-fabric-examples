@@ -24,7 +24,11 @@ import picocli.CommandLine.Command;
         BigQuery.class,
         DataSourceRW.class,
         BuildProfile.class,
-        StreamingDataSource.class
+        StreamingDataSource.class,
+        DemoMilestone2.class,
+        GenerateGraphs.class,
+        DemoEngineer.class,
+        CVS.class
 })
 public class Application {
     public static void main(String[] args) {

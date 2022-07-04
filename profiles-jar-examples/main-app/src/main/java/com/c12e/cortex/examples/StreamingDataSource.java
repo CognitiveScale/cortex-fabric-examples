@@ -42,15 +42,6 @@ public class StreamingDataSource extends  BaseCommand implements Runnable {
     @CommandLine.Spec
     private CommandLine.Model.CommandSpec cmdSpec;
 
-    private static final String AWS_CONNECTION_SECRET_ENV = "CONN_AWS_SECRET";
-
-    private static void checkRequiredSecrets() {
-        if (System.getenv(AWS_CONNECTION_SECRET_ENV) == null) {
-            System.err.println(String.format("Missing environment variable '%s' for local secrets client", AWS_CONNECTION_SECRET_ENV));
-            System.exit(2);
-        }
-    }
-
     Logger logger = LoggerFactory.getLogger(StreamingDataSource.class);
 
     /**
@@ -87,12 +78,18 @@ public class StreamingDataSource extends  BaseCommand implements Runnable {
         //don't perform groupBy on micro-batch
         writer.performAggregation(false);
 
+
+        CortexDeltaMergeBuilder builder = CortexDeltaMergeBuilder.getInstance();
+
+
         //supported modes
-        writer.deltaMerge(CortexDeltaMergeBuilder.getInstance());
+        writer.deltaMerge(builder);
         //writer.mode(SaveMode.Overwrite);
         //writer.mode(SaveMode.Append);
 
         writer.save();
+
+        //cortexSession.job().buildProfile("", "");
 
 
         logger.info("Finished process");

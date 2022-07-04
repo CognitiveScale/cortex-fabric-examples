@@ -70,6 +70,11 @@ public class BaseCommand {
         defaults.put("spark.sql.catalog.spark_catalog", "org.apache.spark.sql.delta.catalog.DeltaCatalog");
         defaults.put("spark.databricks.delta.schema.autoMerge.enabled", "true");
         defaults.put("spark.databricks.delta.merge.repartitionBeforeWrite.enabled", "true");
+        defaults.put("spark.executor.processTreeMetrics.enabled", "true");
+        defaults.put("spark.metrics.conf.*.sink.prometheusServlet.class", "org.apache.spark.metrics.sink.PrometheusServlet");
+        defaults.put("spark.metrics.conf.*.sink.prometheusServlet.path", "/metrics/prometheus");
+        defaults.put("spark.metrics.conf.master.sink.prometheusServlet.path", "/metrics/master/prometheus");
+        defaults.put("spark.metrics.conf.applications.sink.prometheusServlet.path", "/metrics/applications/prometheus");
         return defaults;
     }
 

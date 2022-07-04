@@ -12,13 +12,8 @@
 
 package com.c12e.cortex.examples;
 
-import com.c12e.cortex.phoenix.DataSource;
-import com.c12e.cortex.phoenix.ProfileSchema;
 import com.c12e.cortex.profiles.CortexSession;
 import com.c12e.cortex.profiles.client.LocalSecretClient;
-import com.c12e.cortex.profiles.module.job.BuildProfileJob;
-import com.c12e.cortex.profiles.module.job.IngestDataSourceJob;
-import io.delta.tables.DeltaTable;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SaveMode;
@@ -27,13 +22,14 @@ import picocli.CommandLine;
 
 import java.util.HashMap;
 
-@CommandLine.Command(name = "build-profile", description = "Example Profile Build", mixinStandardHelpOptions = true)
-public class BuildProfile extends  BaseCommand implements Runnable {
+@CommandLine.Command(name = "gen-graphs", description = "Example Generating Graphs", mixinStandardHelpOptions = true)
+public class GenerateGraphs extends  BaseCommand implements Runnable {
     @CommandLine.Option(names = {"-p", "--project"}, description = "Project to use", required = true)
     String project;
 
-    @CommandLine.Option(names = {"-ps", "--profile-schema"}, description = "ProfileSchema Name", required = true)
-    String profileSchemaName;
+    @CommandLine.Option(names = {"-c", "--conn"}, description = "Connection Name", required = true)
+    String connection;
+
 
     @CommandLine.Spec
     private CommandLine.Model.CommandSpec cmdSpec;
@@ -54,6 +50,7 @@ public class BuildProfile extends  BaseCommand implements Runnable {
     public void run() {
         //get spark session
         SparkSession session = getSparkSession(getDefaultProps());
+        session.conf().getAll().toStream().print();
 
         //create local secrets map for use in non-cluster env
         checkRequiredSecrets();
@@ -65,27 +62,11 @@ public class BuildProfile extends  BaseCommand implements Runnable {
 
         //create cortex session
         CortexSession cortexSession = getCortexSession(session, localSecrets);
+        //load the two connections from cortex through the api-server
+        Dataset<Row> ds = cortexSession.read().connection(project, connection).load();
 
-        //get profileschema from the catalog
-        ProfileSchema profileSchema = cortexSession.catalog().getProfileSchema(project, profileSchemaName);
-
-        //build primary datasource
-        IngestDataSourceJob ingestMemberBase = cortexSession.job().ingestDataSource(project, profileSchema.getPrimarySource().getName(), cortexSession.getContext());
-        //ingestMemberBase.formatDatasetForDataSource = (ds) -> ds.filter("filter expression");
-        ingestMemberBase.performFeatureCatalogCalculations = () -> false;
-        ingestMemberBase.run();
-
-        //build all joined datasources
-        profileSchema.getJoins().forEach(join -> {
-            IngestDataSourceJob ingestJoin = cortexSession.job().ingestDataSource(project, join.getName(), cortexSession.getContext());
-            ingestJoin.performFeatureCatalogCalculations = () -> true;
-            ingestJoin.run();
-        });
-
-        //build profile
-        BuildProfileJob buildProfileJob = cortexSession.job().buildProfile(project, profileSchemaName, cortexSession.getContext());
-        buildProfileJob.performFeatureCatalogCalculations = () -> false;
-        buildProfileJob.run();
+        //write to a third connection as a data sink
+        cortexSession.write().connection(ds, project, connection).mode(SaveMode.Overwrite).save();
     }
 }
 

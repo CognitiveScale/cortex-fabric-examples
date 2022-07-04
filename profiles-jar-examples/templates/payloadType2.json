@@ -1,0 +1,48 @@
+{
+  "payload" : {
+    "spark_config": {
+      "pyspark": {
+        "pyspark_bin": "bin/spark-submit",
+        "app_command": [
+          "demo-eng",
+          "-p",
+          "mctest18",
+          "-ps",
+          "member-feedback"
+        ],
+        "app_location": "local:///app/libs/app.jar",
+        "options": {
+          "--master": "k8s://https://kubernetes.default.svc:443",
+          "--deploy-mode": "cluster",
+          "--name": "amp-cli",
+          "--class": "com.c12e.cortex.examples.Application",
+          "--conf": {
+            "spark.cortex.client.phoenix.url": "http://cortex-api.cortex.svc.cluster.local:8080/fabric/v4/graphql",
+            "spark.cortex.client.secrets.url": "http://cortex-accounts.cortex.svc.cluster.local:5000",
+            "spark.cortex.catalog.impl": "com.c12e.cortex.profiles.catalog.CortexRemoteCatalog",
+            "spark.executor.cores": 1,
+            "spark.executor.instances": 2,
+            "spark.executor.memory": "4g",
+            "spark.driver.memory": "2g",
+            "spark.cortex.storage.storageType": "s3",
+            "spark.cortex.storage.s3.endpoint": "http://cortex-minio.cortex.svc.cluster.local:9000",
+            "spark.cortex.storage.s3.sslEnabled": "false",
+            "spark.cortex.storage.s3.accessKey": "changeme",
+            "spark.cortex.storage.s3.secretKey": "changeme",
+            "spark.kubernetes.authenticate.driver.serviceAccountName": "default",
+            "spark.kubernetes.namespace": "cortex-compute",
+            "spark.kubernetes.driver.master": "https://kubernetes.default.svc",
+            "spark.kubernetes.driver.container.image": "private-registry.dci-dev.dev-eks.insights.ai/profiles-example:latest",
+            "spark.kubernetes.executor.container.image": "private-registry.dci-dev.dev-eks.insights.ai/profiles-example:latest",
+            "spark.kubernetes.driver.podTemplateContainerName": "spark-kubernetes-driver",
+            "spark.kubernetes.executor.annotation.traffic.sidecar.istio.io/excludeOutboundPorts": "7078,7079",
+            "spark.kubernetes.driver.annotation.traffic.sidecar.istio.io/excludeInboundPorts": "7078,7079",
+            "spark.kubernetes.container.image.pullPolicy": "Always",
+            "spark.cortex.skipAnalyticsKey": "false",
+            "spark.cortex.refreshKey": "true"
+          }
+        }
+      }
+    }
+  }
+}

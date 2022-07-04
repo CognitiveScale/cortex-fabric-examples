@@ -2,15 +2,11 @@
     "pyspark": {
         "pyspark_bin": "bin/spark-submit",
         "app_command": [
-            "join-conns",
+            "demo-eng",
             "-p",
-            "mctest30",
-            "-l",
-            "member-base",
-            "-r",
-            "member-flu-risk",
-            "-w",
-            "member-joined"
+            "mctest18",
+            "-ps",
+            "member-feedback"
         ],
         "app_location": "local:///app/libs/app.jar",
         "options": {
@@ -37,11 +33,13 @@
                 "spark.kubernetes.driver.master": "https://kubernetes.default.svc",
                 "spark.kubernetes.driver.container.image": "private-registry.dci-dev.dev-eks.insights.ai/profiles-example:latest",
                 "spark.kubernetes.executor.container.image": "private-registry.dci-dev.dev-eks.insights.ai/profiles-example:latest",
-                "spark.kubernetes.driver.podTemplateContainerName": "fabric-action",
+                "spark.kubernetes.driver.podTemplateContainerName": "spark-kubernetes-driver",
                 "spark.kubernetes.executor.annotation.traffic.sidecar.istio.io/excludeOutboundPorts": "7078,7079",
                 "spark.kubernetes.driver.annotation.traffic.sidecar.istio.io/excludeInboundPorts": "7078,7079",
-                "spark.kubernetes.container.image.pullPolicy": "Always"
+                "spark.kubernetes.container.image.pullPolicy": "Always",
+                "spark.cortex.skipAnalyticsKey": "false"
             }
         }
     }
 }
+
