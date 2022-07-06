@@ -2,6 +2,7 @@ package com.c12e.cortex.examples;
 
 import com.c12e.cortex.examples.local.CustomSecretsClient;
 import com.c12e.cortex.examples.local.SessionExample;
+import com.c12e.cortex.examples.local.CatalogExample;
 import com.c12e.cortex.phoenix.Connection;
 import com.c12e.cortex.phoenix.LocalCatalog;
 import com.c12e.cortex.profiles.CortexSession;
@@ -21,18 +22,21 @@ public class TestLocalClient {
     @Test
     public void testUseCortexCatalog() {
         var example = new SessionExample();
-        CortexSession session = example.getCortexSessionFromExplicitOptions();
+        var catalogExample = new CatalogExample();
+        CortexSession session = example.getCortexSession();
         assertTrue(session.catalog() instanceof LocalCatalog);
-        assertEquals(example.listConnectionsInCatalog(session).size(), EXPECTED_NUM_CONNECTIONS);
+        assertEquals(EXPECTED_NUM_CONNECTIONS, catalogExample.listConnectionsInCatalog(session).size());
     }
 
     @Test
     public void testUseSecretClient() {
         var example = new SessionExample();
         var secrets = new CustomSecretsClient();
-        CortexSession session = example.getCortexSessionFromExplicitOptions();
+        CortexSession session = example.getCortexSession();
+
+        // expect plaintext secret when reading a connection (provided by custom client)
         Connection connWithSecret = session.catalog().getConnection("local", "member-flu-risk-file");
         Map<String, String> params = connWithSecret.getParamMap(secrets);
-        assertEquals(params.get("secretParam"), "secret-value");
+        assertEquals("secret-value", params.get("secretParam"));
     }
 }

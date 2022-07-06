@@ -33,7 +33,7 @@ public class JoinConnections implements Runnable {
     public void run() {
         // create a Cortex Session and perform the join
         SessionExample example = new SessionExample();
-        CortexSession cortexSession = example.getCortexSessionFromExplicitOptions();
+        CortexSession cortexSession = example.getCortexSession();
         joinConnections(cortexSession, project, leftConnection, rightConnection, writeConnection, joinColumn);
     }
 

@@ -26,7 +26,7 @@ public class DataSourceRW implements Runnable {
     @Override
     public void run() {
         var sessionExample = new SessionExample();
-        CortexSession cortexSession = sessionExample.getCortexSessionFromExplicitOptions();
+        CortexSession cortexSession = sessionExample.getCortexSession();
         refreshDataSource(cortexSession, project, dataSourceName);
     }
 

@@ -1,62 +1,49 @@
 package com.c12e.cortex.examples.local;
 
-import com.c12e.cortex.phoenix.Catalog;
-import com.c12e.cortex.phoenix.Connection;
-import com.c12e.cortex.phoenix.DataSource;
 import com.c12e.cortex.phoenix.LocalCatalog;
 import com.c12e.cortex.profiles.CortexSession;
 import org.apache.spark.SparkConf;
 import org.apache.spark.sql.SparkSession;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 public class SessionExample {
 
-    protected SparkSession getSparkSession() {
-        // create the spark session by loading the Spark Configuration file
+    protected Map<String, String> getDefaultOptions() {
+        return Map.of(
+                // Use local catalog implementation
+                CortexSession.CATALOG_KEY, LocalCatalog.class.getCanonicalName(),
+                CortexSession.LOCAL_CATALOG_DIR_KEY,  "src/main/resources/spec",
+
+                // Use a local secret client implementation
+                CortexSession.SECRETS_CLIENT_KEY, CustomSecretsClient.class.getCanonicalName()
+        );
+    }
+
+    public SparkSession sparkSessionFromConfig() {
         SparkConf sparkConf = new SparkConf();
         return SparkSession.builder()
                 .config(sparkConf)
                 .getOrCreate();
     }
 
-    protected CortexSession getCortexSession(SparkSession session) {
-        SparkSession sparkSession = getSparkSession();
-        return CortexSession.newSession(sparkSession);
-    }
-
-    public CortexSession getCortexSessionFromExplicitOptions() {
-        Map<String, String> options = Map.of(
-                // specify a local catalog implementation with the directory pointing
-                CortexSession.CATALOG_KEY, LocalCatalog.class.getCanonicalName(),
-                CortexSession.LOCAL_CATALOG_DIR_KEY,  "src/main/resources/spec",
-
-                // specify the local secret client implementation
-                CortexSession.SECRETS_CLIENT_KEY, CustomSecretsClient.class.getCanonicalName()
-        );
+    public SparkSession sparkSessionWithDefaultOptions() {
+        Map<String, String> options = getDefaultOptions();
         SparkConf sparkConf = new SparkConf();
-        SparkSession sparkSession = SparkSession.builder()
+        options.forEach((k, v) -> sparkConf.set(k, v));
+        return SparkSession.builder()
                 .master("local[*]")
                 .config(sparkConf)
                 .getOrCreate();
-        return CortexSession.newSession(sparkSession, options);
     }
 
-    public List<Connection> listConnectionsInCatalog(CortexSession cortexSession) {
-        // list the connections in a project
-        Catalog catalog = cortexSession.catalog();
-        List<Connection> connections = new ArrayList<>();
-        catalog.listConnections("project").forEach(connections::add);
-        return connections;
-    }
-
-    public void recreateDataSource(CortexSession cortexSession) {
-        // get, delete and re-create a data source in the Cortex Catalog
-        Catalog catalog = cortexSession.catalog();
-        DataSource ds = catalog.getDataSource("project", "data-source-name");
-        catalog.deleteDataSource("project", "data-source-name");
-        catalog.saveDataSource(ds);
+    public CortexSession getCortexSession() {
+        // Use the SPARK_HOME env variable as a proxy for whether this is running in-cluster or locally, and
+        // whether to load spark submit config file. (Guarding against missing config file & required properties).
+        boolean useDefaultOptions = System.getenv("SPARK_HOME") == null;
+        if (useDefaultOptions) {
+            return CortexSession.newSession(sparkSessionWithDefaultOptions(), getDefaultOptions());
+        }
+        return CortexSession.newSession(sparkSessionFromConfig());
     }
 }

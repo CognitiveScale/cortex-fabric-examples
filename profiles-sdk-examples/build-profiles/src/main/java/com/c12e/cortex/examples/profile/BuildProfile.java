@@ -25,12 +25,19 @@ public class BuildProfile implements Runnable {
     public void run() {
         // create the cortex session
         SessionExample example = new SessionExample();
-        CortexSession cortexSession = example.getCortexSessionFromExplicitOptions();
+        CortexSession cortexSession = example.getCortexSession();
+        buildProfiles(cortexSession, project, profileSchemaName);
+    }
 
+    public void buildProfiles(CortexSession cortexSession,
+                              String project,
+                              String profileSchemaName) {
         // get ProfileSchema from the catalog
         ProfileSchema profileSchema = cortexSession.catalog().getProfileSchema(project, profileSchemaName);
 
-        // Build the Primary DataSource
+        // Build the Primary DataSource.
+        // Options can be set to control the job. The FeatureCatalog calculations are performed to infer the features in
+        // the datasource, it can optionally be disabled.
         IngestDataSourceJob ingestMemberBase = cortexSession.job().ingestDataSource(project, profileSchema.getPrimarySource().getName(), cortexSession.getContext());
         ingestMemberBase.performFeatureCatalogCalculations = () -> true;
         ingestMemberBase.run();
