@@ -86,16 +86,17 @@ Refer to the instructions in each example.
 ## Skill Template
 
 The [Skill Template](./templates) directory contains files for packaging as [Cortex Job Skill](./templates/skill.yaml), where:
-* The input to the skill is a JSON Payload with the path to [Spark Configuration File](https://spark.apache.org/docs/latest/submitting-applications.html) mounted in the container. See [payload.json](./templates/payload.json).
-* The output of the skill is the output of the Job
+* The input to the skill is a JSON Payload with the path to [Spark Configuration File](https://spark.apache.org/docs/latest/submitting-applications.html) in the Skill's Docker container. See [payload.json](./templates/payload.json).
+* The output of the skill is the Job execution logs
 * The [docker image](./main-app/src/main/resources/Dockerfile) for the `main-app` uses
-  a [Spark Submit](https://spark.apache.org/docs/latest/submitting-applications.html) based wrapper to trigger the Spark
+  a [Spark Submit](https://spark.apache.org/docs/latest/submitting-applications.html) based wrapper to run the Spark
   application. The resources for the spark-submit wrapper is in the [main-app/src/main/resources/python/](./main-app/src/main/resources/python)
-  and is necessary for packaging as a Skill.
+  directory and is necessary for packaging as a Skill.
 
 **Before creating the skill**, you will need to:
-* verify `main-app/src/main/resources/conf/spark-conf.json` configuration file is running the intended example. For example, the below config file specifies the command to run the `join-connections` example,
-* verify the `payload.json` file points the correct Spark configuration file ([spark-conf.json](./main-app/src/main/resources/conf/spark-conf.json))
+* Update the [spark-conf.json](./main-app/src/main/resources/conf/spark-conf.json) with the CLI application command and other config options.
+  The below configuration specifies the command to run the [join-connections](./join-connections/README.md) example with the local clients.
+* Verify skills `payload.json` file refers to the above Spark configuration file (in the built container).
 
 ```json
 {
@@ -126,13 +127,19 @@ The [Skill Template](./templates) directory contains files for packaging as [Cor
 
 ```
 
-To build the skill, you will need to set the environment variables the follow the corresponding make commands:
-* `DOCKER_PREGISTRY_URL=xxxx` <-- Private Registry Url accessible from Cortex
-* `PROJECT_NAME=xxxx` <-- name of the project to save the skill, action and types
-* `CORTEX_TOKEN=xxxx` <-- for connecting to api-server
+To build the skill, you will need to set the following environment variables:
+* `DOCKER_PREGISTRY_URL=xxxx` - Private Registry Url accessible from Cortex
+* `PROJECT_NAME=xxxx` - Name of the project to save the skill, action and types
+* `CORTEX_TOKEN=xxxx` - For connecting to Cortex
 
 Make Commands:
 ```
+# Build the Application
+make clean build
+
+# Create the application image
+make create-app-image
+
 # Building and pushing the skill container, saving the skill and the types
 make deploy-skill
 

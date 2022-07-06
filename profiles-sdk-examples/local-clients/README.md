@@ -97,7 +97,7 @@ See [build-profiles](../build-profiles/README.md) for an example of using Profil
 ### Secrets
 
 The example is configured to use a [local Secret Client](../docs/secrets.md) implemented in this package. The
-configuration options can be seen in the [spark-conf.json](./src/main/resources/spark-conf.json) file:
+configuration options can be seen in the `spark-conf.json` files:
 
 ```json
 {
@@ -107,7 +107,7 @@ configuration options can be seen in the [spark-conf.json](./src/main/resources/
 }
 ```
 
-The Secret Client is not intended to be accessed from the `CortexSession`. The specified implementation is used
+The Secret Client is not intended to be accessed directly from the `CortexSession`. The specified implementation is used
 internally when using Connections.
 
 See [CustomSecretsClient.java](src/main/java/com/c12e/cortex/examples/local/CustomSecretsClient.java) for an example of the above.

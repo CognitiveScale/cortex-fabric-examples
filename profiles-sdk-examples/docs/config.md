@@ -9,7 +9,7 @@ Configuration options will be specific to your use case and may depend on:
 
 ## Spark Configuration Guidance
 
-TODO: General Spark configuration guidance (Spark UI, Debugging, metrics)?
+TODO: General Spark configuration guidance (Spark UI, Debugging, metrics, fs performance)
 
 ### Local Development
 

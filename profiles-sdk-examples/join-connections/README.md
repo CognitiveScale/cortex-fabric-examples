@@ -65,25 +65,75 @@ Notes:
 
 ## Running locally against a Cortex Cluster
 
-To run locally against a Cortex cluster, you will need to:
-* Use the [Remote Catalog](../docs/catalog.md#remote-catalog) implementation instead of the Local Catalog. To do this update the `spark-conf.json` file by removing local catalog implementation and local catalog directory. See [config.md](../docs/config.md#configuration-options).
-* Set the configuration properties for the [Remote Catalog](../docs/config.md#using-a-remote-catalog)
-   - Set the Cortex URL
-   - Export a Cortex Token
-* Update the [Local Secret Client](../local-clients/README.md#secrets)  with any secrets required by your Connection(s)
-* Update application command in `spark-conf.json` for your project and connections
+**Note**: Because this is running outside the Cortex Cluster you will need to know the value of any Secrets used by
+the connections. For access to Cortex Secrets, see [Running as a Skill](#running-as-a-skill).
 
-```bash
+### Prerequisites
+
+To run this example in Spark local mode against a Cortex Cluster with access to the Catalog and Secrets, you will need to:
+* Know the [backend storage configuration](../docs/config.md#cortex-backend-storage) for the Cluster, which includes
+  names of buckets and access keys for remote storage
+* Know the values of Cortex secrets used by the Connection
+* Generate a `CORTEX_TOKEN`
+* Ensures the Cortex resources exist, specifically the Project and Joining Connections (Left, Right, and Result)
+* Update the [spark-conf.json](./src/main/resources/conf/spark-conf.json) file to:
+  - use the [Remote Catalog](../docs/catalog.md#remote-catalog) implementation by setting the Cortex URL (`spark.cortex.client.phoenix.url`) to the GraphQL API endpoint (e.g. `https://api.<domain>/fabric/v4/graphql`) and removing the Local Catalog implementation (`spark.cortex.catalog.impl`).
+  - update [Local Secret Client](../local-clients/README.md#secrets) with any secrets required by your Connection(s). Ensure to update the project, Secret name, and secret value.
+  - Update the `app_command` arguments to match your Cortex project and Connections (`-p`, `-l`, `-r`, `-o` `-c`)
+
+### Example
+
+**Note**: The cortex backend storage configuration could be set in the `spark-conf.json`, but environment variables are
+used below to avoid hardcoding access keys in the source.
+
+The below example command is assuming:
+* the Cortex backend is using the `minio` instance packaged in  the [Cortex Charts](https://github.com/CognitiveScale/cortex-charts) with access keys `xxxxx`/`xxxxx`
+* the [CustomSecretClient](../local-clients/README.md#secrets) provides the secret used by the Connections (loaded from `CONNECTION_SECRET_VALUE`)
+
+```
 # from the parent directory
-make clean build create-app-image
+$ make clean build create-app-image
 
-docker run -p 4040:4040 --entrypoint="python" -e CORTEX_TOKEN="${CORTEX_TOKEN}" \
+$ docker run -p 4040:4040 --entrypoint="python" \
+  -e CORTEX_TOKEN="${CORTEX_TOKEN}" \
+  -e CONNECTION_SECRET_VALUE="${CONNECTION_SECRET_VALUE}"
+  -e STORAGE_TYPE=s3 \
+  -e AWS_ACCESS_KEY_ID=xxxxx \
+  -e AWS_SECRET_KEY=xxxxx \
+  -e S3_ENDPOINT=http://host.docker.internal:9000 \
   -v $(pwd)/join-connections/src/main/resources/conf:/app/conf \
   -v $(pwd)/main-app/src:/opt/spark/work-dir/src \
   -v $(pwd)/main-app/build:/opt/spark/work-dir/build \
 profiles-example submit_job.py "{ \"payload\" : { \"config\" : \"/app/conf/spark-conf.json\" } }"
+
+...
+23:37:27.873 [main] DEBUG c.c.c.p.m.c.DefaultCortexConnectionReader - Removed hadoop filesystem - format_type: csv, uri: s3a://fabric-dev-laguirre/members/members_v14_100.csv, extra
+23:37:28.110 [main] WARN  o.a.h.metrics2.impl.MetricsConfig - Cannot locate configuration: tried hadoop-metrics2-s3a-file-system.properties,hadoop-metrics2.properties
+23:37:33.636 [main] DEBUG c.c.c.p.m.c.DefaultCortexConnectionReader - Inferred schema from sample of connection (CSV) - project: 'laguirre-testi-69257', connectionName: 'member-base'
+23:37:34.071 [main] DEBUG c.c.c.p.m.c.DefaultCortexConnectionReader - Finished reading connection (CSV) - project: 'laguirre-testi-69257', connectionName: 'member-base'
+23:37:34.163 [main] DEBUG c.c.c.p.m.c.DefaultCortexConnectionReader - Removed hadoop filesystem - format_type: csv, uri: s3a://fabric-dev-laguirre/members/members_flu_risk_v14_100.csv, extra
+23:37:34.302 [main] WARN  o.a.h.metrics2.impl.MetricsConfig - Cannot locate configuration: tried hadoop-metrics2-s3a-file-system.properties,hadoop-metrics2.properties
+23:37:35.555 [main] DEBUG c.c.c.p.m.c.DefaultCortexConnectionReader - Inferred schema from sample of connection (CSV) - project: 'laguirre-testi-69257', connectionName: 'members-flu-risk'
+23:37:35.982 [main] DEBUG c.c.c.p.m.c.DefaultCortexConnectionReader - Finished reading connection (CSV) - project: 'laguirre-testi-69257', connectionName: 'members-flu-risk'
+23:37:36.201 [main] DEBUG c.c.c.p.m.c.DefaultCortexConnectionWriter - Writing to connection: 's3a://fabric-dev-laguirre/members/members_joined.csv'
+23:37:36.541 [main] WARN  o.a.spark.sql.catalyst.util.package - Truncated the string representation of a plan since it was too large. This behavior can be adjusted by setting 'spark.sql.debug.maxToStringFields'.
+23:37:37.641 [main] WARN  o.a.h.f.s.c.AbstractS3ACommitterFactory - Using standard FileOutputCommitter to commit work. This is slow and potentially unsafe.
+23:37:39.262 [Executor task launch worker for task 0.0 in stage 5.0 (TID 13)] WARN  o.a.h.f.s.c.AbstractS3ACommitterFactory - Using standard FileOutputCommitter to commit work. This is slow and potentially unsafe.
+23:37:43.945 [shutdown-hook-0] INFO  o.s.jetty.server.AbstractConnector - Stopped Spark@c6c82aa{HTTP/1.1, (http/1.1)}{0.0.0.0:4040}
+23:37:43.948 [shutdown-hook-0] INFO  org.apache.spark.ui.SparkUI - Stopped Spark web UI at http://a0a8fdbb79c2:4040
+Pod Name:
+Container State:
+Termination Reason:
+Exit Code: 0
 ```
 
 ## Running as a Skill
 
-TODO
+Update the spark configuration file (e.g. `spark-conf.json`) used by the main application to match configuration for
+this example and refer to the [instructions for running the Skill Template](../README.md#skill-template).
+
+
+## Common Errors
+* If you see a NullPointerException, ClassNotFoundException, or Guice DI related exception then double check that ALL configuration options are set correctly and refer to the configuration options
+* GraphQL 302 HTTP response - double check API endpoint
+* GraphQL general non-200 HTTP response related to connections -> Double check all Cortex resources exist and match the config options
