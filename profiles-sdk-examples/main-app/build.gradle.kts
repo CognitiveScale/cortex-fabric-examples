@@ -21,8 +21,8 @@ plugins {
 
 dependencies {
     // project dependencies
-    implementation(platform("com.c12e.cortex.profiles:platform-dependencies:6.3.0-M.2"))
-    implementation("com.c12e.cortex.profiles:profiles-sdk:6.3.0-M.2")
+    api(platform("com.c12e.cortex.profiles:platform-dependencies:6.3.0-M.2"))
+    api("com.c12e.cortex.profiles:profiles-sdk:6.3.0-M.2")
     implementation("com.google.cloud.spark:spark-bigquery-with-dependencies_2.12:0.25.0")
 
     // other examples
@@ -70,3 +70,16 @@ tasks.create("docker-install", DockerBuildImage::class) {
     inputDir.set(file("docker"))
     images.add("test/myapp:latest")
 }*/
+
+tasks.withType<Jar> {
+    setProperty("zip64", true)
+    manifest.attributes["Main-Class"] = "com.c12e.cortex.examples.Application"
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+    // include compiled example source in built jar
+    from(project.sourceSets["main"].output)
+    from(project(":local-clients").sourceSets["main"].output)
+    from(project(":build-profiles").sourceSets["main"].output)
+    from(project(":datasource-refresh").sourceSets["main"].output)
+    from(project(":join-connections").sourceSets["main"].output)
+}

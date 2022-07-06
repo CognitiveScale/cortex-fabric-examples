@@ -16,7 +16,6 @@
     ],
     "app_location": "local:///app/libs/app.jar",
     "options": {
-      "--jars": "file:///app/libs/local-clients.jar",
       "--master": "local[*]",
       "--class": "com.c12e.cortex.examples.Application",
       "--conf": {
@@ -26,7 +25,7 @@
         "spark.sql.streaming.metricsEnabled": "true",
         "spark.cortex.catalog.impl": "com.c12e.cortex.phoenix.LocalCatalog",
         "spark.cortex.catalog.local.dir":  "src/main/resources/spec",
-        "spark.cortex.clients.secrets.impl": "com.c12e.cortex.examples.local.CustomSecretsClient",
+        "spark.cortex.client.secrets.impl": "com.c12e.cortex.examples.local.CustomSecretsClient",
         "spark.cortex.storage.storageType": "file",
         "spark.cortex.storage.file.baseDir": "src/main/resources/data"
       }
