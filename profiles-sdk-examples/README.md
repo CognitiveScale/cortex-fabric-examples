@@ -76,17 +76,14 @@ examples:
 [picocli](https://picocli.info/) is used by each example to create a minimal CLI application for running the example.
 Refer to the instructions in each example.
 
-<!-- TODO(LA):
-* Fix missing classpath for CustomSecretsClient when running in a docker container (need to include all values in a jar)
-* Add instructions to join-connections example for running locally against dci-dev.
-* Port DataSource/Connection streaming examples to their own module
-* Instructions for adding an example/putting in your own example
--->
-
 ## Skill Template
 
+<!-- TODO: Seems inefficient that we package the config in the docker image. We should be able to set some config
+    options in the payload, so we don't have to rebuild an image for a config update.
+-->
+
 The [Skill Template](./templates) directory contains files for packaging as [Cortex Job Skill](./templates/skill.yaml), where:
-* The input to the skill is a JSON Payload with the path to [Spark Configuration File](https://spark.apache.org/docs/latest/submitting-applications.html) in the Skill's Docker container. See [payload.json](./templates/payload.json).
+* The input to the skill is a [JSON Payload](./templates/payload.json) with the path to [Spark Configuration File](https://spark.apache.org/docs/latest/submitting-applications.html) in the Skill's Docker container.
 * The output of the skill is the Job execution logs
 * The [docker image](./main-app/src/main/resources/Dockerfile) for the `main-app` uses
   a [Spark Submit](https://spark.apache.org/docs/latest/submitting-applications.html) based wrapper to run the Spark
@@ -95,69 +92,62 @@ The [Skill Template](./templates) directory contains files for packaging as [Cor
 
 **Before creating the skill**, you will need to:
 * Update the [spark-conf.json](./main-app/src/main/resources/conf/spark-conf.json) with the CLI application command and other config options.
-  The below configuration specifies the command to run the [join-connections](./join-connections/README.md) example with the local clients.
 * Verify skills `payload.json` file refers to the above Spark configuration file (in the built container).
-
-```json
-{
-    "pyspark": {
-        "pyspark_bin": "bin/spark-submit",
-        "app_command": [
-            "join-connections",
-            "-p",
-            "local",
-            "-l",
-            "member-base",
-            "-r",
-            "member-flu-risk",
-            "-w",
-            "member-joined"
-        ],
-        "app_location": "local:///app/libs/app.jar",
-        "options": {
-            "--master": "local[*]",
-            "--class": "com.c12e.cortex.examples.Application",
-            "--conf": {
-                "spark.cortex.client.phoenix.url": "https://api.dci-dev.dev-eks.insights.ai/fabric/v4/graphql",
-                "spark.cortex.catalog.impl": "com.c12e.cortex.profiles.catalog.CortexRemoteCatalog",
-            }
-        }
-    }
-}
-
-```
 
 To build the skill, you will need to set the following environment variables:
 * `DOCKER_PREGISTRY_URL=xxxx` - Private Registry Url accessible from Cortex
 * `PROJECT_NAME=xxxx` - Name of the project to save the skill, action and types
 * `CORTEX_TOKEN=xxxx` - For connecting to Cortex
 
-Make Commands:
+Building the Skill
 ```
-# Build the Application
-make clean build
+make clean build create-app-image deploy-skill
+...
 
-# Create the application image
-make create-app-image
-
-# Building and pushing the skill container, saving the skill and the types
-make deploy-skill
-
-# Tag the latest create-app-image built container
-make tag-container
-
-# Push the container
-make push-container
-
-# Deploy the action and save the skill
-make skill-save
-
-# Save types
-make types-save
-
-# Invoke the skill with payload
-make invoke
+latest: digest: sha256:d90eb1af0789bfa9b36082d9ef67ffc535e2f2a3f8c62c10950dff14a5fd57dc size: 2606
+cortex types save -y templates/types.yaml --project testi-69257
+Type definition saved
+cortex actions deploy --actionName profiles-example --actionType job --docker private-registry.dci-dev.dev-eks.insights.ai/profiles-example:latest --project testi-69257 --cmd '["scuttle", "python", "submit_job.py"]' --podspec ./templates/podspec.yaml
+{
+  "success": true,
+  "action": {
+    "_isDeleted": false,
+    "_projectId": "testi-69257",
+    "_createdBy": "laguirre@cognitivescale.com",
+    "name": "profiles-example",
+    "description": "",
+    "image": "private-registry.dci-dev.dev-eks.insights.ai/profiles-example:latest",
+    "type": "job",
+    "command": [
+      "scuttle",
+      "python",
+      "submit_job.py"
+    ],
+    "scaleCount": 1,
+    "podSpec": "[{\"path\":\"/containers/0/imagePullPolicy\",\"value\":\"Always\"}]",
+    "jobTimeout": 0,
+    "k8sResources": [],
+    "environmentVariables": null,
+    "createdAt": "2022-07-07T17:10:14.258Z",
+    "updatedAt": "2022-07-07T17:10:14.258Z",
+    "_version": 2
+  }
+}
+cortex skills save -y templates/skill.yaml --project testi-69257
+Skill saved: {"success":true,"version":2,"message":"Skill definition profiles-example saved."}
 ```
+
+Invoking the Skill:
+```
+$ make invoke
+cortex skills invoke --params-file templates/payload.json profiles-example params --project laguirre-testi-69257
+{
+  "success": true,
+  "activationId": "115d1196-408a-47fa-91c4-6f8e8a391641"
+}
+```
+
+Run `cortex agents get-activation <activation-id>` or `cortex tasks logs <task-name>` to view logs of the skill activation.
 
 ## FAQ
 * How are users installing this? 
