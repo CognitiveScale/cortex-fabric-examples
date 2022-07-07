@@ -8,9 +8,8 @@ See [JoinConnections.java](./src/main/java/com/c12e/cortex/examples/joinconn/Joi
 
 ## Running Locally
 
-To run this example with locally with local Cortex clients:
+To run this example locally with local Cortex clients (from the parent directory):
 ```
-# from the parent directory
 $ make build
 $ ./gradlew main-app:run --args="join-connections -p local -l member-base-file -r member-feedback-file -w member-joined-file -c member_id"
 ```
@@ -24,12 +23,9 @@ The joined connection file will be at: `main-app/build/tmp/test-data/joined_v14.
 
 ## Running in a Docker container with spark-submit
 
-To run this example with Spark Submit based docker container and local Cortex clients:
+To run this example in a docker container with local Cortex clients (from the parent directory):
 ```
-# from the parent directory
 $ make clean build create-app-image
-
-$ export CORTEX_TOKEN=....
 
 $ docker run -p 4040:4040 --entrypoint="python" -e CORTEX_TOKEN="${CORTEX_TOKEN}" \
   -v $(pwd)/join-connections/src/main/resources/conf:/app/conf \
@@ -132,7 +128,6 @@ Exit Code: 0
 ```
 
 ## Running as a Skill
-
 Update the spark configuration file (e.g. `spark-conf.json`) used by the main application to match configuration for
 this example and refer to the [instructions for running the Skill Template](../README.md#skill-template).
 

@@ -30,6 +30,7 @@ dependencies {
     implementation(project(":join-connections"))
     implementation(project(":datasource-refresh"))
     implementation(project(":build-profiles"))
+    implementation(project(":cdata-connection"))
 
     // CLI framework
     implementation("info.picocli:picocli:4.6.3")
@@ -76,10 +77,11 @@ tasks.withType<Jar> {
     manifest.attributes["Main-Class"] = "com.c12e.cortex.examples.Application"
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 
-    // include compiled example source in built jar
+    // include all compiled examples in built jar
     from(project.sourceSets["main"].output)
     from(project(":local-clients").sourceSets["main"].output)
     from(project(":build-profiles").sourceSets["main"].output)
     from(project(":datasource-refresh").sourceSets["main"].output)
     from(project(":join-connections").sourceSets["main"].output)
+    from(project(":cdata-connection").sourceSets["main"].output)
 }

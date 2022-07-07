@@ -1,0 +1,49 @@
+---
+apiVersion: cognitivescale.io/v1
+kind: Connection
+metadata:
+  name: "cdata-csv"
+spec:
+  title: CDATA CSV
+  connectionType: jdbc
+  params:
+    - name: query
+      value: select * from members_100_v14
+    - name: url
+      value: jdbc:csv:GenerateSchemaFiles=OnStart;URI=file://./src/main/resources/data/members_100_v14.csv;Location=./build/tmp;
+    - name: driver
+      value: cdata.jdbc.csv.CSVDriver
+    - name: oem_key
+      value: '#SECURE.oem_key'
+---
+apiVersion: cognitivescale.io/v1
+kind: Connection
+metadata:
+  name: "cdata-bigquery"
+spec:
+  title: CDATA BigQuery
+  connectionType: jdbc
+  params:
+    - name: query
+      value: SELECT * FROM `bigquery-public-data.covid19_weathersource_com.postal_code_day_forecast` WHERE forecast_date = '2022-06-03' LIMIT 10
+    - name: url
+      value: jdbc:cdata:googlebigquery:AuthScheme:OAuthJWT;InitiateOAuth=GETANDREFRESH;OAuthJWTCertType:GOOGLEJSON;OAuthJWTCert:/secure-storage/gcp-service-account.json;ProjectId=fabric-qa;DatasetId=covid19_weathersource_co;
+    - name: driver
+      value: cdata.jdbc.googlebigquery.GoogleBigQueryDriver
+    - name: oem_key
+      value: '#SECURE.oem_key'
+---
+apiVersion: cognitivescale.io/v1
+kind: Connection
+metadata:
+  name: "sink"
+spec:
+  title: Sink File
+  connectionType: file
+  contentType: parquet
+  allowRead: true
+  allowWrite: false
+  params:
+    - name: uri
+      value: file:///opt/spark/work-dir/build/tmp/test-data/sink-ds/
+---

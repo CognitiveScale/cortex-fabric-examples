@@ -17,6 +17,7 @@ import picocli.CommandLine.Command;
 import com.c12e.cortex.examples.datasource.DataSourceRW;
 import com.c12e.cortex.examples.joinconn.JoinConnections;
 import com.c12e.cortex.examples.profile.BuildProfile;
+import com.c12e.cortex.examples.cdata.CData;
 
 /**
  * CLI application entrypoint for interacting with the example application.
@@ -25,7 +26,7 @@ import com.c12e.cortex.examples.profile.BuildProfile;
         DataSourceRW.class,
         JoinConnections.class,
         BuildProfile.class,
-        //CData.class,
+        CData.class,
         //BigQuery.class,
         //StreamingDataSource.class
 })
