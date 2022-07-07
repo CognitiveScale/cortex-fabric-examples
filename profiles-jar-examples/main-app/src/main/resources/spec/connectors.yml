@@ -155,7 +155,7 @@ spec:
       value: true
     - name: csv/header
       value: true
-    - name: streamReadDir
+    - name: stream_read_dir
       value: s3a://cortex-examples/data/data-streaming
     - name: isTriggered
       value: false

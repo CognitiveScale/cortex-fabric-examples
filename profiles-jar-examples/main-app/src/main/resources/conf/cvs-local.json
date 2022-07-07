@@ -14,7 +14,7 @@
       "--class": "com.c12e.cortex.examples.Application",
       "--conf": {
         "spark.fabric.client.phoenix.url": "http://cortex-internal.cortex.svc.cluster.local/fabric/v4/graphql",
-        "spark.fabric.catalog.impl": "com.c12e.cortex.phoenix.profiles.spark.catalog.FabricRemoteCatalog",
+        "spark.fabric.catalog.impl": "com.c12e.cortex.profiles.catalog.CortexRemoteCatalog",
         "spark.driver.memory": "4g",
         "spark.kubernetes.driver.limit.cores": "4"
       }

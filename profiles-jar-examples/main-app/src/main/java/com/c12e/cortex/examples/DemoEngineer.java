@@ -74,143 +74,6 @@ public class DemoEngineer extends  BaseCommand implements Runnable {
     public static final String PROFILE_REFRESH_WITH_PARTITION = "spark.cortex.refreshKey";
     public static final String PROFILE_SKIP_FEATURE_CATALOG_ANALYTICS = "spark.cortex.skipAnalyticsKey";
 
-
-    public class ExtendedPhoenixClient extends GeneratedPhoenixClient {
-        String graphqlEndpoint = null;
-        String token = null;
-        GraphQLClient client = null;
-        HttpClient httpClient = HttpClientBuilder.create().build();
-        @InjectLogger
-        Logger logger;
-
-        @Inject
-        protected ExtendedPhoenixClient(@Named("spark.cortex.client.phoenix.url") String graphqlEndpoint, @Named("spark.cortex.phoenix.token") String token) {
-            super(graphqlEndpoint, token);
-            this.graphqlEndpoint = graphqlEndpoint;
-            this.token = "Bearer " + token;
-            this.client = this.initializeClient();
-        }
-
-        public com.c12e.cortex.generated.types.ProfileSchema saveProfileSchema(CreateProfileSchemaGraphQLQuery query) throws Exception {
-            return null;
-        }
-
-        public com.c12e.cortex.generated.types.DataSource saveDataSource(CreateDataSourceGraphQLQuery query) throws Exception {
-            return null;
-        }
-
-        //
-        public com.c12e.cortex.generated.types.Connection saveConnection(CreateConnectionGraphQLQuery query) throws Exception {
-            GraphQLQueryRequest mutationRequest = new GraphQLQueryRequest(query);
-            GraphQLResponse gQLResponse = client.executeQuery(mutationRequest.serialize());
-            com.c12e.cortex.generated.types.Connection response =
-                    gQLResponse.extractValueAsObject("data." + query.getOperationName(), com.c12e.cortex.generated.types.Connection.class);
-            return response;
-        }
-        private HttpEntity createHttpEntity(String body) {
-            HttpEntity requestEntity = null;
-
-            try {
-                requestEntity = new StringEntity(body);
-            } catch (UnsupportedEncodingException e) {
-                this.logger.error("Failed to encode HTTP Entity", e);
-            }
-
-            return requestEntity;
-        }
-
-        private void setHeaders(HttpPost httpPost, Map<String, ? extends List<String>> headers) {
-            Iterator headerSet = headers.entrySet().iterator();
-
-            while (headerSet.hasNext()) {
-                Map.Entry<String, ? extends List<String>> entry = (Map.Entry) headerSet.next();
-                httpPost.setHeader((String) entry.getKey(), (String) ((List) entry.getValue()).get(0));
-            }
-
-            httpPost.setHeader("Authorization", this.token);
-        }
-
-        private CustomGraphQLClient initializeClient() {
-            return GraphQLClient.createCustom(this.graphqlEndpoint, (url, headers, body) -> {
-                HttpPost httpPost = new HttpPost(url);
-                this.setHeaders(httpPost, headers);
-                httpPost.setEntity(this.createHttpEntity(body));
-
-                try {
-                    HttpResponse httpResponse = this.httpClient.execute(httpPost);
-                    return new com.netflix.graphql.dgs.client.HttpResponse(httpResponse.getStatusLine().getStatusCode(), EntityUtils.toString(httpResponse.getEntity()));
-                } catch (IOException e) {
-                    this.logger.error("POST request failed - url: '{}'", url, e);
-                    return null;
-                }
-            });
-        }
-    }
-
-    public class ExtendedRemoteCatalog extends CortexRemoteCatalog {
-        ExtendedPhoenixClient cortexPhoenixClient;
-        @InjectLogger
-        Logger logger;
-
-        @Inject
-        protected ExtendedRemoteCatalog(ExtendedPhoenixClient cortexPhoenixClient) {
-            super(cortexPhoenixClient);
-            this.cortexPhoenixClient = cortexPhoenixClient;
-        }
-
-        private <T> T getOrDefault(Supplier<T> function, T defaultValue) {
-            try {
-                T value = function.get();
-                return value == null ? defaultValue : value;
-            } catch (NullPointerException var4) {
-                return defaultValue;
-            }
-        }
-
-        @NotNull
-        @Override
-        public ProfileSchema createProfileSchema(@NotNull ProfileSchema schema) {
-            try {
-                CreateProfileSchemaGraphQLQuery.Builder mappedSchema = new CreateProfileSchemaGraphQLQuery.Builder();
-                //map internal to generated type
-                cortexPhoenixClient.saveProfileSchema(mappedSchema.build());
-                return schema;
-            } catch (Exception e) {
-                this.logger.error("Failed to save ProfileSchema - project: '{}', name: '{}'", schema.getProject(), schema.getName(), e);
-                return null;
-            }
-        }
-
-        @NotNull
-        @Override
-        public DataSource saveDataSource(@NotNull DataSource source) {
-            try {
-                CreateDataSourceGraphQLQuery.Builder mappedSource = new CreateDataSourceGraphQLQuery.Builder();
-                //map internal to generated type
-                cortexPhoenixClient.saveDataSource(mappedSource.build());
-                return source;
-            } catch (Exception e) {
-                this.logger.error("Failed to save DataSource - project: '{}', name: '{}'", source.getProject(), source.getName(), e);
-                return null;
-            }
-        }
-
-        @NotNull
-        @Override
-        public Connection saveConnection(@NotNull Connection conn) {
-            try {
-                CreateConnectionGraphQLQuery.Builder mappedConnection = new CreateConnectionGraphQLQuery.Builder();
-                //map internal to generated type
-                cortexPhoenixClient.saveConnection(mappedConnection.build());
-                return conn;
-            } catch (Exception e) {
-                this.logger.error("Failed to save Connection - project: '{}', name: '{}'", conn.getProject(), conn.getName(), e);
-                return null;
-            }
-        }
-    }
-
-
     private void createAllResources(CortexSession cortexSession, HashMap<String, String> resourceMap, Boolean deleteFirst) {
         resourceMap.get("profileSchemaA");
         ProfileSchema profile = new ProfileSchema(null, null, null, null,
@@ -225,7 +88,7 @@ public class DemoEngineer extends  BaseCommand implements Runnable {
         //don't save if profile schema found, you could also update profile schema with new configuration
         //safest would be to delete first in that case
         if(foundSchema == null) {
-            cortexSession.catalog().saveProfileSchema(profile);
+            cortexSession.catalog().createProfileSchema(profile);
         }
     }
 
@@ -241,7 +104,6 @@ public class DemoEngineer extends  BaseCommand implements Runnable {
 
 
         //hitting remote client, normally would only want to use this in cluster
-        defaultOptions.put(CortexSession.CATALOG_KEY, ExtendedRemoteCatalog.class.getName());
         defaultOptions.put(CortexSession.PHOENIX_CLIENT_URL_KEY, "http://api.dci-dev.dev-eks.insights.ai");
         defaultOptions.put(CortexSession.PHOENIX_TOKEN_KEY, "eyJraWQiOiJfM1g1aWpvcGdTSm0tSmVmdWJQenh5RS1XWGw3UzJqSVZ" +
                 "DLXRNWnNiRG9BIiwiYWxnIjoiRWREU0EifQ.eyJiZWFyZXIiOiJ1c2VyIiwiaWF0IjoxNjU2OTA0ODc4LCJleHAiOjE2NTY5OTEy" +
@@ -262,7 +124,7 @@ public class DemoEngineer extends  BaseCommand implements Runnable {
         CortexSession cortexSession = getCortexSession(session, localSecrets);
 
 
-        cortexSession.catalog().saveDataSource(new DataSource(
+        cortexSession.catalog().createDataSource(new DataSource(
                 project,
                 "myDataSource",
                 null,
