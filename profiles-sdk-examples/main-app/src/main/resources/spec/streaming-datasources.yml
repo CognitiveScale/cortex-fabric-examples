@@ -1,0 +1,27 @@
+---
+apiVersion: cognitivescale.io/v1
+kind: DataSource
+metadata:
+  name: member-base-s3-stream-write
+spec:
+  kind: streaming
+  primaryKey: member_id
+  connection:
+    name: member-base-s3-stream
+  attributes:
+    - member_id
+    - state_code
+    - city
+    - state
+    - zip_code
+    - gender
+    - segment
+    - member_health_plan
+    - is_PCP_auto_assigned
+    - pcp_tax_id
+    - phone
+    - do_not_call
+    - channel_pref
+    - age
+    - last_flu_shot_date
+    - pcp_name

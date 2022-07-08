@@ -32,7 +32,7 @@ tasks.getByName<Test>("test") {
     useJUnitPlatform()
 }
 
-project.setProperty("mainClassName", "com.c12e.cortex.examples.cdata.CData")
+project.setProperty("mainClassName", "com.c12e.cortex.examples.streaming.StreamingDataSource")
 distributions {
     main {
         contents {

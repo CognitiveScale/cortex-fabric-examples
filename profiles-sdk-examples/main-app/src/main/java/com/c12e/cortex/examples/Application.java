@@ -18,6 +18,7 @@ import com.c12e.cortex.examples.datasource.DataSourceRW;
 import com.c12e.cortex.examples.joinconn.JoinConnections;
 import com.c12e.cortex.examples.profile.BuildProfile;
 import com.c12e.cortex.examples.cdata.CData;
+import com.c12e.cortex.examples.streaming.StreamingDataSource;
 
 /**
  * CLI application entrypoint for interacting with the example application.
@@ -28,7 +29,7 @@ import com.c12e.cortex.examples.cdata.CData;
         BuildProfile.class,
         CData.class,
         //BigQuery.class,
-        //StreamingDataSource.class
+        StreamingDataSource.class
 })
 public class Application {
     public static void main(String[] args) {

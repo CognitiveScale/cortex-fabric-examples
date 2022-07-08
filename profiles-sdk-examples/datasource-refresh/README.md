@@ -8,16 +8,18 @@ See [DataSourcesRW.java](./src/main/java/com/c12e/cortex/examples/datasource/Dat
 
 ## Running Locally
 
-To run this example with locally with local Cortex clients:
-```bash
-./gradlew main-app:run --args="datasource-refresh -p local -d member-base-ds"
+To run this example locally with local Cortex clients:
+```
+$ make clean build
+
+$ ./gradlew main-app:run --args="datasource-refresh -p local -d member-base-ds"
 ```
 
-This will write the `member-base-ds` DataSource to a local file. **NOTE:** Because this is running with a Catalog instance
-and local filesystem as the Cortex backend, the resulting for the DataSource will be written to a local file and does
+This will write the `member-base-ds` DataSource to a local file. **NOTE:** Because this is running with a local Catalog 
+and local filesystem as the Cortex backend, the result of the DataSource will be written to a local file and does
 not exist prior to running the above.
 
-(The resulting DataSource is saved as a DeltaTable in `build/test-data/cortex-profiles/sources/local/member-base-ds-delta`)
+The resulting DataSource is saved as a DeltaTable in `../main-app/build/test-data/cortex-profiles/sources/local/member-base-ds-delta`
 
 ## Running in a Docker container with spark-submit
 

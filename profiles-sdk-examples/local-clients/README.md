@@ -66,7 +66,7 @@ See [SessionExample.java](src/main/java/com/c12e/cortex/examples/local/SessionEx
 
 #### Connections
 
-`Connections` for the local catalog are defined in [connections.yaml](../main-app/src/main/resources/spec/connections.yml). There
+`Connections` for the local catalog are defined in [connectors.yaml](../main-app/src/main/resources/spec/connectors.yml). There
 are 4 connections defined which are each associated with local csv/parquet [files](../main-app/src/main/resources/data):
 - [member-base-file](../main-app/src/main/resources/data/members_100_v14.csv) - contains base member information
 - [member-feedback-file](../main-app/src/main/resources/data/feedback_100_v14.csv) - contains member feedback information
@@ -78,7 +78,7 @@ See [join-connections](../join-connections/README.md) for an example of using Co
 #### Data Sources
 
 `DataSources` in the local Catalog are defined in [datasources.yml](../main-app/src/main/resources/spec/datasources.yml). There
-are 3 DataSources defined in the Catalog, each associated with a corresponding connection:
+are 3 DataSources defined, each associated with a corresponding connection:
 - member-base-ds
 - member-feedback-file-ds
 - member-flu-risk-file-ds

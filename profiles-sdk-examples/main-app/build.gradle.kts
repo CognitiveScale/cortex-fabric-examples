@@ -31,6 +31,7 @@ dependencies {
     implementation(project(":datasource-refresh"))
     implementation(project(":build-profiles"))
     implementation(project(":cdata-connection"))
+    implementation(project(":streaming-datasource"))
 
     // CLI framework
     implementation("info.picocli:picocli:4.6.3")
@@ -84,4 +85,5 @@ tasks.withType<Jar> {
     from(project(":datasource-refresh").sourceSets["main"].output)
     from(project(":join-connections").sourceSets["main"].output)
     from(project(":cdata-connection").sourceSets["main"].output)
+    from(project(":streaming-datasource").sourceSets["main"].output)
 }
