@@ -94,7 +94,7 @@ public class StreamingDataSource implements Runnable {
     /**
      * Streaming Listener that the streaming query state.
      */
-    public class TestStreamQueryListener extends  StreamingQueryListener {
+    public class TestStreamQueryListener extends StreamingQueryListener {
         SparkSession sparkSession;
         Long countBeforeStop = 3L;
 

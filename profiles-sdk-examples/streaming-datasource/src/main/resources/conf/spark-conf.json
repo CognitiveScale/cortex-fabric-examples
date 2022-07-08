@@ -2,11 +2,11 @@
   "pyspark": {
     "pyspark_bin": "bin/spark-submit",
     "app_command": [
-      "datasource-refresh",
+      "ds-streaming",
       "-p",
       "local",
       "-d",
-      "member-base-ds"
+      "member-base-s3-stream-write",
     ],
     "app_location": "local:///app/libs/app.jar",
     "options": {

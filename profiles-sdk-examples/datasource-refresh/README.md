@@ -21,7 +21,7 @@ not exist prior to running the above.
 
 The resulting DataSource is saved as a DeltaTable in `../main-app/build/test-data/cortex-profiles/sources/local/member-base-ds-delta`
 
-## Running in a Docker container with spark-submit
+## Running in a Docker container with Spark-Submit
 
 Run this example in a docker container with local clients, from the parent directory:
 ```bash

@@ -62,7 +62,7 @@ Notes:
 ## Running locally against a Cortex Cluster
 
 **Note**: Because this is running outside the Cortex Cluster you will need to know the value of any Secrets used by
-the connections and. For access to Cortex Secrets, see [Running as a Skill](#running-as-a-skill).
+the connections. For access to Cortex Secrets, see [Running as a Skill](#running-as-a-skill).
 
 ### Prerequisites
 
