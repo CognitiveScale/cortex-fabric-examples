@@ -6,7 +6,7 @@
       "-p",
       "local",
       "-d",
-      "member-base-s3-stream-write",
+      "member-base-s3-stream-write"
     ],
     "app_location": "local:///app/libs/app.jar",
     "options": {
