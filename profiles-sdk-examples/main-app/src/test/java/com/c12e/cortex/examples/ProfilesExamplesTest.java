@@ -12,6 +12,7 @@
 
 package com.c12e.cortex.examples;
 
+import com.c12e.cortex.examples.local.CustomSecretsClient;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
