@@ -214,12 +214,14 @@ Make sure to update the [Spark submit config file](./src/main/resources/conf/spa
 To run this example in a docker container with local Cortex clients (from the parent directory):
 
 ```
-$ make clean build create-app-image
+$ make build create-app-image
 
-$ docker run -p 4040:4040 --entrypoint="python" -e CORTEX_TOKEN="${CORTEX_TOKEN}" \
--v $(pwd)/streaming-datasource/src/main/resources/conf:/app/conf \
--v $(pwd)/main-app/src:/opt/spark/work-dir/src \
--v $(pwd)/main-app/build:/opt/spark/work-dir/build \
+$ docker run -p 4040:4040 --entrypoint="python" \
+  -e CORTEX_TOKEN="${CORTEX_TOKEN}" \
+  -e STREAMING_SECRET_KEY="${STREAMING_SECRET_KEY}" \
+  -v $(pwd)/datasource-streaming/src/main/resources/conf:/app/conf \
+  -v $(pwd)/main-app/src:/opt/spark/work-dir/src \
+  -v $(pwd)/main-app/build:/opt/spark/work-dir/build \
 profiles-example submit_job.py "{ \"payload\" : { \"config\" : \"/app/conf/spark-conf.json\" } }"
 ```
 

@@ -11,14 +11,13 @@
  */
 package com.c12e.cortex.examples;
 
-import picocli.CommandLine;
-import picocli.CommandLine.Command;
-
+import com.c12e.cortex.examples.cdata.CData;
 import com.c12e.cortex.examples.datasource.DataSourceRW;
 import com.c12e.cortex.examples.joinconn.JoinConnections;
 import com.c12e.cortex.examples.profile.BuildProfile;
-import com.c12e.cortex.examples.cdata.CData;
-//import com.c12e.cortex.examples.streaming.StreamingDataSource;
+import com.c12e.cortex.examples.streaming.StreamingDataSource;
+import picocli.CommandLine;
+import picocli.CommandLine.Command;
 
 /**
  * CLI application entrypoint for interacting with the example application.
@@ -28,8 +27,8 @@ import com.c12e.cortex.examples.cdata.CData;
         JoinConnections.class,
         BuildProfile.class,
         CData.class,
+        StreamingDataSource.class
         //BigQuery.class,
-        //StreamingDataSource.class
 })
 public class Application {
     public static void main(String[] args) {

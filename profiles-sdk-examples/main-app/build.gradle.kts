@@ -35,7 +35,7 @@ dependencies {
     implementation(project(":datasource-refresh"))
     implementation(project(":build-profiles"))
     implementation(project(":cdata-connection"))
-    implementation(project(":streaming-datasource"))
+    implementation(project(":datasource-streaming"))
 
     // CLI framework
     implementation("info.picocli:picocli:4.6.3")
@@ -52,7 +52,7 @@ dependencies {
     testImplementation(project(":datasource-refresh"))
     testImplementation(project(":build-profiles"))
     testImplementation(project(":cdata-connection"))
-    testImplementation(project(":streaming-datasource"))
+    testImplementation(project(":datasource-streaming"))
 }
 
 // application entrypoint
@@ -97,5 +97,5 @@ tasks.withType<Jar> {
     from(project(":datasource-refresh").sourceSets["main"].output)
     from(project(":join-connections").sourceSets["main"].output)
     from(project(":cdata-connection").sourceSets["main"].output)
-    //from(project(":streaming-datasource").sourceSets["main"].output)
+    from(project(":datasource-streaming").sourceSets["main"].output)
 }

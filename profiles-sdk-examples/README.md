@@ -72,6 +72,9 @@ examples:
 * [Join Connections](./join-connections/README.md)
 * [DataSource Refresh](./datasource-refresh/README.md)
 * [Build Profiles](./build-profiles/README.md)
+* [DataSource Streaming](./datasource-streaming/README.md)
+* [CData Connections](./cdata-connection/README.md)
+* [BigQuery Connection](./bigquery-connection/README.md)
 
 [picocli](https://picocli.info/) is used by each example to create a minimal CLI application for running the example.
 Refer to the instructions in each example.
