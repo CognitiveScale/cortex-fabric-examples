@@ -14,6 +14,7 @@ package com.c12e.cortex.examples;
 
 import com.c12e.cortex.profiles.CortexSession;
 import com.c12e.cortex.profiles.client.CortexSecretsClient;
+import com.c12e.cortex.profiles.client.LocalRemoteStorageClient;
 import com.c12e.cortex.profiles.client.LocalSecretClient;
 import com.c12e.cortex.profiles.intercept.TracingTimingMethodInterceptor;
 import com.c12e.cortex.phoenix.LocalCatalog;
@@ -40,6 +41,7 @@ public class BaseCommand {
         defaults.put(CortexSession.CATALOG_KEY, LocalCatalog.class.getName());
         defaults.put(CortexSession.METHOD_PROXY_KEY, TracingTimingMethodInterceptor.class.getName());
         defaults.put(CortexSession.LOCAL_CATALOG_DIR_KEY, "src/main/resources/spec/");
+        defaults.put(CortexSession.STORAGE_CLIENT_KEY, LocalRemoteStorageClient.class.getName());
         defaults.put("spark.app.name", "CortexProfilesExample");
         defaults.put("spark.master", "local[*]");
         defaults.put("spark.ui.enabled", "true");

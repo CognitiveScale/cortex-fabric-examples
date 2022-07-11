@@ -25,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class ProfilesExamplesTest {
 
     @Test
+    @SetEnvironmentVariable(key = "CONN_AWS_SECRET", value = "xxxx")
     public void testJoinConnections() {
         Application app = new Application();
         CommandLine cmd = new CommandLine(app);
