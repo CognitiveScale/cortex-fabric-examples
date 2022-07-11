@@ -25,6 +25,10 @@ dependencies {
     api("com.c12e.cortex.profiles:profiles-sdk:6.3.0-M.2")
     implementation("com.google.cloud.spark:spark-bigquery-with-dependencies_2.12:0.25.0")
 
+    // any extra jars (for CData/BigQuery examples)
+    runtimeOnly(fileTree("src/main/resources/lib"){ include("*.jar") })
+    testRuntimeOnly(fileTree("src/main/resources/lib"){ include("*.jar") })
+
     // other examples
     implementation(project(":local-clients"))
     implementation(project(":join-connections"))
@@ -41,6 +45,14 @@ dependencies {
     testImplementation(platform("org.junit:junit-bom:5.8.2"))
     testImplementation("org.junit.jupiter:junit-jupiter")
     testImplementation("org.junit-pioneer:junit-pioneer:1.7.1")
+
+    // other examples
+    testImplementation(project(":local-clients"))
+    testImplementation(project(":join-connections"))
+    testImplementation(project(":datasource-refresh"))
+    testImplementation(project(":build-profiles"))
+    testImplementation(project(":cdata-connection"))
+    testImplementation(project(":streaming-datasource"))
 }
 
 // application entrypoint
@@ -85,5 +97,5 @@ tasks.withType<Jar> {
     from(project(":datasource-refresh").sourceSets["main"].output)
     from(project(":join-connections").sourceSets["main"].output)
     from(project(":cdata-connection").sourceSets["main"].output)
-    from(project(":streaming-datasource").sourceSets["main"].output)
+    //from(project(":streaming-datasource").sourceSets["main"].output)
 }

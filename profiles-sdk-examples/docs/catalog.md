@@ -57,6 +57,8 @@ See [Supported Resources](#supported-resources) for which Cortex resources can b
 - a default `"local"` project is included
 <!-- FeatureSets are only loaded into the "local" project (inconsistency). -->
 
+**NOTE:** Comments are not supported in the YAML files used by the LocalCatalog.
+
 Implementation: `com.c12e.cortex.phoenix.LocalCatalog` <!-- TODO: Link to javadoc -->
 
 ### Configuration options

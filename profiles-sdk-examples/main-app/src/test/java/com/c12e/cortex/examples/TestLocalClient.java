@@ -14,10 +14,11 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@SetEnvironmentVariable(key = "MY_ENVIRONMENT_VARIABLE", value = "secret-value")
+@SetEnvironmentVariable(key = CustomSecretsClient.CONNECTION_SECRET_ENV, value = "secret-value")
+@SetEnvironmentVariable(key = CustomSecretsClient.STREAMING_SECRET_ENV, value = "streaming-secret-value")
 public class TestLocalClient {
 
-    public static final int EXPECTED_NUM_CONNECTIONS = 4;
+    public static final int EXPECTED_NUM_CONNECTIONS = 9;
 
     @Test
     public void testUseCortexCatalog() {

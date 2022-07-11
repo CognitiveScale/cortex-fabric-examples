@@ -1,7 +1,7 @@
 # Streaming Connections
 
 This example is contains a CLI application for refreshing a DataSource via streaming. This builds off
-the [Local Clients](../local-clients/README.md) example for its setup but uses a different set of Connections and DataSource for this example defined in .
+the [Local Clients](../local-clients/README.md) example for its setup but uses a different set of Connections and DataSource for this example defined in [streaming-connections.yml](../main-app/src/main/resources/spec/streaming-connections.yml) and [streaming-datasource.yml](../main-app/src/main/resources/spec/streaming-datasources.yml) respectively.
 
 See [StreamDataSource.java](./src/main/java/com/c12e/cortex/examples/streaming/StreamingDataSource.java) for the full source.
 
@@ -43,7 +43,7 @@ $ make clean build
 
 $ export STREAMING_SECRET_ENV=...
 
-$ ./gradlew main-app:run --args="ds-streaming -p local -d member-base-s3-stream-write
+$ ./gradlew main-app:run --args="ds-streaming -p local -d member-base-s3-stream-write"
 
 > Task :main-app:run
 ...
