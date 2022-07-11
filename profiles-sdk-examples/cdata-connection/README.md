@@ -42,19 +42,30 @@ in [cdata-connections.yml](../main-app/src/main/resources/spec/cdata-connections
 
 The sink file can be found at `./main-app/build/tmp/test-data/sink-ds`.
 
+**NOTE**: The above requires that you add the additional Jar files (from [Prerequisites](#prerequisites)) as dependencies
+in the `build.gradle.kts` script, e.g.:
+```kotlin
+```
+
 ## Running in a Docker container with spark-submit
 
 ```
 $ make clean build create-app-image
 
+$ export CORTEX_TOKEN=...
+
+$ export CDATA_OEM_KEY=...
+
+$ export CDATA_PRODUCT_CHECKSUM=...
+
 $ docker run -p 4040:4040 --entrypoint="python" \
-    -e "CORTEX_TOKEN=xxxxxxxxx" \
-    -e "CDATA_OEM_KEY=<CData OEM Key>" \
-    -e "CDATA_PRODUCT_CHECKSUM=<CData product checksum>" \
-    -v $(pwd)/main-app/src/main/resources/conf:/app/conf \
+    -e "CORTEX_TOKEN=${CORTEX_TOKEN}" \
+    -e "CDATA_OEM_KEY=${CDATA_OEM_KEY}" \
+    -e "CDATA_PRODUCT_CHECKSUM=${CDATA_PRODUCT_CHECKSUM}" \
+    -v $(pwd)/cdata-connection/src/main/resources/conf:/app/conf \
     -v $(pwd)/main-app/src:/opt/spark/work-dir/src \
     -v $(pwd)/main-app/build:/opt/spark/work-dir/build \
-    profiles-example submit_job.py "{\"payload\" : {\"config\": \"/app/conf/local.json\"}}"
+    profiles-example submit_job.py "{\"payload\" : {\"config\": \"/app/conf/spark-conf.json\"}}"
 ```
 
 Notes:
@@ -72,16 +83,24 @@ To authenticate against Google BigQuery:
 * Get a GCP Service Account JSON as described in https://docs.google.com/document/d/1T1u8RMZhDYMIXHk7v3lLF2rzag7xLTr5CLHC-49UiYU/edit#heading=h.756ioo8pxy08 and put it into `profiles-examples/main-app/src/main/resources/credentials`.
 * When running locally container you will need to include an additional volume sharing the GCP credentials.
 ```
-docker run -p 4040:4040 \
-    -e "CORTEX_TOKEN=xxxxxxxxx" \
-    -e "CDATA_OEM_KEY=<CData OEM Key>" \
-    -e "CDATA_PRODUCT_CHECKSUM=<CData product checksum>" \
+$ make clean build create-app-image
+
+$ export CORTEX_TOKEN=...
+
+$ export CDATA_OEM_KEY=...
+
+$ export CDATA_PRODUCT_CHECKSUM=...
+
+$ docker run -p 4040:4040 \
+    -e CORTEX_TOKEN="${CORTEX_TOKEN}" \
+    -e CDATA_OEM_KEY="${CDATA_OEM_KEY}" \
+    -e CDATA_PRODUCT_CHECKSUM="{CDATA_PRODUCT_CHECKSUM}" \
     --entrypoint="python" \
     -v $(pwd)/main-app/src/main/resources/credentials/:/secure-storage/
-    -v $(pwd)/main-app/src/main/resources/conf:/app/conf
+    -v $(pwd)/cdata-connection/src/main/resources/conf:/app/conf
     -v $(pwd)/main-app/src:/opt/spark/work-dir/src
     -v $(pwd)/main-app/build:/opt/spark/work-dir/build
-    profiles-example submit_job.py "{\"payload\" : {\"config\": \"/app/conf/local.json\"}}"
+    profiles-example submit_job.py "{\"payload\" : {\"config\": \"/app/conf/spark-conf.json\"}}"
 ```
 
 

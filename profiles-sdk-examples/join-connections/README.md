@@ -77,7 +77,7 @@ To run this example in Spark local mode against a Cortex Cluster with access to 
   - update [Local Secret Client](../local-clients/README.md#secrets) with any secrets required by your Connection(s). Ensure to update the project, Secret name, and secret value.
   - Update the `app_command` arguments to match your Cortex project and Connections (`-p`, `-l`, `-r`, `-o` `-c`)
 
-**NOTE**: If your connections do not use Cortex Secrets because the Cortex cluster has [IRSA enabled](TODO), then you may
+**NOTE**: If your connections do not use Cortex Secrets because the Cortex cluster has [IRSA enabled](https://cognitivescale.github.io/cortex-charts/docs/platforms/aws/aws-irsa), then you may
 not be able to run this example without editing the Connection. This is because IRSA provides authentication within the
 cluster, and cannot be leveraged when running locally. Try [Running the example as a Skill](#running-as-a-skill).
 
@@ -128,12 +128,8 @@ Exit Code: 0
 ```
 
 ## Running as a Skill
-Update the spark configuration file (e.g. `spark-conf.json`) used by the main application to match configuration for
-this example and refer to the [instructions for running the Skill Template](../README.md#skill-template).
 
 ### Prerequisites
-
-To run this example in Spark local mode against a Cortex Cluster with access to the Catalog and Secrets, you will need to:
 * Ensures the Cortex resources exist, specifically the Project and Joining Connections (Left, Right, and Result), and any corresponding Cortex Secrets
 * Generate a `CORTEX_TOKEN`
 * Update the [spark-conf.json](./src/main/resources/conf/spark-conf.json) file to:
@@ -141,9 +137,16 @@ To run this example in Spark local mode against a Cortex Cluster with access to 
   - remove the Local Secret Client implementation (`spark.cortex.clients.secrets.impl`)
   - Update the `app_command` arguments to match your Cortex Project and Connection names (`-p`, `-l`, `-r`, `-o` `-c`)
 
+To run this example in Spark local mode against a Cortex Cluster with access to the Catalog and Secrets, you will need to
+update the spark configuration file (e.g. `spark-conf.json`) used by the main application to match configuration for
+this example. 
+
+Refer to the [instructions for running the Skill Template](../README.md#skill-template) in the top level README for
+deploying and invoking the skill.
+
 ### Example
 
-```jsonc
+```json
 // spark-conf.json
 {
   "pyspark": {
@@ -190,16 +193,42 @@ To run this example in Spark local mode against a Cortex Cluster with access to 
         "spark.kubernetes.driver.podTemplateContainerName": "fabric-action",
         "spark.kubernetes.executor.annotation.traffic.sidecar.istio.io/excludeOutboundPorts": "7078,7079",
         "spark.kubernetes.driver.annotation.traffic.sidecar.istio.io/excludeInboundPorts": "7078,7079",
-        "spark.kubernetes.container.image.pullPolicy": "Always"
+        "spark.kubernetes.container.image.pullPolicy": "Always",
+
+        "spark.ui.prometheus.enabled": "false",
+        "spark.sql.streaming.metricsEnabled": "false",
+        "spark.executor.processTreeMetrics.enabled": "true",
+        "spark.metrics.conf.*.sink.prometheusServlet.class": "org.apache.spark.metrics.sink.PrometheusServlet",
+        "spark.metrics.conf.*.sink.prometheusServlet.path": "/metrics/prometheus",
+        "spark.metrics.conf.master.sink.prometheusServlet.path": "/metrics/master/prometheus",
+        "spark.metrics.conf.applications.sink.prometheusServlet.path": "/metrics/applications/prometheus",
+
+        "spark.delta.logStore.gs.impl": "io.delta.storage.GCSLogStore",
+        "spark.hadoop.fs.AbstractFileSystem.gs.impl": "com.google.cloud.hadoop.fs.gcs.GoogleHadoopFS",
+        "spark.sql.shuffle.partitions": "10",
+        "spark.hadoop.fs.s3a.impl": "org.apache.hadoop.fs.s3a.S3AFileSystem",
+        "spark.hadoop.fs.s3a.fast.upload.buffer": "disk",
+        "spark.hadoop.fs.s3a.fast.upload": "true",
+        "spark.hadoop.fs.s3a.block.size": "128M",
+        "spark.hadoop.fs.s3a.multipart.size": "512M",
+        "spark.hadoop.fs.s3a.multipart.threshold": "512M",
+        "spark.hadoop.fs.s3a.fast.upload.active.blocks": "2048",
+        "spark.hadoop.fs.s3a.committer.threads": "2048",
+        "spark.hadoop.fs.s3a.max.total.tasks": "2048",
+        "spark.hadoop.fs.s3a.threads.max": "2048",
+        "spark.sql.extensions": "io.delta.sql.DeltaSparkSessionExtension",
+        "spark.sql.catalog.spark_catalog": "org.apache.spark.sql.delta.catalog.DeltaCatalog",
+        "spark.databricks.delta.schema.autoMerge.enabled": "true",
+        "spark.databricks.delta.merge.repartitionBeforeWrite.enabled": "true"
       }
     }
   }
 }
 ```
 
-**NOTEs**:
-* The `--master` and `--deploy-mode` have been set to run the Spark job in the Cortex (Kubernetes) Cluster
-* Notice the Phoenix Client URL and Secret Client URL are referring to services in Kubernetes Cluster
+**NOTES**:
+* The `--master` and `--deploy-mode` have been set to run the Spark job in the Cortex (Kubernetes) Cluster.
+* The Phoenix Client URL and Secret Client URL are referring to services in Kubernetes Cluster
 
 <!-- TODO(LA):
 * Setting cluster storage information should be defaulted, not fully sure about this yet?
