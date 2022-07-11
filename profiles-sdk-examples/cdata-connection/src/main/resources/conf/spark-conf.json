@@ -12,7 +12,6 @@
     ],
     "app_location": "local:///app/libs/app.jar",
     "options": {
-      "--jars": "file:///app/libs/local-clients.jar",
       "--master": "local[*]",
       "--class": "com.c12e.cortex.examples.Application",
       "--conf": {

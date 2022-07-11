@@ -33,12 +33,3 @@ tasks.getByName<Test>("test") {
 }
 
 project.setProperty("mainClassName", "com.c12e.cortex.examples.profiles.BuildProfile")
-distributions {
-    main {
-        contents {
-            from("src/main/resources") {
-                into("src/main/resources")
-            }
-        }
-    }
-}

@@ -31,7 +31,7 @@ spec:
     - name: driver
       value: cdata.jdbc.googlebigquery.GoogleBigQueryDriver
     - name: oem_key
-      value: '#SECURE.oem_key'
+      value: "#SECURE.oem_key"
 ---
 apiVersion: cognitivescale.io/v1
 kind: Connection
