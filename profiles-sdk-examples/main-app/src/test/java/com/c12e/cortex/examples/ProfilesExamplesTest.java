@@ -23,6 +23,8 @@ import java.io.StringWriter;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@SetEnvironmentVariable(key = CustomSecretsClient.CONNECTION_SECRET_ENV, value = "secret-value")
+@SetEnvironmentVariable(key = CustomSecretsClient.STREAMING_SECRET_ENV, value = "streaming-secret-value")
 public class ProfilesExamplesTest {
 
     @Test
