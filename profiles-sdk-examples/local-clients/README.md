@@ -102,7 +102,7 @@ configuration options can be seen in the `spark-conf.json` files:
 ```json
 {
   "options": {
-    "spark.cortex.clients.secrets.impl": "com.c12e.cortex.examples.local.CustomSecretsClient"
+    "spark.cortex.client.secrets.impl": "com.c12e.cortex.examples.local.CustomSecretsClient"
   }
 }
 ```

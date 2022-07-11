@@ -16,10 +16,10 @@ Implementation: `com.c12e.cortex.profiles.client.LocalSecretsClient`
 
 To use a local Secret client you will need to:
 - Subclass the `LocalSecretsClient` with an implementation that contains secrets for your Connections/DataSources
-- Specify the secret client implementation to use in Spark configuration property. Set `spark.cortex.clients.secrets.impl` to the corresponding class path 
+- Specify the secret client implementation to use in Spark configuration property. Set `spark.cortex.client.secrets.impl` to the corresponding class path 
 
 <!-- It is possible to bind a Secret client using an explicit Guice binding, but that is pulling the covers back too much (requires Guice knowledge) -->
-For example, you would set `spark.cortex.clients.secrets.impl` to `com.example.app.CustomSecretsClient` for the following custom implementation:
+For example, you would set `spark.cortex.client.secrets.impl` to `com.example.app.CustomSecretsClient` for the following custom implementation:
 ```java
 public class CustomSecretsClient extends LocalSecretClient {
     // LocalSecrets stores a map of secret key and values for each project

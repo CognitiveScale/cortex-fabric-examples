@@ -134,7 +134,7 @@ Exit Code: 0
 * Generate a `CORTEX_TOKEN`
 * Update the [spark-conf.json](./src/main/resources/conf/spark-conf.json) file to:
   - use the [Remote Catalog](../docs/catalog.md#remote-catalog) implementation by setting the Cortex URL (`spark.cortex.client.phoenix.url`) to the GraphQL API endpoint (e.g. `https://api.<domain>/fabric/v4/graphql`) and removing the Local Catalog implementation (`spark.cortex.catalog.impl`).
-  - remove the Local Secret Client implementation (`spark.cortex.clients.secrets.impl`)
+  - remove the Local Secret Client implementation (`spark.cortex.client.secrets.impl`)
   - Update the `app_command` arguments to match your Cortex Project and Connection names (`-p`, `-l`, `-r`, `-o` `-c`)
 
 To run this example in Spark local mode against a Cortex Cluster with access to the Catalog and Secrets, you will need to

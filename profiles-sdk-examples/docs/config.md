@@ -16,7 +16,7 @@ TODO: General Spark configuration guidance (Spark UI, Debugging, metrics, fs per
 When working locally it is useful to set:
 * `spark.cortex.catalog.impl` to the Local Catalog implementation
 * `spark.cortex.catalog.local.dir` to the Local Catalog Directory
-* `spark.cortex.clients.secrets.impl` to the local Secrets Client Implementation
+* `spark.cortex.client.secrets.impl` to the local Secrets Client Implementation
 * `spark.cortex.proxy.impl` to a Guice MethodInterceptor implementation
 * `spark.cortex.storage.storageType` to `"file"` to use a local directory to mock Cortex Backend Storage
 * `spark.cortex.storage.file.baseDir` to the base directory when working with a local directory

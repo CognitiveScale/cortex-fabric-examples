@@ -94,17 +94,62 @@ The built profiles will be saved at: `main-app/build/test-data/cortex-profiles/p
 
 ## Running in a Docker Container with Spark-Submit
 
-To run this example with spark-submit/docker container and local Cortex clients:
-```bash
-# from the parent directory
-make clean build create-app-image
+To run this example in a docker container with local Cortex clients (from the parent directory):
+```
+$ make build create-app-image
 
-docker run -p 4040:4040 --entrypoint="python" -e CORTEX_TOKEN="${CORTEX_TOKEN}" \
+$ docker run -p 4040:4040 --entrypoint="python" -e CORTEX_TOKEN="${CORTEX_TOKEN}" \
   -v $(pwd)/build-profiles/src/main/resources/conf:/app/conf \
   -v $(pwd)/main-app/src:/opt/spark/work-dir/src \
   -v $(pwd)/main-app/build:/opt/spark/work-dir/build \
 profiles-example submit_job.py "{ \"payload\" : { \"config\" : \"/app/conf/spark-conf.json\" } }"
+....
+
+22:01:40.685 [main] DEBUG c.c.c.p.m.c.DefaultCortexConnectionReader - Reading connection from file_path 'src/main/resources/data/cortex-profiles/sources/local/member-flu-risk-file-ds-delta'
+root
+ |-- profile_id: integer (nullable = true)
+ |-- state_code: string (nullable = true)
+ |-- city: string (nullable = true)
+ |-- state: string (nullable = true)
+ |-- zip_code: integer (nullable = true)
+ |-- gender: string (nullable = true)
+ |-- email: string (nullable = true)
+ |-- segment: string (nullable = true)
+ |-- member_health_plan: string (nullable = true)
+ |-- is_PCP_auto_assigned: integer (nullable = true)
+ |-- pcp_tax_id: integer (nullable = true)
+ |-- address: string (nullable = true)
+ |-- phone: string (nullable = true)
+ |-- do_not_call: integer (nullable = true)
+ |-- channel_pref: string (nullable = true)
+ |-- age: integer (nullable = true)
+ |-- last_flu_shot_date: string (nullable = true)
+ |-- pcp_name: string (nullable = true)
+ |-- pcp_address: string (nullable = true)
+ |-- _timestamp: timestamp (nullable = false)
+ |-- has_phone_number: boolean (nullable = true)
+ |-- age_group: string (nullable = true)
+ |-- flu_risk_score: double (nullable = true)
+ |-- date: string (nullable = true)
+ |-- avg_flu_risk: double (nullable = true)
+ |-- flu_risk_1_pct: double (nullable = true)
+ |-- is_flu_risk_1_pct: boolean (nullable = true)
+
+22:01:42.281 [main] INFO  c.c12e.cortex.phoenix.ProfileEngine - Build Profile Completed
+22:01:42.293 [main] DEBUG c.c.c.p.m.c.DefaultCortexConnectionWriter - Overwriting delta table: 'src/main/resources/data/cortex-profiles/profiles/local/member-profile-delta'
+22:01:42.308 [main] WARN  o.a.spark.sql.catalyst.util.package - Truncated the string representation of a plan since it was too large. This behavior can be adjusted by setting 'spark.sql.debug.maxToStringFields'.
+22:01:49.523 [main] INFO  c.c.c.p.f.DefaultFeatureReportCalculator - Insufficient dataset size for sampling (actual vs MIN_SAMPLE_SIZE): 100 vs 3364. Using entire dataset
+22:02:36.035 [shutdown-hook-0] INFO  o.s.jetty.server.AbstractConnector - Stopped Spark@2a331b46{HTTP/1.1, (http/1.1)}{0.0.0.0:4040}
+22:02:36.039 [shutdown-hook-0] INFO  org.apache.spark.ui.SparkUI - Stopped Spark web UI at http://6ff8c687d5da:4040
+Pod Name:
+Container State:
+Termination Reason:
+Exit Code: 0
 ```
+
+## Running locally against a Cortex Cluster
+
+TODO.
 
 ## Running as a Skill
 

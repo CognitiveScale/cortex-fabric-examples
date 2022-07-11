@@ -55,6 +55,95 @@ dependencies {
 }
 ```
 
+Alternatively, you put built profiles-sdk jar in `main-app/src/main/resources/lib/` to override the version used in the docker container when packaged as a skill.
+
+### TroubleShooting
+
+#### Guice Injection Errors
+
+Usually the result of misconfiguration, ex:
+```
+com.google.inject.ProvisionException: Unable to provision, see the following errors:
+
+1) [Guice/NullInjectedIntoNonNullable]: null returned by binding at CortexSession$CortexSessionModule.secretsClientUrl()
+   but the 1st parameter of InternalSecretsClient.<init>(InternalSecretsClient.kt:54) is not @Nullable
+   at CortexSession$CortexSessionModule.secretsClientUrl(CortexSession.java:224)
+   at CortexSession$CortexSessionModule.secretsClientUrl(CortexSession.java:224)
+   at InternalSecretsClient.<init>(InternalSecretsClient.kt:54)
+   \_ for 1st parameter
+   at InternalSecretsClient.class(InternalSecretsClient.kt:54)
+   while locating InternalSecretsClient
+   at DefaultCortexConnectionReader.<init>(DefaultCortexConnectionReader.java:56)
+   \_ for 5th parameter
+   while locating DefaultCortexConnectionReader
+   at DefaultCortexSparkReader.<init>(DefaultCortexSparkReader.java:40)
+   \_ for 1st parameter
+   while locating DefaultCortexSparkReader
+   at BaseCortexContext.<init>(BaseCortexContext.java:58)
+   \_ for 3rd parameter
+   while locating BaseCortexContext
+   at CortexSession$CortexSessionModule.provideSession(CortexSession.java:205)
+   \_ for 1st parameter
+   at CortexSession$CortexSessionModule.provideSession(CortexSession.java:205)
+   while locating CortexSession
+
+Learn more:
+https://github.com/google/guice/wiki/NULL_INJECTED_INTO_NON_NULLABLE
+
+1 error
+
+======================
+Full classname legend:
+======================
+BaseCortexContext:                 "com.c12e.cortex.profiles.context.BaseCortexContext"
+CortexSession:                     "com.c12e.cortex.profiles.CortexSession"
+CortexSession$CortexSessionModule: "com.c12e.cortex.profiles.CortexSession$CortexSessionModule"
+DefaultCortexConnectionReader:     "com.c12e.cortex.profiles.module.connection.DefaultCortexConnectionReader"
+DefaultCortexSparkReader:          "com.c12e.cortex.profiles.reader.DefaultCortexSparkReader"
+InternalSecretsClient:             "com.c12e.cortex.phoenix.InternalSecretsClient"
+========================
+End of classname legend:
+========================
+```
+
+#### Inspecting the Built Container
+
+```
+docker run -p 4040:4040 \
+    --entrypoint="/bin/bash"  -it
+    -e "CORTEX_TOKEN=${CORTEX_TOKEN}" 
+    -e "CDATA_OEM_KEY=${CDATA_OEM_KEY}"
+    -e "CDATA_PRODUCT_CHECKSUM=${CDATA_PRODUCT_CHECKSUM}"
+    -v $(pwd)/cdata-connection/src/main/resources/conf:/app/conf
+    -v $(pwd)/main-app/src:/opt/spark/work-dir/src
+    -v $(pwd)/main-app/build:/opt/spark/work-dir/build
+    profiles-example
+```
+
+#### GQL Query Template:
+
+Connection By Name
+```bash
+curl -i -H 'Content-Type: application/json' \
+ -H "Authorization: Bearer ${CORTEX_TOKEN}" \
+ -X POST -d '{"query":"query {connectionByName(project: \"laguirre-testi-69257\", name: \"member-base\"){ allowRead allowWrite description name project   { name } title connectionType    contentType    params   { name value } } }","variables":{},"operationName":null}' https://api.dci-dev.dev-eks.insights.ai/fabric/v4/graphql
+```
+
+## Examples
+
+Table of which examples are working:
+
+| Example                                         | All Local (Spark, Catalog, Secrets, Backend Storage) | All Local (in container) | Semi-Local (Local Spark, Local Secrets, Local Backend, Remote Catalog) | Semi-Local (Local Spark, Local Secrets, Remote Catalog + Backend Storage) | (Job) Skill |
+|-------------------------------------------------|------------------------------------------------------|--------------------------|------------------------------------------------------------------------|---------------------------------------------------------------------------|-------------|
+| [join-connections](../join-connections)         | [x]                                                  | [x]                      | [x]                                                                    | [x]                                                                       | [x]         |
+| [datasource-refresh](../datasource-refresh)     | [x]                                                  | [x]                      | [x]                                                                    | [x]                                                                       | [x]         |
+| [build-profiles](../build-profiles)             | [x]                                                  | [x]                      | [ ]                                                                    | [ ]                                                                       | [ ]         |
+| [streaming-datasource](../streaming-datasource) | [x]                                                  | [x]                      | [x]                                                                    | [x]                                                                       | [ ]         |
+| [cdata-connection](../cdata-connection)         | [ ]                                                  | [x]                      | [ ]                                                                    | [x]                                                                       | [ ]         |
+| [bigquery-connection](../bigquery-connection)   | [ ]                                                  | [ ]                      | [ ]                                                                    | [ ]                                                                       | [ ]         |
+
+(Also possible to run with an in-cluster Spark Session, but not including that as it requires kubectl access, and not practical for a lot of users)
+
 ## Milestones
 
 ### Milestone 1

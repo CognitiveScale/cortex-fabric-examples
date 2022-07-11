@@ -25,7 +25,7 @@ dependencies {
     api("com.c12e.cortex.profiles:profiles-sdk:6.3.0-M.2")
     implementation("com.google.cloud.spark:spark-bigquery-with-dependencies_2.12:0.25.0")
 
-    // any extra jars (for CData/BigQuery examples)
+    // include extra jars (for CData/BigQuery examples)
     runtimeOnly(fileTree("src/main/resources/lib"){ include("*.jar") })
     testRuntimeOnly(fileTree("src/main/resources/lib"){ include("*.jar") })
 

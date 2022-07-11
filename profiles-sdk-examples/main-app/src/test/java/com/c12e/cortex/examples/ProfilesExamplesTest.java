@@ -122,6 +122,7 @@ public class ProfilesExamplesTest {
 
     @Test
     @Disabled("requires CData jar setup")
+    @DisplayName("(local) cdata -p local -i cdata-csv -o sink")
     public void testCData() {
         Application app = new Application();
         CommandLine cmd = new CommandLine(app);
