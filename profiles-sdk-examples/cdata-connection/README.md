@@ -5,9 +5,13 @@ Connection. This builds off the [Local Clients](../local-clients/README.md) exam
 separate set of connections defined in [cdata-connections.yml](../main-app/src/main/resources/spec/cdata-connections.yml).
 
 Two source Connections are defined in the [Local Catalog](../local-clients/README.md#catalog):
-- `cdata-csv` - Connection to a local `members_100_v14.csv` file. **This will be used for the following examples.**
-- `cdata-bigquery` - CData Connection to Google BigQuery. To use this you will need to update the `url` parameter to
-  your BigQuery data and update the `query` parameter accordingly. See [Notes on CData BigQuery Connection](#notes-on-cdata-bigquery-connection)
+- `cdata-csv` - Connection to a local `members_100_v14.csv` file.
+- `cdata-bigquery` - CData Connection to Google BigQuery. To use this you will need to provide GCS credentials and
+  additionally update the `url` and `query` parameters to your BigQuery data in
+  the [cdata-connections.yml](../main-app/src/main/resources/spec/cdata-connections.yml) file.
+  See [Notes on CData BigQuery Connection](#notes-on-cdata-bigquery-connection).
+
+The following will use the `cdata-csv` Connection.
 
 See [CData.java](./src/main/java/com/c12e/cortex/examples/cdata/CData.java) for the full source.
 
@@ -49,8 +53,9 @@ $ ./gradlew main-app:run --args="cdata -p local -i cdata-csv -o sink"
 ```
 
 **NOTE**: This example is currently not working when running locally, because the Spark executors require a
-scratch-directory. This should be sett-able via `spark.local.dir`/`SPARK_LOCAL_DIRS`, but this configuration has not
-been overrideable. If you see an error similar to the following, then instead try
+scratch-directory (`/opt-spark/work-dir`) which does not exist (setting ). This should be sett-able
+via `spark.local.dir`/`SPARK_LOCAL_DIRS`, but this configuration has not been overrideable. If you see an error similar
+to the following, then instead try
 [running this example in a docker container](#running-in-a-docker-container-with-spark-submit):
 
 ```
@@ -217,6 +222,10 @@ Termination Reason:
 Exit Code: 0
 ```
 
+This will read the `cdata-csv` Connection and write it to the `sink` connection defined
+in [cdata-connections.yml](../main-app/src/main/resources/spec/cdata-connections.yml). The sink file can be found
+at `./main-app/build/tmp/test-data/sink-ds` after running the command.
+
 Notes:
 * Port 4040 is forwarded from the container to expose the Spark UI (for debugging)
 * The 1st volume mount is sharing the [Spark submit config file](./src/main/resources/conf/spark-conf.json)
@@ -234,18 +243,40 @@ Notes:
 TODO.
 
 ## Notes on CData BigQuery connection
-To authenticate against Google BigQuery:
-* Get a GCP Service Account JSON as described in https://docs.google.com/document/d/1T1u8RMZhDYMIXHk7v3lLF2rzag7xLTr5CLHC-49UiYU/edit#heading=h.756ioo8pxy08 and put it into `profiles-examples/main-app/src/main/resources/credentials`.
-* When running locally container you will need to include an additional volume sharing the GCP credentials.
+
+The CData BigQuery Connection (shown below) requires authenticating to Google Cloud Storage along with providing the
+CDATA keys. This example is configured to use Google Service Account JSON credentials that is specified
+at `/secure-storage/gcs-service-account.json` (see the `OAuthJWTCert` in the `url` parameter).
+
+```yaml
+---
+apiVersion: cognitivescale.io/v1
+kind: Connection
+metadata:
+  name: "cdata-bigquery"
+spec:
+  title: CDATA BigQuery
+  connectionType: jdbc
+  params:
+    - name: query
+      value: SELECT * FROM `bigquery-public-data.covid19_weathersource_com.postal_code_day_forecast` WHERE forecast_date = '2022-06-03' LIMIT 10
+    - name: url
+      value: "jdbc:cdata:googlebigquery:AuthScheme:OAuthJWT;InitiateOAuth=GETANDREFRESH;OAuthJWTCertType:GOOGLEJSON;OAuthJWTCert:/secure-storage/gcp-service-account.json;ProjectId=fabric-qa;DatasetId=covid19_weathersource_co;"
+    - name: driver
+      value: cdata.jdbc.googlebigquery.GoogleBigQueryDriver
+    - name: oem_key
+      value: "#SECURE.oem_key"
 ```
-$ make clean build create-app-image
 
-$ export CORTEX_TOKEN=...
 
-$ export CDATA_OEM_KEY=...
-
-$ export CDATA_PRODUCT_CHECKSUM=...
-
+<!-- TODO(LA): below google doc isn't public, we should link off to Google docs instead -->
+To run this example locally in a container:
+* Get a GCP Service Account JSON as described
+  in https://docs.google.com/document/d/1T1u8RMZhDYMIXHk7v3lLF2rzag7xLTr5CLHC-49UiYU/edit#heading=h.756ioo8pxy08 and put
+  it into `profiles-examples/main-app/src/main/resources/credentials/`.
+* Update the `url` and `query` parameter (including the `ProjectId`) to match your data
+* Include an additional volume mount to share the Service Account credentials:
+```
 $ docker run -p 4040:4040 \
     -e CORTEX_TOKEN="${CORTEX_TOKEN}" \
     -e CDATA_OEM_KEY="${CDATA_OEM_KEY}" \

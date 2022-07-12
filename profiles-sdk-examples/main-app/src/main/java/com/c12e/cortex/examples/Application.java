@@ -16,6 +16,8 @@ import com.c12e.cortex.examples.datasource.DataSourceRW;
 import com.c12e.cortex.examples.joinconn.JoinConnections;
 import com.c12e.cortex.examples.profile.BuildProfile;
 import com.c12e.cortex.examples.streaming.StreamingDataSource;
+import com.c12e.cortex.examples.bigquery.BigQuery;
+
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 
@@ -27,8 +29,8 @@ import picocli.CommandLine.Command;
         JoinConnections.class,
         BuildProfile.class,
         CData.class,
-        StreamingDataSource.class
-        //BigQuery.class,
+        StreamingDataSource.class,
+        BigQuery.class
 })
 public class Application {
     public static void main(String[] args) {

@@ -45,7 +45,6 @@ public class SessionExample {
         options.put("spark.databricks.delta.schema.autoMerge.enabled", "true");
         options.put("spark.databricks.delta.merge.repartitionBeforeWrite.enabled", "true");
         options.put("spark.sql.shuffle.partitions", "10");
-        options.put("spark.cortex.proxy.impl", "com.c12e.cortex.profiles.intercept.TracingTimingMethodInterceptor");
         return options;
     }
 

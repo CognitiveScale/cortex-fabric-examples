@@ -27,7 +27,7 @@ spec:
     - name: query
       value: SELECT * FROM `bigquery-public-data.covid19_weathersource_com.postal_code_day_forecast` WHERE forecast_date = '2022-06-03' LIMIT 10
     - name: url
-      value: "Update connection string: jdbc:cdata:googlebigquery:AuthScheme:OAuthJWT;InitiateOAuth=GETANDREFRESH;OAuthJWTCertType:GOOGLEJSON;OAuthJWTCert:/secure-storage/gcp-service-account.json;ProjectId=fabric-qa;DatasetId=covid19_weathersource_co;"
+      value: "jdbc:cdata:googlebigquery:AuthScheme:OAuthJWT;InitiateOAuth=GETANDREFRESH;OAuthJWTCertType:GOOGLEJSON;OAuthJWTCert:/secure-storage/gcp-service-account.json;ProjectId=fabric-qa;DatasetId=covid19_weathersource_co;"
     - name: driver
       value: cdata.jdbc.googlebigquery.GoogleBigQueryDriver
     - name: oem_key
@@ -45,5 +45,4 @@ spec:
   allowWrite: false
   params:
     - name: uri
-      value: file:///opt/spark/work-dir/build/tmp/test-data/sink-ds/
----
+      value: ./build/tmp/test-data/sink-ds/

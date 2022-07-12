@@ -12,8 +12,12 @@ create-app-image:
 	docker build --build-arg base_img=c12e/spark-template:profile-jar-base-6.3.0-M.2 -t profiles-example:latest -f ./main-app/build/resources/main/Dockerfile ./main-app/build
 
 # Build the Application
-build: clean
+build:
 	./gradlew build
+
+# Test the Application
+test:
+	./gradlew test
 
 clean:
 	./gradlew clean

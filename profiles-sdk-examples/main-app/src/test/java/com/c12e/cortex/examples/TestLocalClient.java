@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @SetEnvironmentVariable(key = CustomSecretsClient.STREAMING_SECRET_ENV, value = "streaming-secret-value")
 public class TestLocalClient {
 
-    public static final int EXPECTED_NUM_CONNECTIONS = 9;
+    public static final int EXPECTED_NUM_CONNECTIONS = 8;
 
     @Test
     public void testUseCortexCatalog() {

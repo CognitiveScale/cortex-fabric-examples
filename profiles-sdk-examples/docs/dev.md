@@ -131,18 +131,19 @@ curl -i -H 'Content-Type: application/json' \
 
 ## Examples
 
-Table of which examples are working:
+Table of which example flows have been fully documented:
 
 | Example                                         | All Local (Spark, Catalog, Secrets, Backend Storage) | All Local (in container) | Semi-Local (Local Spark, Local Secrets, Local Backend, Remote Catalog) | Semi-Local (Local Spark, Local Secrets, Remote Catalog + Backend Storage) | (Job) Skill |
 |-------------------------------------------------|------------------------------------------------------|--------------------------|------------------------------------------------------------------------|---------------------------------------------------------------------------|-------------|
 | [join-connections](../join-connections)         | [x]                                                  | [x]                      | [x]                                                                    | [x]                                                                       | [x]         |
 | [datasource-refresh](../datasource-refresh)     | [x]                                                  | [x]                      | [x]                                                                    | [x]                                                                       | [x]         |
 | [build-profiles](../build-profiles)             | [x]                                                  | [x]                      | [ ]                                                                    | [ ]                                                                       | [ ]         |
-| [datasource-streaming](../datasource-streaming) | [x]                                                  | [x]                      | [x]                                                                    | [x]                                                                       | [ ]         |
-| [cdata-connection](../cdata-connection)         | [ ]                                                  | [x]                      | [ ]                                                                    | [x]                                                                       | [ ]         |
-| [bigquery-connection](../bigquery-connection)   | [ ]                                                  | [ ]                      | [ ]                                                                    | [ ]                                                                       | [ ]         |
+| [datasource-streaming](../datasource-streaming) | [x]                                                  | [x]                      | [ ]                                                                    | [ ]                                                                       | [ ]         |
+| [cdata-connection](../cdata-connection)         | [ ]                                                  | [x]                      | [ ]                                                                    | [ ]                                                                       | [ ]         |
+| [bigquery-connection](../bigquery-connection)   | [x]                                                  | [x]                      | [ ]                                                                    | [ ]                                                                       | [ ]         |
 
-(Also possible to run with an in-cluster Spark Session, but not including that as it requires kubectl access, and not practical for a lot of users)
+Notes:
+* It is also possible to run with an in-cluster Spark Session, but not including that as it requires kube access and not practical for a lot of users
 
 ## Milestones
 

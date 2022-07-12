@@ -19,11 +19,21 @@ plugins {
     id("com.bmuschko.docker-remote-api")
 }
 
+
+// Exclude potential duplicate classpath during build. This may be the result of supplying a dependency defined here
+// as a jar in `main-app/src/main/resources/lib/` so said jar can be shared with spark executors.
+tasks.withType<Tar> {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+tasks.withType<Zip> {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
 dependencies {
     // project dependencies
     api(platform("com.c12e.cortex.profiles:platform-dependencies:6.3.0-M.2"))
     api("com.c12e.cortex.profiles:profiles-sdk:6.3.0-M.2")
-    implementation("com.google.cloud.spark:spark-bigquery-with-dependencies_2.12:0.25.0")
 
     // include extra jars (for CData/BigQuery examples)
     runtimeOnly(fileTree("src/main/resources/lib"){ include("*.jar") })
@@ -36,6 +46,7 @@ dependencies {
     implementation(project(":build-profiles"))
     implementation(project(":cdata-connection"))
     implementation(project(":datasource-streaming"))
+    implementation(project(":bigquery-connection"))
 
     // CLI framework
     implementation("info.picocli:picocli:4.6.3")
@@ -53,6 +64,7 @@ dependencies {
     testImplementation(project(":build-profiles"))
     testImplementation(project(":cdata-connection"))
     testImplementation(project(":datasource-streaming"))
+    testImplementation(project(":bigquery-connection"))
 }
 
 // application entrypoint
@@ -98,4 +110,5 @@ tasks.withType<Jar> {
     from(project(":join-connections").sourceSets["main"].output)
     from(project(":cdata-connection").sourceSets["main"].output)
     from(project(":datasource-streaming").sourceSets["main"].output)
+    from(project(":bigquery-connection").sourceSets["main"].output)
 }
