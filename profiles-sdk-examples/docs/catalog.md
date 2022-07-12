@@ -32,7 +32,7 @@ to utilize DataSources and Connections defined in the Cortex Cluster locally.
 currently supported. Unsupported methods will throw a `NotImplementedError` or `RuntimeException`.
 
 ### Managed Content and Profile Data
-<!-- TODO(LA): Not sure about this section? Seems like something most "users" won't be able to do. -->
+<!-- TODO(LA): Not sure about this section? Seems like something most "users" won't be able to do this. -->
 
 **NOTE**: In order to access Managed Content or Profiles data from a remote Cortex Cluster, you will need to set the
 related [configuration properties](./config.md#cortex-backend-storage) to access backing storage for the cluster. **When

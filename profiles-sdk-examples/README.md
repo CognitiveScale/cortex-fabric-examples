@@ -3,7 +3,7 @@
 The Cortex Profiles SDK is collection of Java/Kotlin libraries, examples, and templates for utilizing Cortex Fabric in a Spark
 based environment, whether that be on your local machine or in a Cortex Fabric Cluster.
 
-These examples are structured in step-by-step way to display the array of possible usages of currently available features in the Cortex Profiles SDK.
+These examples are structured in step-by-step way to display the array of usages of the currently available features in the Cortex Profiles SDK.
 
 
 1. [Overview](#overview)
@@ -22,16 +22,16 @@ These examples are structured in step-by-step way to display the array of possib
 ![Cortex Profiles SDK Overview](./docs/profiles-sdk-overview.jpeg)
 
 The core of the Profiles SDK is a library that exposes an interface to Cortex for utilizing Spark for custom processing
-of Profile relate data. The entrypoint to the Profiles SDK is the `CortexSession`, a session based API around Spark and the `SparkSession`.
-The Profiles SDK (`CortexSession`) provides
-- an extensible dependency injected platform that allows for process, module, and environment (local vs in Cortex cluster) specific configuration
+of Profile related data. The entrypoint to the Profiles SDK is the `CortexSession`, a session based API around Spark and the `SparkSession`.
+The Profiles SDK (`CortexSession`) provides:
+- an extensible dependency injected platform that allows for process, module, and environment (local vs in Cortex cluster) specific configuration <!-- TODO: link to Guice -->
 - access to [Cortex Catalog](./docs/catalog.md)
 - access to Cortex Backend Storage (e.g. Managed Content and Profiles)
 - configurable provider for Cortex [Secrets](./docs/secrets.md)
-- stream and batch processing support for Cortex Data Sources and Connections <!-- and Profiles? -->
+- stream and batch processing support for Cortex Connections
 - access to Cortex Phoenix job flows for ingesting DataSources and building Profiles
 - Spark property based configuration options, see [config.md](./docs/config.md)
-- a [Cortex Skill Template](./templates) with a [Spark-Submit](TODO) based launcher
+- a [Cortex Skill Template](./templates) with a [Spark-Submit]((https://spark.apache.org/docs/latest/submitting-applications.html) based launcher
 <!-- - a [Version Compatibility](#version-compatibility) check with platform dependencies -->
 
 ## Installation and Setup
@@ -173,8 +173,7 @@ Run `cortex agents get-activation <activation-id>` or `cortex tasks logs <task-n
 
 ## Version Compatibility
 
-<!-- TODO: Crossed out because this check shouldn't happen automatically? -->
-~~The Profiles Library contains version compatibility check to verify compatible Spark and Hadoop are provided in the environment.~~
+<!-- TODO: Crossed out because this doesn't happen automatically. ~~The Profiles Library contains version compatibility check to verify compatible Spark and Hadoop are provided in the environment.~~ -->
 
 | Profiles SDK Version | Cortex Version | Spark Version | Hadoop Version | Delta Version |
 |----------------------|----------------|---------------|----------------|---------------|
@@ -191,4 +190,3 @@ Additionally, refer to the [Cortex Compatibility Matrix](https://cognitivescale.
 * [Cortex Profiles SDK API Documentation](TODO)
 * [Cortex Compatibility Matrix](https://cognitivescale.github.io/cortex-fabric/docs/getting-started/compatibility-matrix)
 * [Cortex CLI](https://www.npmjs.com/package/cortex-cli)
-
