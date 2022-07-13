@@ -85,10 +85,10 @@ Refer to the instructions in each example.
     options in the payload, so we don't have to rebuild an image for a config update.
 -->
 
-The [Skill Template](./templates) directory contains files for packaging as [Cortex Job Skill](./templates/skill.yaml), where:
-* The input to the skill is a [JSON Payload](./templates/payload.json) with the path to [Spark Configuration File](https://spark.apache.org/docs/latest/submitting-applications.html) in the Skill's Docker container.
+The [Skill Template](./templates) directory contains files for packaging as [Cortex Job Skill](templates/skill.yaml), where:
+* The input to the skill is a [JSON Payload](templates/payload.json) with the path to [Spark Configuration File](https://spark.apache.org/docs/latest/submitting-applications.html) in the Skill's Docker container.
 * The output of the skill is the Job execution logs
-* The [Docker image](./main-app/src/main/resources/Dockerfile) for the `main-app` uses
+* The [Docker image](main-app/src/main/resources/Dockerfile) for the `main-app` uses
   a [Spark Submit](https://spark.apache.org/docs/latest/submitting-applications.html) based wrapper to run the Spark
   application. The resources for the spark-submit wrapper is in the [main-app/src/main/resources/python/](./main-app/src/main/resources/python)
   directory and is necessary for packaging as a Skill.
@@ -97,7 +97,7 @@ The [Skill Template](./templates) directory contains files for packaging as [Cor
 in a docker container locally, you should set the `--entrypoint` option.
 
 **Before creating the skill**, you will need to:
-* Update the [spark-conf.json](./main-app/src/main/resources/conf/spark-conf.json) with the CLI application command and other config options.
+* Update the [spark-conf.json](main-app/src/main/resources/conf/spark-conf.json) with the CLI application command and other config options.
 * Verify skills `payload.json` file refers to the above Spark configuration file (in the built container).
 
 To build the skill, you will need to set the following environment variables:

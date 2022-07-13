@@ -15,8 +15,8 @@ $ ./gradlew main-app:run --args="join-connections --project local -l member-base
 ```
 
 This will merge the following connections defined in the Local Catalog, and will populate `member-joined-file` connection:
-- member-base-file
-- member-flu-risk-file
+- `member-base-file`
+- `member-flu-risk-file`
 
 <!-- Flowchart showing merge of Connections to result connection. I wish mermaid had [venn diagrams](https://github.com/mermaid-js/mermaid/issues/2583) -->
 ```mermaid

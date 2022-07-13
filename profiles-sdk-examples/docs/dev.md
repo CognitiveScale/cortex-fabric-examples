@@ -9,7 +9,7 @@ export GRADLE_OPTS="-Dorg.gradle.jvmargs='-Xmx2g -XX:MaxMetaspaceSize=512m -XX:+
 
 ## JFrog Artifactory Setup
 
-1. Java 11 (use Openjdk, see the link in [Resources](#resources) section)
+1. Java 11 (use Openjdk, see the link in [Resources](../README.md#resources) section)
 1. JFrog Artifactory credentials (shared in LastPass with everyone in `Shared-Engineering` folder)
 1. Install IntelliJ IDEA with the latest Kotlin plugin enabled ([Intellij IDEA](https://www.jetbrains.com/idea/))
 1. Put JFrog Artifactory credentials in `$USER_HOME/.gradle/gradle.properties` file. See `gradle.properties.template` for instructions. 
@@ -42,6 +42,11 @@ dependencies {
 }
 ```
 
+## Checking all manual links (should be automated)
+
+Would be nice to automate testing of links as part of unit testing, but couldn't find packages in Java. I've manually used npm packages (both don't work out of the box):
+- https://github.com/webhintio/markdown-link-validator
+- https://github.com/tcort/markdown-link-check
 
 ### TroubleShooting
 
@@ -132,14 +137,14 @@ curl -i -H 'Content-Type: application/json' \
 
 Table of which example flows have been fully documented:
 
-| Example                                         | All Local (Spark, Catalog, Secrets, Backend Storage) | All Local (in container) | Semi-Local (Local Spark, Local Secrets, Local Backend, Remote Catalog) | Semi-Local (Local Spark, Local Secrets, Remote Catalog + Backend Storage) | Job Skill (In Cluster Spark Session + Cortex clients) |
-|-------------------------------------------------|------------------------------------------------------|--------------------------|------------------------------------------------------------------------|---------------------------------------------------------------------------|-------------------------------------------------------|
-| [join-connections](../join-connections)         | [x]                                                  | [x]                      | [x]                                                                    | [x]                                                                       | [x]                                                   |
-| [datasource-refresh](../datasource-refresh)     | [x]                                                  | [x]                      | [x]                                                                    | [x]                                                                       | [x]                                                   |
-| [build-profiles](../build-profiles)             | [x]                                                  | [x]                      | [ ]                                                                    | [ ]                                                                       | [ ]                                                   |
-| [datasource-streaming](../datasource-streaming) | [x]                                                  | [x]                      | [ ]                                                                    | [ ]                                                                       | [ ]                                                   |
-| [cdata-connection](../cdata-connection)         | [ ]                                                  | [x]                      | [ ]                                                                    | [ ]                                                                       | [ ]                                                   |
-| [bigquery-connection](../bigquery-connection)   | [x]                                                  | [x]                      | [ ]                                                                    | [ ]                                                                       | [ ]                                                   |
+| Example                                                   | All Local (Spark, Catalog, Secrets, Backend Storage) | All Local (in container) | Semi-Local (Local Spark, Local Secrets, Local Backend, Remote Catalog) | Semi-Local (Local Spark, Local Secrets, Remote Catalog + Backend Storage) | Job Skill (In Cluster Spark Session + Cortex clients) |
+|-----------------------------------------------------------|------------------------------------------------------|--------------------------|------------------------------------------------------------------------|---------------------------------------------------------------------------|-------------------------------------------------------|
+| [join-connections](../join-connections/README.md)         | [x]                                                  | [x]                      | [x]                                                                    | [x]                                                                       | [x]                                                   |
+| [datasource-refresh](../datasource-refresh/README.md)     | [x]                                                  | [x]                      | [x]                                                                    | [x]                                                                       | [x]                                                   |
+| [build-profiles](../build-profiles/README.md)             | [x]                                                  | [x]                      | [ ]                                                                    | [ ]                                                                       | [ ]                                                   |
+| [datasource-streaming](../datasource-streaming/README.md) | [x]                                                  | [x]                      | [ ]                                                                    | [ ]                                                                       | [ ]                                                   |
+| [cdata-connection](../cdata-connection/README.md)         | [ ]                                                  | [x]                      | [ ]                                                                    | [ ]                                                                       | [ ]                                                   |
+| [bigquery-connection](../bigquery-connection/README.md)   | [x]                                                  | [x]                      | [ ]                                                                    | [ ]                                                                       | [ ]                                                   |
 
 Notes:
 * It is also possible to run with a non-local Spark Session, but not including that as it requires kube access and not practical for a lot of users.
