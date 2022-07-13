@@ -15,7 +15,7 @@ spec:
     - name: publicKey
       value: "****"
     - name: secretKey
-      value: #SECURE.streaming-secret
+      value: "#SECURE.streaming-secret"
     - name: s3Endpoint
       value: http://localhost:9000
     - name: sslEnabled
