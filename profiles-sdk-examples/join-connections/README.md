@@ -1,7 +1,7 @@
 # Join Connections
 
 This example is a CLI application for Joining two Cortex Connections and saving the resulting dataset to
-another Connection. This builds off the [Local Clients](../local-clients/README.md) example for its setup 
+another Cortex Connection. This builds off the [Local Clients](../local-clients/README.md) example for its setup
 (see [connections](../local-clients/README.md#connections)).
 
 See [JoinConnections.java](./src/main/java/com/c12e/cortex/examples/joinconn/JoinConnections.java) for the full source.
@@ -11,13 +11,20 @@ See [JoinConnections.java](./src/main/java/com/c12e/cortex/examples/joinconn/Joi
 To run this example locally with local Cortex clients (from the parent directory):
 ```
 $ make build
-$ ./gradlew main-app:run --args="join-connections -p local -l member-base-file -r member-feedback-file -w member-joined-file -c member_id"
+$ ./gradlew main-app:run --args="join-connections --project local -l member-base-file -r member-flu-risk-file -w member-joined-file -c member_id"
 ```
 
 This will merge the following connections defined in the Local Catalog, and will populate `member-joined-file` connection:
 - member-base-file
-- member-feedback-file
 - member-flu-risk-file
+
+<!-- Flowchart showing merge of Connections to result connection. I wish mermaid had [venn diagrams](https://github.com/mermaid-js/mermaid/issues/2583) -->
+```mermaid
+flowchart TB
+  member-base-file --> id(("Inner Join on member_id"))
+  member-flu-risk-file --> id(("Inner Join on member_id"))
+  id(("Inner Join on member_id")) --> member-joined-file
+```
 
 The joined connection file will be at: `main-app/build/tmp/test-data/joined_v14.csv`
 
@@ -75,7 +82,7 @@ To run this example in Spark local mode against a Cortex Cluster with access to 
 * Update the [spark-conf.json](./src/main/resources/conf/spark-conf.json) file to:
   - use the [Remote Catalog](../docs/catalog.md#remote-catalog) implementation by setting the Cortex URL (`spark.cortex.client.phoenix.url`) to the GraphQL API endpoint (e.g. `https://api.<domain>/fabric/v4/graphql`) and removing the Local Catalog implementation (`spark.cortex.catalog.impl`).
   - update [Local Secret Client](../local-clients/README.md#secrets) with any secrets required by your Connection(s). Ensure to update the project, Secret name, and secret value.
-  - Update the `app_command` arguments to match your Cortex project and Connections (`-p`, `-l`, `-r`, `-o` `-c`)
+  - Update the `app_command` arguments to match your Cortex project and Connections (`--project`,  `--left-conn`, `--right-conn`, `--write-conn` `--column`)
 
 **NOTE**: If your connections do not use Cortex Secrets because the Cortex cluster has [IRSA enabled](https://cognitivescale.github.io/cortex-charts/docs/platforms/aws/aws-irsa), then you may
 not be able to run this example without editing the Connection. This is because IRSA provides authentication within the
@@ -146,8 +153,9 @@ deploying and invoking the skill.
 
 ### Example
 
+
+Example Spark configuration (`spark-conf.json`):
 ```json
-// spark-conf.json
 {
   "pyspark": {
     "pyspark_bin": "bin/spark-submit",
@@ -226,17 +234,8 @@ deploying and invoking the skill.
 }
 ```
 
-**NOTES**:
+Notes on the above example:
 * The `--master` and `--deploy-mode` have been set to run the Spark job in the Cortex (Kubernetes) Cluster.
 * The Phoenix Client URL and Secret Client URL are referring to services in Kubernetes Cluster
-
-<!-- TODO(LA):
-* Setting cluster storage information should be defaulted, not fully sure about this yet?
--->
-
-<!-- 
-## Common Errors
-* If you see a NullPointerException, ClassNotFoundException, or Guice DI related exception then double check that ALL configuration options are set correctly and refer to the configuration options
-* GraphQL 302 HTTP response - double check API endpoint and Cortex Token
-* GraphQL general non-200 HTTP response related to connections -> Double check all Cortex resources exist and match the config options
--->
+* The Spark Driver and Spark Executors (`"spark.executor.instances"`) have a 2g and 4g of memory respectively. **Adjust the amount of resources used for your cluster/data.**
+* The Cortex [Backend Storage configuration](../docs/config.md#cortex-backend-storage) is configured as environment variables in the driver environment (e.g. `spark.kubernetes.driverEnv.STORAGE_TYPE`)

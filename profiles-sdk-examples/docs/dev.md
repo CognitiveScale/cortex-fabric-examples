@@ -45,7 +45,17 @@ dependencies {
 
 ### TroubleShooting
 
+#### Skill stays in ACTIVE state
+
+* If the entrypoint for the Docker container is not `scuttle`, then Skill activation (Task) will stay `ACTIVE`.
+  Additionally, the Spark Driver Pod will not exit because of the istio-proxy continues (this is only viewable with
+  Kubernetes access). This can happen if you build the Skill template using a Dockerfile/Docker Image meant to be run
+  locally. You will need to delete the corresponding task (`cortex task delete`), and manually delete the Pod.
+
 #### Guice Injection Errors
+
+If you see a NullPointerException, ClassNotFoundException, or Guice DI related exception then double check that ALL
+configuration options are set correctly and refer to the configuration options.
 
 Usually the result of misconfiguration, ex:
 ```
@@ -107,6 +117,9 @@ docker run -p 4040:4040 \
 ```
 
 #### GQL Query Template:
+
+* GraphQL 302 HTTP response - double check API endpoint and Cortex Token
+* GraphQL general non-200 HTTP response related to connections -> Double check all Cortex resources exist and match the config options
 
 Connection By Name
 ```bash
