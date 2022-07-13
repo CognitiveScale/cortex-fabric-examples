@@ -50,6 +50,55 @@ Would be nice to automate testing of links as part of unit testing, but couldn't
 
 ### TroubleShooting
 
+#### Secret does not exist
+
+When a secret does not exist then check:
+- which Secret Client is being used
+- If using a `LocalSecretClient` subclass, then check said implementation (java file) includes the secret
+- If using the Remote client, then check the Cortex Console or Cortex CLI to see if the secret exists
+
+```
+...
+java.lang.RuntimeException: Secret super_secret does not exist in project testi-69257
+at com.c12e.cortex.profiles.client.LocalSecretClient.getSecret(LocalSecretClient.java:33)
+at com.c12e.cortex.phoenix.Connection.resolveSecret(Schema.kt:492)
+at com.c12e.cortex.phoenix.Connection.resolveSecret(Schema.kt:487)
+at com.c12e.cortex.phoenix.Connection.getParamMap(Schema.kt:479)
+at com.c12e.cortex.profiles.module.connection.DefaultCortexConnectionReader.getConnectionOptions(DefaultCortexConnectionReader.java:142)
+at com.c12e.cortex.profiles.module.connection.DefaultCortexConnectionReader.read(DefaultCortexConnectionReader.java:187)
+at com.c12e.cortex.profiles.module.connection.DefaultCortexConnectionReader$CortexReadParameters.load(DefaultCortexConnectionReader.java:281)
+at com.c12e.cortex.profiles.module.connection.DefaultCortexConnectionReader$CortexReadParameters.load(DefaultCortexConnectionReader.java:239)
+at com.c12e.cortex.examples.joinconn.JoinConnections.joinConnections(JoinConnections.java:47)
+at com.c12e.cortex.examples.joinconn.JoinConnections.run(JoinConnections.java:37)
+at picocli.CommandLine.executeUserObject(CommandLine.java:1939)
+at picocli.CommandLine.access$1300(CommandLine.java:145)
+at picocli.CommandLine$RunLast.executeUserObjectOfLastSubcommandWithSameParent(CommandLine.java:2358)
+at picocli.CommandLine$RunLast.handle(CommandLine.java:2352)
+at picocli.CommandLine$RunLast.handle(CommandLine.java:2314)
+at picocli.CommandLine$AbstractParseResultHandler.execute(CommandLine.java:2179)
+at picocli.CommandLine$RunLast.execute(CommandLine.java:2316)
+at picocli.CommandLine.execute(CommandLine.java:2078)
+at com.c12e.cortex.examples.Application.main(Application.java:37)
+at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+at java.base/java.lang.reflect.Method.invoke(Unknown Source)
+at org.apache.spark.deploy.JavaMainApplication.start(SparkApplication.scala:52)
+at org.apache.spark.deploy.SparkSubmit.org$apache$spark$deploy$SparkSubmit$$runMain(SparkSubmit.scala:955)
+at org.apache.spark.deploy.SparkSubmit.doRunMain$1(SparkSubmit.scala:180)
+at org.apache.spark.deploy.SparkSubmit.submit(SparkSubmit.scala:203)
+at org.apache.spark.deploy.SparkSubmit.doSubmit(SparkSubmit.scala:90)
+at org.apache.spark.deploy.SparkSubmit$$anon$2.doSubmit(SparkSubmit.scala:1043)
+at org.apache.spark.deploy.SparkSubmit$.main(SparkSubmit.scala:1052)
+at org.apache.spark.deploy.SparkSubmit.main(SparkSubmit.scala)
+19:33:23.395 [shutdown-hook-0] INFO  o.s.jetty.server.AbstractConnector - Stopped Spark@6917bb4{HTTP/1.1, (http/1.1)}{0.0.0.0:4040}
+19:33:23.400 [shutdown-hook-0] INFO  org.apache.spark.ui.SparkUI - Stopped Spark web UI at http://205c969f1419:4040
+Pod Name:
+Container State:
+Termination Reason:
+Exit Code: 0
+```
+
 #### Skill stays in ACTIVE state
 
 * If the entrypoint for the Docker container is not `scuttle`, then Skill activation (Task) will stay `ACTIVE`.

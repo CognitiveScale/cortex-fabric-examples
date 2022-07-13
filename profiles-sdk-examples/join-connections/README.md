@@ -103,7 +103,7 @@ $ make clean build create-app-image
 
 $ docker run -p 4040:4040 --entrypoint="python" \
   -e CORTEX_TOKEN="${CORTEX_TOKEN}" \
-  -e CONNECTION_SECRET_VALUE="${CONNECTION_SECRET_VALUE}"
+  -e CONNECTION_SECRET_VALUE="${CONNECTION_SECRET_VALUE}" \
   -e STORAGE_TYPE=s3 \
   -e AWS_ACCESS_KEY_ID=xxxxx \
   -e AWS_SECRET_KEY=xxxxx \
