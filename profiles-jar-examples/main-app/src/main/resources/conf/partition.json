@@ -1,0 +1,16 @@
+{
+  "batchDirList": [
+    "s://cvs-synthetic/history2_2"
+  ],
+  "profiles": [
+    {
+      "dataSources": [
+        {
+          "name": "T_PHMCY_CLM",
+          "primaryKey": "MBR_ACCT_GID"
+        }
+      ]
+    }
+  ]
+}
+
