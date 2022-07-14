@@ -25,12 +25,12 @@ If you have built `distro` jar w/ the SDK and all dependencies, you can update `
 
 ```kotlin
 dependencies {
-    implementation(platform("com.c12e.cortex.profiles:parent:6.3.0-M.2"))
-    implementation("com.c12e.cortex.profiles:profiles-cli:6.3.0-M.2")
+    implementation(platform("com.c12e.cortex.profiles:parent:6.3.0-M.2.1"))
+    implementation("com.c12e.cortex.profiles:profiles-cli:6.3.0-M.2.1")
     ...
 }
 ```
-
+./g
 To:
 ```kotlin
 dependencies {

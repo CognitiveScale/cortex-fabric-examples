@@ -37,8 +37,8 @@ The Profiles SDK (`CortexSession`) provides:
 ## Installation and Setup
 
 The Cortex Profiles SDK consists of:
-* The Profiles SDK Jar (`com.c12e.cortex.profiles:profiles-sdk:6.3.0-M.2`)
-* Platform Dependencies Jar (`com.c12e.cortex.profiles:platform-dependencies:6.3.0-M.2`)
+* The Profiles SDK Jar (`com.c12e.cortex.profiles:profiles-sdk:6.3.0-M.2.1`)
+* Platform Dependencies Jar (`com.c12e.cortex.profiles:platform-dependencies:6.3.0-M.2.1`)
 * Example Materials and Templates located in this repo
 
 The Profile SDK Jar's can be pulled from CognitiveScale's JFrog Artifactory, if access has been shared with

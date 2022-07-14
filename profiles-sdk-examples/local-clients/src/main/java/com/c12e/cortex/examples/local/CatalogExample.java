@@ -22,6 +22,6 @@ public class CatalogExample {
         Catalog catalog = cortexSession.catalog();
         DataSource ds = catalog.getDataSource("project", "data-source-name");
         catalog.deleteDataSource("project", "data-source-name");
-        catalog.saveDataSource(ds);
+        catalog.createDataSource(ds);
     }
 }

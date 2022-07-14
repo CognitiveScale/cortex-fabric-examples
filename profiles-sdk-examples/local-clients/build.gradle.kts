@@ -14,8 +14,8 @@ repositories {
 
 dependencies {
     // project dependencies
-    api(platform("com.c12e.cortex.profiles:platform-dependencies:6.3.0-M.2"))
-    api("com.c12e.cortex.profiles:profiles-sdk:6.3.0-M.2")
+    api(platform("com.c12e.cortex.profiles:platform-dependencies"))
+    api("com.c12e.cortex.profiles:profiles-sdk")
 
     // test dependencies
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.6.0")

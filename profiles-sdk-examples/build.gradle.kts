@@ -85,4 +85,13 @@ subprojects {
 			name = "Redshift Maven Repository"
 		}
 	}
+	configurations.all {
+		resolutionStrategy {
+			eachDependency {
+				when (requested.group) {
+					"com.c12e.cortex.profiles" -> useVersion("6.3.0-M.2.1")
+				}
+			}
+		}
+	}
 }

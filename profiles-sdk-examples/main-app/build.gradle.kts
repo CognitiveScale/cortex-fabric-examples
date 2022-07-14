@@ -32,8 +32,8 @@ tasks.withType<Zip> {
 
 dependencies {
     // project dependencies
-    api(platform("com.c12e.cortex.profiles:platform-dependencies:6.3.0-M.2"))
-    api("com.c12e.cortex.profiles:profiles-sdk:6.3.0-M.2")
+    api(platform("com.c12e.cortex.profiles:platform-dependencies"))
+    api("com.c12e.cortex.profiles:profiles-sdk")
 
     // include extra jars (for CData/BigQuery examples)
     runtimeOnly(fileTree("src/main/resources/lib"){ include("*.jar") })
