@@ -1,4 +1,7 @@
 {
+  "batchDirList": [
+    "gs://cvs-synthetic/day1"
+  ],
   "resources": {
     "specs": {
       "connections": [
@@ -15,8 +18,8 @@
               "value": "gs://cvs-synthetic/day4/T_MBR_ACCT_DENORM.parquet"
             },
             {
-              "name": "serviceAccountKey",
-              "value": "#SECURE.gcs-secret"
+              "name": "workloadIdentityEnabled",
+              "value": "true"
             }
           ]
         },
@@ -33,8 +36,8 @@
               "value": "gs://cvs-synthetic/day4/T_DGTL_SEG_PS_HSEHO.parquet"
             },
             {
-              "name": "serviceAccountKey",
-              "value": "#SECURE.gcs-secret"
+              "name": "workloadIdentityEnabled",
+              "value": "true"
             }
           ]
         },
@@ -51,8 +54,8 @@
               "value": "gs://cvs-synthetic/day4/T_MBR_MEDD_PA_CASE.parquet"
             },
             {
-              "name": "serviceAccountKey",
-              "value": "#SECURE.gcs-secret"
+              "name": "workloadIdentityEnabled",
+              "value": "true"
             }
           ]
         },
@@ -69,8 +72,8 @@
               "value": "gs://cvs-synthetic/day4/T_PHMCY_CLM.parquet"
             },
             {
-              "name": "serviceAccountKey",
-              "value": "#SECURE.gcs-secret"
+              "name": "workloadIdentityEnabled",
+              "value": "true"
             }
           ]
         },
@@ -87,8 +90,8 @@
               "value": "gs://cvs-synthetic/day4/V_CC_PSV_CALL_DATA.parquet"
             },
             {
-              "name": "serviceAccountKey",
-              "value": "#SECURE.gcs-secret"
+              "name": "workloadIdentityEnabled",
+              "value": "true"
             }
           ]
         },
@@ -105,8 +108,8 @@
               "value": "gs://cvs-synthetic/day4/V_CC_PSV_CALL_NOTE.parquet"
             },
             {
-              "name": "serviceAccountKey",
-              "value": "#SECURE.gcs-secret"
+              "name": "workloadIdentityEnabled",
+              "value": "true"
             }
           ]
         },
@@ -123,8 +126,8 @@
               "value": "gs://cvs-synthetic/day4/V_MBR_CMNCT_PRFR_DTL.parquet"
             },
             {
-              "name": "serviceAccountKey",
-              "value": "#SECURE.gcs-secret"
+              "name": "workloadIdentityEnabled",
+              "value": "true"
             }
           ]
         },
@@ -141,8 +144,8 @@
               "value": "gs://cvs-synthetic/day4/V_MBR_MEDD_PA_PRDCTV.parquet"
             },
             {
-              "name": "serviceAccountKey",
-              "value": "#SECURE.gcs-secret"
+              "name": "workloadIdentityEnabled",
+              "value": "true"
             }
           ]
         },
@@ -159,8 +162,8 @@
               "value": "gs://cvs-synthetic/day4/V_MCDH_ITGR_CALL_RSN.parquet"
             },
             {
-              "name": "serviceAccountKey",
-              "value": "#SECURE.gcs-secret"
+              "name": "workloadIdentityEnabled",
+              "value": "true"
             }
           ]
         },
@@ -177,8 +180,8 @@
               "value": "gs://cvs-synthetic/day4/V_RXC_PRIOR_ATHZN.parquet"
             },
             {
-              "name": "serviceAccountKey",
-              "value": "#SECURE.gcs-secret"
+              "name": "workloadIdentityEnabled",
+              "value": "true"
             }
           ]
         }
@@ -1704,7 +1707,7 @@
         },
         {
           "title": "T_MBR_MEDD_PA_CASE",
-          "name": "T_MBR_MEDD_PA_CASE",
+          "name": "tmbrmeddpacase",
           "names": {
             "categories": [],
             "plural": "",
@@ -1946,43 +1949,60 @@
         }
       ]
     },
-    "recreate" : true
+    "overwrite" : true
   },
-  "process" : {
-    "skipDataSource": true
-  },
-  "app" : {
-    "profiles": [
-      {
-        "name": "T_MBR_MEDD_PA_CASE"
-      },
-      {
-        "name": "V_MBR_MEDD_PA_PRDCTV"
-      },
-      {
-        "name": "V_RXC_PRIOR_ATHZN"
-      },
-      {
-        "name": "T_DGTL_SEG_PS_HSEHO"
-      },
-      {
-        "name": "T_PHMCY_CLM"
-      },
-      {
-        "name": "T_MBR_ACCT_DENORM"
-      },
-      {
-        "name": "V_MBR_CMNCT_PRFR_DTL"
-      },
-      {
-        "name": "V_CC_PSV_CALL_DATA"
-      },
-      {
-        "name": "V_MCDH_ITGR_CALL_RSN"
-      },
-      {
-        "name": "V_CC_PSV_CALL_NOTE"
-      }
-    ]
-  }
+  "profiles": [
+    {
+      "dataSources": [
+        {
+          "name": "T_MBR_MEDD_PA_CASE",
+          "profileSchemaName": "tmbrmeddpacase"
+        },
+        {
+          "name": "V_MBR_MEDD_PA_PRDCTV",
+          "profileSchemaName": "V_MBR_MEDD_PA_PRDCTV"
+        },
+        {
+          "name": "V_RXC_PRIOR_ATHZN",
+          "profileSchemaName": "V_RXC_PRIOR_ATHZN"
+        }
+      ]
+    },
+    {
+      "dataSources": [
+        {
+          "name": "T_DGTL_SEG_PS_HSEHO",
+          "profileSchemaName": "T_DGTL_SEG_PS_HSEHO"
+        },
+        {
+          "name": "T_PHMCY_CLM",
+          "profileSchemaName": "T_PHMCY_CLM"
+        },
+        {
+          "name": "T_MBR_ACCT_DENORM",
+          "profileSchemaName": "T_MBR_ACCT_DENORM"
+        },
+        {
+          "name": "V_MBR_CMNCT_PRFR_DTL",
+          "profileSchemaName": "V_MBR_CMNCT_PRFR_DTL"
+        }
+      ]
+    },
+    {
+      "dataSources": [
+        {
+          "name": "V_CC_PSV_CALL_DATA",
+          "profileSchemaName": "V_CC_PSV_CALL_DATA"
+        },
+        {
+          "name": "V_MCDH_ITGR_CALL_RSN",
+          "profileSchemaName": "V_MCDH_ITGR_CALL_RSN"
+        },
+        {
+          "name": "V_CC_PSV_CALL_NOTE",
+          "profileSchemaName": "V_CC_PSV_CALL_NOTE"
+        }
+      ]
+    }
+  ]
 }

@@ -27,7 +27,9 @@ import picocli.CommandLine.Command;
         BuildProfile.class,
         StreamingDataSource.class,
         NoJoinBuildProfileExample.class,
-        Partition.class
+        Partition.class,
+        BuildProfileSideConfig.class
+
 })
 public class Application {
     public static void main(String[] args) {

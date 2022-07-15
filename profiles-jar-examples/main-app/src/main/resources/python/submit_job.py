@@ -28,7 +28,7 @@ def get_runtime_args(config, token, url):
     args.append(f"spark.cortex.phoenix.token={token}")
     if url:
         args.append('--conf')
-        args.append(f"spark.fabric.client.phoenix.url={url}/fabric/v4/graphql")
+        args.append(f"spark.fabric.client.phoenix.url={url}")
     args.append(pyspark_args['app_location'])
     for x in pyspark_args['app_command']:
         args.append(x)
@@ -107,6 +107,11 @@ if __name__ == '__main__':
             # get resource files from filesystem
             config_file_loc = input_params.get("config")
             spark_config = get_config_file(config_file_loc)
+
+        app_config = input_params.get("app_config")
+        if app_config:
+            with open("/opt/spark/conf/app-conf.json", 'w') as file:
+                file.write(app_config)
 
         # create spark-submit call
         run_args = get_runtime_args(spark_config, token, payload.get('apiEndpoint'))
