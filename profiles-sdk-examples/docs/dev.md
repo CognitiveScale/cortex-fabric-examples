@@ -1,4 +1,4 @@
-# Local Developer Setup
+# Internal Developer Notes
 
 ## Recommended JVM Settings
 
@@ -17,7 +17,6 @@ export GRADLE_OPTS="-Dorg.gradle.jvmargs='-Xmx2g -XX:MaxMetaspaceSize=512m -XX:+
 
 ## Local Developer Setup
 
-
 To work with a locally built Profiles SDK JAR **in a container** you put built profiles-sdk jar in
 `main-app/src/main/resources/lib/` to override the version used in the docker container (by the spark executors).
 
@@ -30,7 +29,7 @@ dependencies {
     ...
 }
 ```
-./g
+
 To:
 ```kotlin
 dependencies {
@@ -44,7 +43,7 @@ dependencies {
 
 ## Checking all manual links (should be automated)
 
-Would be nice to automate testing of links as part of unit testing, but couldn't find packages in Java. I've manually used npm packages (both don't work out of the box):
+Would be nice to automate testing of links as part of unit testing, but couldn't find packages in Java. I've manually used npm packages (both don't work perfectly out of the box):
 - https://github.com/webhintio/markdown-link-validator
 - https://github.com/tcort/markdown-link-check
 

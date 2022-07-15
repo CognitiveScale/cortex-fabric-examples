@@ -31,15 +31,6 @@ to utilize DataSources and Connections defined in the Cortex Cluster locally.
 **Disclaimer**: The `CortexRemoteCatalog` implementation is being developed and not all methods (GraphQL endpoints) are
 currently supported. Unsupported methods will throw a `NotImplementedError` or `RuntimeException`.
 
-### Managed Content and Profile Data
-<!-- TODO(LA): Not sure about this section? Seems like something most "users" won't be able to do this. -->
-
-**NOTE**: In order to access Managed Content or Profiles data from a remote Cortex Cluster, you will need to set the
-related [configuration properties](./config.md#cortex-backend-storage) to access backing storage for the cluster. **When
-packaged in an Agent, the above configuration is handled by Cortex.** These configuration options only need to be set when:
-* the application is running the outside the Cortex cluster
-* the application needs access to Managed Content or Profile data from a Cortex Cluster
-
 ## Local Catalog
 
 The `LocalCatalog` provides a file based implementation for mocking the actual Cortex Catalog. This can be useful while developing
@@ -360,15 +351,4 @@ Reference:
 TODO: Add note that credentials need to be set locally?
 -->
 
-### Local Managed Content and Profile Data
-
-<!-- TODO(LA): Not sure about this section? Seems like something most users might not want to do. -->
-
-The Profiles SDK supports configuring a local filesystem as the backend Cortex Storage. To use a local filesystem as the
-backend storage set the corresponding [configuration properties](./config.md#cortex-backend-storage).
-
-This is useful when working locally, but may require additional setup. For example, a `DataSource` or `ProfileSchema`
-may be defined in the Local Catalog but the corresponding data may not already exist in the `Profiles Bucket`.
-
-## Resources
-* [Cortex Fabric GraphQL API Reference](https://cognitivescale.github.io/cortex-fabric/graphql-6.2.2/index.html)
+* [Cortex Fabric GraphQL API Reference](https://cognitivescale.github.io/cortex-fabric/docs/reference-guides/apis/#graphql-api)

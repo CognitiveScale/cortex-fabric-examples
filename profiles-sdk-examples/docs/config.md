@@ -30,16 +30,48 @@ When running outside the cluster, set:
 * `spark.cortex.client.phoenix.token`
 
 ### Cortex Backend Storage 
-* Set `spark.cortex.storage.storageType` to the storage type to either: `s3`, `gcs`, `file`
-* Set the corresponding options for the storage type. Refer to below options prefixed with: `spark.cortex.storage.<storage_type>*`
-* Configure bucket names Cortex backend storage (can be a local path for `file` based storage):
+
+* Set `spark.cortex.client.storage.impl` to set the client implementation you will be
+  using <!-- TODO: config not in table -->
+* If using the local Remote Storage client implementation, then set `spark.cortex.storage.storageType` to `file` and
+  update `spark.cortex.storage.file.baseDir` to the base directory in the local filesystem. You can optionally configure
+  the bucket names (local file path) used
   - `spark.cortex.storage.bucket.managedContent`
   - `spark.cortex.storage.bucket.profiles`
   - `spark.cortex.storage.bucket.amp`
+  * If using the default (in-cluster) Remote Storage Client implementation, then configuration options for remote storage
+  will be provided by the cluster and **need not be set**. Configuration options prefixed with `spark.cortex.storage`
+  can override values provided by the client implementation.
 
-The required spark Config properties depend on the DCIs configuration, see: 
-* https://cognitivescale.github.io/cortex-charts/docs/infrastructure/minio
-* https://cognitivescale.github.io/cortex-charts/docs/installation
+Hierarchy for loading Storage Configuration options (least to most priority)
+* Values provided by Storage Client Implementation
+* Spark Configuration Properties
+* Environment Variables (see table below)
+* Programmatic Configuration Overrides
+
+Example: If a user has a Spark Configuration file with the following options and no configuration options are set programmatically.
+```json
+{
+  "spark.cortex.client.storage.impl": "com.c12e.cortex.profiles.client.InternalRemoteStorageClient",
+  "spark.cortex.client.phoenix.url": "http://cortex-api.cortex.svc.cluster.local:8080/fabric/v4/graphql",
+  "spark.cortex.storage.storageType": "file",
+
+  "spark.cortex.storage.bucket.managedContent": "custom-mc-bucket",
+  "spark.cortex.storage.bucket.profiles": "custom-profiles-bucket",
+  "spark.cortex.storage.bucket.amp": "custom-amp-bucket",
+
+  "spark.kubernetes.driverEnv.STORAGE_TYPE": "s3",
+  "spark.kubernetes.driverEnv.S3_ENDPOINT": "https://minio.example.com",
+  "spark.kubernetes.driverEnv.S3_SSL_ENABLED": "false",
+  "spark.kubernetes.driverEnv.AWS_ACCESS_KEY_ID": "xxxx",
+  "spark.kubernetes.driverEnv.AWS_SECRET_KEY": "xxxx",
+}
+```
+
+The in-cluster [remote storage client](backendstorage.md#remote-storage-client) will be used, but instead of using the
+clusters remote storage, the SDK would use `s3` compatible storage hosted at `"https://minio.example.com"` using the
+given access keys. This is because the S3 related environment variables are overriding the option set via configuration
+properties (`spark.cortex.storage.storageType`), as well as the values provided by the client implementation.
 
 ## Cortex Config options
 
