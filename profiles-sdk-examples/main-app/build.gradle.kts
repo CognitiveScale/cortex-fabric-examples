@@ -47,6 +47,7 @@ dependencies {
     implementation(project(":cdata-connection"))
     implementation(project(":datasource-streaming"))
     implementation(project(":bigquery-connection"))
+    implementation(project(":side-config"))
 
     // CLI framework
     implementation("info.picocli:picocli:4.6.3")
@@ -65,6 +66,7 @@ dependencies {
     testImplementation(project(":cdata-connection"))
     testImplementation(project(":datasource-streaming"))
     testImplementation(project(":bigquery-connection"))
+    testImplementation(project(":side-config"))
 }
 
 // application entrypoint

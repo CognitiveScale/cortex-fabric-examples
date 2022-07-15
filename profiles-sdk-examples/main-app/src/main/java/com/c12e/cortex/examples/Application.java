@@ -11,6 +11,7 @@
  */
 package com.c12e.cortex.examples;
 
+import com.c12e.cortex.examples.BuildProfileSideConfig;
 import com.c12e.cortex.examples.cdata.CData;
 import com.c12e.cortex.examples.datasource.DataSourceRW;
 import com.c12e.cortex.examples.joinconn.JoinConnections;
@@ -30,7 +31,8 @@ import picocli.CommandLine.Command;
         BuildProfile.class,
         CData.class,
         StreamingDataSource.class,
-        BigQuery.class
+        BigQuery.class,
+        BuildProfileSideConfig.class
 })
 public class Application {
     public static void main(String[] args) {

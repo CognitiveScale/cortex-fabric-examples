@@ -62,7 +62,7 @@ public class SessionExample {
     public SparkSession sparkSessionWithOptions(Map<String, String> options) {
         SparkConf sparkConf = new SparkConf();
         options.forEach((k, v) -> sparkConf.set(k, v));
-        return SparkSession.builder()
+        return SparkSession.builder().
                 .master("local[*]")
                 .config(sparkConf)
                 .getOrCreate();
