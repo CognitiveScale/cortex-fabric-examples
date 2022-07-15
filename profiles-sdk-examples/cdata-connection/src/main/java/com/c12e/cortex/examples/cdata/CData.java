@@ -79,8 +79,7 @@ public class CData implements Runnable {
     public void run() {
         SessionExample sessionExample = new SessionExample();
         CortexSession cortexSession = sessionExample.getCortexSessionWithOverrides(Map.of(
-                //CortexSession.SECRETS_CLIENT_KEY, CDataSecretClient.class.getCanonicalName())
-                CortexSession.SECRETS_CLIENT_KEY, "com.c12e.cortex.examples.cdata.CData$CDataSecretClient"
+                CortexSession.SECRETS_CLIENT_KEY, CDataSecretClient.class.getName()
         ));
         readConnection(cortexSession, project, source, sink);
     }

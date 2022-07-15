@@ -2,7 +2,7 @@ package com.c12e.cortex.examples.local;
 
 import com.c12e.cortex.phoenix.LocalCatalog;
 import com.c12e.cortex.profiles.CortexSession;
-import com.c12e.cortex.profiles.intercept.TracingMethodInterceptor;
+import com.c12e.cortex.profiles.client.LocalRemoteStorageClient;
 import org.apache.spark.SparkConf;
 import org.apache.spark.sql.SparkSession;
 
@@ -14,11 +14,14 @@ public class SessionExample {
     protected Map<String, String> getDefaultOptions() {
         var options = new HashMap<>(Map.of(
                 // Use local catalog implementation
-                CortexSession.CATALOG_KEY, LocalCatalog.class.getCanonicalName(),
+                CortexSession.CATALOG_KEY, LocalCatalog.class.getName(),
                 CortexSession.LOCAL_CATALOG_DIR_KEY,  "src/main/resources/spec",
 
                 // Use a local secret client implementation
-                CortexSession.SECRETS_CLIENT_KEY, CustomSecretsClient.class.getCanonicalName()
+                CortexSession.SECRETS_CLIENT_KEY, CustomSecretsClient.class.getName(),
+
+                // Set the Backend Storage Client implementation
+                CortexSession.STORAGE_CLIENT_KEY, LocalRemoteStorageClient.class.getName()
         ));
         options.put("spark.ui.enabled", "true");
         options.put("spark.ui.prometheus.enabled", "true");

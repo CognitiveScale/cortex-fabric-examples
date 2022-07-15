@@ -22,6 +22,7 @@
         "spark.cortex.catalog.impl": "com.c12e.cortex.phoenix.LocalCatalog",
         "spark.cortex.catalog.local.dir":  "src/main/resources/spec",
         "spark.cortex.client.secrets.impl": "com.c12e.cortex.examples.cdata.CData$CDataSecretClient",
+        "spark.cortex.client.storage.impl": "com.c12e.cortex.profiles.client.LocalRemoteStorageClient",
         "spark.cortex.storage.storageType": "file",
         "spark.cortex.storage.file.baseDir": "src/main/resources/data"
       }
