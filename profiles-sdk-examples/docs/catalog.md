@@ -4,16 +4,16 @@
 (From: https://cognitivescale.github.io/cortex-fabric/docs/reference-guides/cortex-service-descriptions)
 
 The Profiles SDK includes a client for the Cortex Catalog that utilizes
-the [Cortex Fabric GraphQL API](https://cognitivescale.github.io/cortex-fabric/graphql-6.2.2/index.html). While deployed
-Agents will interact with the actual Cortex Catalog instance, the Profiles SDK includes a local implementation of the
-Catalog that may be easier to use during development.
+the [Cortex Fabric GraphQL API](https://cognitivescale.github.io/cortex-fabric/docs/reference-guides/apis/#graphql-api).
+Deployed Agents will interact with the actual Cortex Catalog instance. The Profiles SDK includes a local
+implementation of the Catalog that may be easier to use during development.
 
 Base Interface: `com.c12e.cortex.phoenix.Catalog` <!-- TODO: Link to javadoc -->
 
 ## Remote Catalog
 
-By default, the Profiles SDK (`CortexSession`) will utilize remote Cortex Catalog. This is such that deployed Agents
-containing your application (and the Cortex Profiles SDK) will communicate with the Cortex Catalog instance in your
+By default, the Profiles SDK (`CortexSession`) utilizes remote Cortex Catalog. This is such that deployed Agents
+containing your application (and the Cortex Profiles SDK) communicates with the Cortex Catalog instance in your
 Cortex Cluster.
 
 Implementation: `com.c12e.cortex.profiles.catalog.CortexRemoteCatalog` <!-- TODO: Link to javadoc -->
@@ -24,23 +24,23 @@ The `CortexRemoteCatalog` implementation requires:
 * The Cortex API endpoint to be specified (`https://api.<dci-base-domain>`) - `spark.cortex.client.phoenix.url`
 * A Cortex API Token - `spark.cortex.client.phoenix.token`
 
-**When packaged as a skill with existing templates, the Token and URL will be handled by the Cortex.**
-These configuration options need only be set when running outside the Cortex cluster (i.e. locally). This can be useful
-to utilize DataSources and Connections defined in the Cortex Cluster locally.
+When packaged as a Skill with the existing templates then token and URL are handled by the Cortex Cluster. These
+configuration options need only be set when running outside the Cortex cluster (i.e. locally).
 
-**Disclaimer**: The `CortexRemoteCatalog` implementation is being developed and not all methods (GraphQL endpoints) are
-currently supported. Unsupported methods will throw a `NotImplementedError` or `RuntimeException`.
+**WARNING**: The `CortexRemoteCatalog` implementation is being developed and not all methods (GraphQL endpoints) are
+currently supported. Unsupported methods will return a `NotImplementedError` or `RuntimeException` error.
 
 ## Local Catalog
 
-The `LocalCatalog` provides a file based implementation for mocking the actual Cortex Catalog. This can be useful while developing
+The `LocalCatalog` provides a file-based implementation for mocking the actual Cortex Catalog. This can be useful while developing
 your solution because
-- Cortex Resources (DataSources, Connections, and ProfileSchemas) can be written locally in YAML
-- Smaller datasets can be used for DataSources and Connections before actual deployment
-- Local files can be used for datasets, which need not require Secrets or authentication in general (NOTE: remote connections are supported).
-- Authentication to Cortex is not required
+- Cortex Resources (Data Sources, Connections, and Profile Schemas) can be written locally in YAML.
+- Smaller datasets can be used for Data Sources and Connections before actual deployment.
+- Local files can be used for datasets, which need not require Secrets or authentication in general. (NOTE: Remote connections are supported but require setting up a secrets client).
+- Authentication to Cortex is not required.
 
-**Disclaimer**: The `LocalCatalog` implementation is being developed and not all methods (GraphQL endpoints) are currently supported. Unsupported methods will throw a `NotImplementedError`.
+**WARNING**: The `LocalCatalog` implementation is being developed and not all methods (GraphQL endpoints) are currently
+supported. Unsupported methods will return a `NotImplementedError` error.
 See [Supported Resources](#supported-resources) for which Cortex resources can be used with the `LocalCatalog`.
 
 **NOTE: The `LocalCatalog` implementation is currently project-unaware**, in that:
@@ -67,19 +67,19 @@ Below instructions are setting up a local catalog directory.
 
 * Create a directory to contain all Cortex Resources -  `mkdir spec/`
 * [Resources](#supported-resources) are defined in YAML files with only a single type of per file
-* Create a new file for each resource type you would like to load in the Catalog, e.g. 
+* Create a new file for each resource type you would like to load in the Catalog, e.g.
     ```
     touch spec/datasources.yaml
     touch spec/connections.yaml
     touch spec/profileschemas.yaml
     ```
 * Define the resources in each file. The YAML representation expected by the `LocalCatalog` is not too dissimilar from
-  the associated [GraphQL Schema definition](https://cognitivescale.github.io/cortex-fabric/graphql-6.2.2/) but there
+  the associated  [Cortex Fabric GraphQL API Reference](https://cognitivescale.github.io/cortex-fabric/docs/reference-guides/apis/#graphql-api) but there
   are general differences. The general pattern for representing each resource will be shown below with regard
   to `Connections`, but refer to the below sections for more information
   - Each resource should include top level `apiVersion`, `kind`, `metadata`, and `spec` fields
   - The `apiVersion` can be set to `cognitivescale.io/v1`
-  - The `kind` should be the name of the resource type - e.g. Connection, DataSource, ProfileSchema 
+  - The `kind` should be the name of the resource type - e.g. `Connection`, `DataSource`, `ProfileSchema`
   - The `name` of the resource should be defined in the `metadata` object
   - All other attributes should be listed in the `spec` object
   - Example:
@@ -176,11 +176,11 @@ Supported Catalog methods:
 - `deleteConnection`
 
 Reference:
-* [Cortex Connection GraphQL Schema](https://cognitivescale.github.io/cortex-fabric/graphql-6.2.2/connection.doc.html)
+* [Cortex Connection GraphQL Schema](https://cognitivescale.github.io/cortex-fabric/docs/reference-guides/apis/#graphql-api)
 * [Cortex Connection Types Reference](https://cognitivescale.github.io/cortex-fabric/docs/reference-guides/connection-types)
 * [Cortex Connections](https://cognitivescale.github.io/cortex-fabric/docs/manage-data/manage-connections)
 
-#### DataSources
+#### Data Sources
 ```yaml
 ---
 apiVersion: cognitivescale.io/v1
@@ -219,10 +219,10 @@ Supported Catalog Methods:
 * `deleteDataSource`
  
 Resources: 
-* [Cortex DataSource GraphQL Schema](https://cognitivescale.github.io/cortex-fabric/graphql-6.2.2/datasource.doc.html)
-* [Cortex DataSource Management](https://cognitivescale.github.io/cortex-fabric/docs/manage-data/manage-data-sources)
+* [Cortex Data Source GraphQL Schema](https://cognitivescale.github.io/cortex-fabric/docs/reference-guides/apis/#graphql-api)
+* [Cortex Data Source Management](https://cognitivescale.github.io/cortex-fabric/docs/manage-data/manage-data-sources)
 
-#### ProfileSchemas
+#### Profile Schemas
 
 Examples:
 ```yaml
@@ -275,9 +275,9 @@ spec:
       - member_id
       - phone
       - age_group
-  # List of DataSources to join into this Profile schema
+  # List of Data Sources to join into this Profile schema
   joins:
-    - name: member-flu-risk-file-ds     # DataSource Name
+    - name: member-flu-risk-file-ds     # Data Source Name
       join:
         primarySourceColumn: member_id  # column in the primary source to join on
         joinSourceColumn: member_id     # column in the join source to join on
@@ -322,7 +322,7 @@ Implemented Methods
 * `deleteProfileSchema`
 
 Reference:
-* [Cortex ProfileSchema GraphQL Schema](https://cognitivescale.github.io/cortex-fabric/graphql-6.2.2/profileschema.doc.html)
+* [Cortex Profile Schema GraphQL Schema](https://cognitivescale.github.io/cortex-fabric/docs/reference-guides/apis/#graphql-api)
 * [Cortex Building Profile Schemas](https://cognitivescale.github.io/cortex-fabric/docs/build-profiles/build-schemas)
 
 <!-- Don't think we need these? Will iterate on

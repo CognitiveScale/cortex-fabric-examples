@@ -1,28 +1,26 @@
 # CData Connection
 
-This example is a CLI application for reading data from a CData Cortex Connection and writing said data to a separate
+This example is a CLI application for reading data from a CData Cortex Connection and writing that data to a separate
 Connection. This builds off the [Local Clients](../local-clients/README.md) example for its initial setup, but uses a
 separate set of connections defined in [cdata-connections.yml](../main-app/src/main/resources/spec/cdata-connections.yml).
 
 Two source Connections are defined in the [Local Catalog](../local-clients/README.md#catalog):
-- `cdata-csv` - Connection to a local `members_100_v14.csv` file.
-- `cdata-bigquery` - CData Connection to Google BigQuery. To use this you will need to provide GCS credentials and
-  additionally update the `url` and `query` parameters to your BigQuery data in
-  the [cdata-connections.yml](../main-app/src/main/resources/spec/cdata-connections.yml) file.
-  See [Notes on CData BigQuery Connection](#notes-on-cdata-bigquery-connection).
-
-The following will use the `cdata-csv` Connection.
+- `cdata-csv` - Connection to a local `members_100_v14.csv` file that is used for the following examples.
+- `cdata-bigquery` - CData Connection to Google BigQuery. To use this you must update the `url` and `query` parameters
+  to match your BigQuery data in the [cdata-connections.yml](../main-app/src/main/resources/spec/cdata-connections.yml)
+  file. (See [Notes on CData BigQuery Connection](#notes-on-cdata-bigquery-connection)).
 
 See [CData.java](./src/main/java/com/c12e/cortex/examples/cdata/CData.java) for the full source.
 
 ## Prerequisites
-* A CData OEM Key and CData Product Checksum
-* Download the CData driver jars from http://cdatabuilds.s3.amazonaws.com/support/JDBC_JARS_21.0.8059.zip
-* Add required driver jars and CData Spark SQL jar to [../main-app/src/main/resources/lib/](../main-app/src/main/resources/lib). These jars will be made available to the Spark Driver and Executors, as well as the current classpath for development.
+* Get a CData OEM Key and CData Product Checksum and save these values for later use. If you do not have one then check with your SRE team or Systems Administrator.
+* Download the CData driver jar files from: http://cdatabuilds.s3.amazonaws.com/support/JDBC_JARS_21.0.8059.zip
+* Add required driver jars and CData Spark SQL jar to [../main-app/src/main/resources/lib/](../main-app/src/main/resources/lib). These jars will be made available to the Spark driver and executors, as well as the current classpath for development.
   - Copy: `cdata.jdbc.csv.jar`, `cdata.jdbc.sparksql.jar`. If using a BigQuery Connection copy: `cdata.jdbc.googlebigquery.jar`
-* (Optional) Update `query`, `url`, `driver` in the CData/JDBC connection definitions [cdata-connections.yml](../main-app/src/main/resources/spec/cdata-connections.yml) to control which subset of the datasets will be used. Refer to [CData documentation](https://cdn.cdata.com/help/RVF/jdbc/pg_JDBCconnectcode.htm) for syntax details.
+* (Optional) Update `query`, `url`, `driver` in the CData/JDBC connection definitions [cdata-connections.yml](../main-app/src/main/resources/spec/cdata-connections.yml) to control which subset of the datasets will be used. (Refer to [CData documentation](https://cdn.cdata.com/help/RVF/jdbc/pg_JDBCconnectcode.htm) for syntax details.)
 
-**NOTE**: We can't use `cortex-cdata-plugin` to create JDBC connection nor parse Cortex Connections because Spark SQL has specific requirement for JDBC, see https://spark.apache.org/docs/latest/sql-data-sources-jdbc.html
+**NOTE**: `cortex-cdata-plugin` cannot be used to create JDBC connections, nor can it parse Cortex Connections because
+Spark SQL has specific requirement for JDBC (see https://spark.apache.org/docs/latest/sql-data-sources-jdbc.html).
 
 <!--
 **NOTE**: The above requires the additional jar files (from [Prerequisites](#prerequisites)) be listed
@@ -35,10 +33,10 @@ testRuntimeOnly(fileTree("src/main/resources/lib"){ include("*.jar") })
 ```
 -->
 
-## Running Locally
+## Run Locally
 
-This example utilizes a local Secret Client for manging the connection secrets. Database passwords, SSL certs, service
-account JSON file contents, etc. should be set in
+This example allows you to use the Profiles SDK locally. It utilizes a local Secret Client for manging the connection
+secrets. Database passwords, SSL certs, service account JSON file contents, and other variables. should be set in
 the [CData.java](./src/main/java/com/c12e/cortex/examples/cdata/CData.java) file via environment variables.
 
 To run this example locally with local Cortex clients (from the parent directory):
@@ -118,12 +116,12 @@ org.apache.spark.SparkException: Job aborted due to stage failure: Task 0 in sta
 
 This will read the `cdata-csv` Connection and write it to the `sink` connection defined
 in [cdata-connections.yml](../main-app/src/main/resources/spec/cdata-connections.yml). Both connections require:
-- an `oem_key` to be set via `CDATA_OEM_KEY`
-- a product checksum to be set via `CDATA_PRODUCT_CHECKSUM`
+- An `oem_key` to be set via `CDATA_OEM_KEY`.
+- A product checksum to be set via `CDATA_PRODUCT_CHECKSUM`.
 
 The sink file can be found at `./main-app/build/tmp/test-data/sink-ds` after running the command.
 
-## Running in a Docker container with spark-submit
+## Run in a Docker container with Spark-Submit
 
 To run this example in a docker container with local Cortex clients (from the parent directory):
 ```
@@ -227,20 +225,10 @@ in [cdata-connections.yml](../main-app/src/main/resources/spec/cdata-connections
 at `./main-app/build/tmp/test-data/sink-ds` after running the command.
 
 Notes:
-* Port 4040 is forwarded from the container to expose the Spark UI (for debugging)
-* The 1st volume mount is sharing the [Spark submit config file](./src/main/resources/conf/spark-conf.json)
-* The 2cd volume mount shares the LocalCatalog contents and other local application resources
-* The 3rd volume mount is the output location of the joined connection
-
-## Running locally against a Cortex Cluster
-
-## Running as a Skill 
-
-### Prerequisites
-
-### Example
-
-TODO.
+* Port 4040 is forwarded from the container to expose the Spark UI (for debugging).
+* The first volume mount is sharing the [Spark submit config file](./src/main/resources/conf/spark-conf.json).
+* The second volume mount shares the LocalCatalog contents and other local application resources.
+* The third volume mount is the output location of the joined connection.
 
 ## Notes on CData BigQuery connection
 
@@ -271,11 +259,11 @@ spec:
 
 <!-- TODO(LA): below google doc isn't public, we should link off to Google docs instead -->
 To run this example locally in a container:
-* Get a GCP Service Account JSON as described
+* Get a GCP Service Account JSON as described.
   in https://docs.google.com/document/d/1T1u8RMZhDYMIXHk7v3lLF2rzag7xLTr5CLHC-49UiYU/edit#heading=h.756ioo8pxy08 and put
   it into `profiles-examples/main-app/src/main/resources/credentials/`.
-* Update the `url` and `query` parameter (including the `ProjectId`) to match your data
-* Include an additional volume mount to share the Service Account credentials:
+* Update the `url` and `query` parameter (including the `ProjectId`) to match your data.
+* Include an additional volume mount to share the Service Account credentials.
 ```
 $ docker run -p 4040:4040 \
     -e CORTEX_TOKEN="${CORTEX_TOKEN}" \

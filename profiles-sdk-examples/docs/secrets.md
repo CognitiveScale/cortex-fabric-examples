@@ -1,12 +1,12 @@
 # Secrets
 
-When packaged in an Agent the Profiles SDK (`CortexSession`) will have access to Cortex Secrets in the cluster. However,
+When packaged in an Agent the Profiles SDK will have access to Cortex Secrets in the cluster. However,
 secrets are not exposed to applications running outside the Cortex cluster. Although this may seem like a limitation, the
 Profiles SDK includes a local mock client for providing secrets.
 
 This mock client may be useful when:
-* when running an application locally (outside the cluster) that uses a Connection or DataSource defined in a remote Cortex Cluster (with secrets)
-* when running an application locally (outside the cluster) that uses a Connection or DataSource in a remote storage (S3/GCS/Azure)
+* when running an application locally (outside the cluster) that uses a Connection or Data Source defined in a remote Cortex Cluster (with secrets)
+* when running an application locally (outside the cluster) that uses a Connection or Data Source in a remote storage (S3/GCS/Azure)
 
 Base Interface: `com.c12e.cortex.profiles.client.CortexSecretsClient`
 
@@ -15,7 +15,7 @@ Implementation: `com.c12e.cortex.profiles.client.LocalSecretsClient`
 ### Configuration Options
 
 To use a local Secret client you will need to:
-- Subclass the `LocalSecretsClient` with an implementation that contains secrets for your Connections/DataSources
+- Subclass the `LocalSecretsClient` with an implementation that contains secrets for your Connections/Data Sources
 - Specify the secret client implementation to use in Spark configuration property. Set `spark.cortex.client.secrets.impl` to the corresponding class path 
 
 <!-- It is possible to bind a Secret client using an explicit Guice binding, but that is pulling the covers back too much (requires Guice knowledge) -->

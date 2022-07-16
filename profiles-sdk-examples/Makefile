@@ -8,6 +8,8 @@ ifndef DOCKER_PREGISTRY_URL
 endif
 SPARK_CONTAINER := ${DOCKER_PREGISTRY_URL}/${DOCKER_IMAGE}:${TAG}
 
+all: clean build create-app-image deploy-skill
+
 create-app-image:
 	docker build --build-arg base_img=c12e/spark-template:profile-jar-base-6.3.0-M.2.1 -t profiles-example:latest -f ./main-app/build/resources/main/Dockerfile ./main-app/build
 

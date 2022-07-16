@@ -17,11 +17,15 @@ public void createCortexSession(SparkSession sparkSession) {
     // create the session
     CortexSession session = CortexSession.newSession(sparkSession);
 
-    // create the session and apply properties for the CortexSession
+    // create the session and apply properties programmatically
     CortexSession alternativeSession = CortexSession.newSession(sparkSession, Map.of(
         "spark.cortex.catalog.impl", "com.c12e.cortex.phoenix.LocalCatalog",
         "spark.cortex.catalog.local.dir",  "src/main/resources/spec",
-    ));
+
+        // a static variable is used for the secret client implementation key
+        // the '.getName()' method is useful for setting an implementation value
+        CortexSession.SECRETS_CLIENT_KEY, CustomSecretClient.class.getName()
+        ));
 }
 ```
 
@@ -37,7 +41,7 @@ the `spark-conf.json` files in other examples, e.g.
 {
   "options": {
     "spark.cortex.catalog.impl": "com.c12e.cortex.phoenix.LocalCatalog",
-    "spark.cortex.catalog.local.dir":  "src/main/resources/spec",
+    "spark.cortex.catalog.local.dir":  "src/main/resources/spec"
   }
 }
 ```

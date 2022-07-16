@@ -205,7 +205,7 @@ Notes:
 ## Milestones
 
 ### Milestone 1
-* Connector and DataSource work
+* Connector and Data Source work
 
 ### Milestone 2
-* Streaming DataSource and Profile work
+* Streaming Data Source and Profile work
