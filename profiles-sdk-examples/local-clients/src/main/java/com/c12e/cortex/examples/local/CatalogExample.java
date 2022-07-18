@@ -10,7 +10,7 @@ import java.util.List;
 
 public class CatalogExample {
     public List<Connection> listConnectionsInCatalog(CortexSession cortexSession) {
-        // list the connections in a project
+        // List the Connections in a Project.
         Catalog catalog = cortexSession.catalog();
         List<Connection> connections = new ArrayList<>();
         catalog.listConnections("local").forEach(connections::add);
@@ -18,7 +18,7 @@ public class CatalogExample {
     }
 
     public void recreateDataSource(CortexSession cortexSession) {
-        // get, delete and re-create a data source in the Cortex Catalog
+        // Get, delete and re-create a Data Source in the Cortex Catalog.
         Catalog catalog = cortexSession.catalog();
         DataSource ds = catalog.getDataSource("project", "data-source-name");
         catalog.deleteDataSource("project", "data-source-name");

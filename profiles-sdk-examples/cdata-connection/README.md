@@ -10,7 +10,7 @@ Two source Connections are defined in the [Local Catalog](../local-clients/READM
   to match your BigQuery data in the [cdata-connections.yml](../main-app/src/main/resources/spec/cdata-connections.yml)
   file. (See [Notes on CData BigQuery Connection](#notes-on-cdata-bigquery-connection)).
 
-See [CData.java](./src/main/java/com/c12e/cortex/examples/cdata/CData.java) for the full source.
+(See [CData.java](./src/main/java/com/c12e/cortex/examples/cdata/CData.java) for the source code.)
 
 ## Prerequisites
 * Get a CData OEM Key and CData Product Checksum and save these values for later use. If you do not have one then check with your SRE team or Systems Administrator.
@@ -54,7 +54,7 @@ $ ./gradlew main-app:run --args="cdata -p local -i cdata-csv -o sink"
 scratch-directory (`/opt-spark/work-dir`) which does not exist (setting ). This should be sett-able
 via `spark.local.dir`/`SPARK_LOCAL_DIRS`, but this configuration has not been overrideable. If you see an error similar
 to the following, then instead try
-[running this example in a docker container](#running-in-a-docker-container-with-spark-submit):
+[running this example in a Docker container](#run-locally-in-a-docker-container-with-spark-submit):
 
 ```
 16:29:55.486 [main] DEBUG c.c.c.p.m.c.DefaultCortexConnectionWriter - Writing to connection: 'file:///opt/spark/work-dir/build/tmp/test-data/sink-ds/'
@@ -121,7 +121,7 @@ in [cdata-connections.yml](../main-app/src/main/resources/spec/cdata-connections
 
 The sink file can be found at `./main-app/build/tmp/test-data/sink-ds` after running the command.
 
-## Run in a Docker container with Spark-Submit
+## Run Locally in a Docker Container with Spark-Submit
 
 To run this example in a docker container with local Cortex clients (from the parent directory):
 ```
@@ -230,7 +230,7 @@ Notes:
 * The second volume mount shares the LocalCatalog contents and other local application resources.
 * The third volume mount is the output location of the joined connection.
 
-## Notes on CData BigQuery connection
+## Notes on CData BigQuery Connection
 
 The CData BigQuery Connection (shown below) requires authenticating to Google Cloud Storage along with providing the
 CDATA keys. This example is configured to use Google Service Account JSON credentials that is specified

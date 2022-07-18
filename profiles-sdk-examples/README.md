@@ -146,7 +146,7 @@ The [Skill Template](./templates) directory contains files for packaging as [Cor
   the Skill.
 
 **Note**: The `ENTRYPOINT` for the Docker image is [scuttle](https://github.com/CognitiveScale/scuttle). When running application
-in a docker container locally, you should set the `--entrypoint` option.
+in a Docker container locally, you should set the `--entrypoint` option.
 
 
 1. **Before creating the Skill**, you will need to:

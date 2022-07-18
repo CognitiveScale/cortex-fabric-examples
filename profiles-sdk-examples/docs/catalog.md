@@ -40,12 +40,12 @@ your solution because
 - Authentication to Cortex is not required.
 
 **WARNING**: The `LocalCatalog` implementation is being developed and not all methods (GraphQL endpoints) are currently
-supported. Unsupported methods will return a `NotImplementedError` error.
-See [Supported Resources](#supported-resources) for which Cortex resources can be used with the `LocalCatalog`.
+supported. Unsupported methods will return `NotImplementedError`. (See [Supported Resources](#supported-resources) for
+which Cortex resources can be used with the `LocalCatalog`.)
 
-**NOTE: The `LocalCatalog` implementation is currently project-unaware**, in that:
-- Resources are keyed based on their name and are not necessarily scoped to a project
-- a default `"local"` project is included
+**NOTE: The `LocalCatalog` implementation is currently project-unaware** in that:
+- Resources are keyed (globally unique) based on their names and are not scoped to a singular project.
+- A default `"local"` project is included.
 <!-- FeatureSets are only loaded into the "local" project (inconsistency). -->
 
 **NOTE:** Comments are not supported in the YAML files used by the LocalCatalog.
@@ -54,34 +54,32 @@ Implementation: `com.c12e.cortex.phoenix.LocalCatalog` <!-- TODO: Link to javado
 
 ### Configuration options
 
- To use the `LocalCatalog` instance you will at need to:
+ To use the `LocalCatalog` instance you will need to:
 - Specify the Catalog implementation (classpath) - `spark.cortex.catalog.local.dir`
 - Specify the local directory for the Catalog - `spark.cortex.catalog.impl`
 
-See [./config.md](./config.md#local-development) for more information on configuration options.
+(See [./config.md](./config.md#local-development) for more information on configuration options.)
 
 
 ### Local File Setup
 
-Below instructions are setting up a local catalog directory.
-
-* Create a directory to contain all Cortex Resources -  `mkdir spec/`
-* [Resources](#supported-resources) are defined in YAML files with only a single type of per file
-* Create a new file for each resource type you would like to load in the Catalog, e.g.
+Follow the instructions below to setup a local catalog directory.
+* Create a directory to contain all Cortex Resources -  `mkdir spec/`.
+* [Connections, Data Sources, and Profile Schemas](#supported-resources) are defined in YAML files with only a single type of per file. Create a new file for
+  each resource type you would like to load in the Catalog, e.g.
     ```
     touch spec/datasources.yaml
     touch spec/connections.yaml
     touch spec/profileschemas.yaml
     ```
-* Define the resources in each file. The YAML representation expected by the `LocalCatalog` is not too dissimilar from
-  the associated  [Cortex Fabric GraphQL API Reference](https://cognitivescale.github.io/cortex-fabric/docs/reference-guides/apis/#graphql-api) but there
-  are general differences. The general pattern for representing each resource will be shown below with regard
-  to `Connections`, but refer to the below sections for more information
-  - Each resource should include top level `apiVersion`, `kind`, `metadata`, and `spec` fields
-  - The `apiVersion` can be set to `cognitivescale.io/v1`
-  - The `kind` should be the name of the resource type - e.g. `Connection`, `DataSource`, `ProfileSchema`
-  - The `name` of the resource should be defined in the `metadata` object
-  - All other attributes should be listed in the `spec` object
+* Define the resources in each file. The YAML representation expected by the `LocalCatalog` is not dissimilar from
+  the associated [Cortex Fabric GraphQL API Reference](https://cognitivescale.github.io/cortex-fabric/docs/reference-guides/apis/#graphql-api) but there
+  are some differences. The general pattern for representing each resource is listed below, followed by an annotated example of a Connection.
+  - Include at the top level of each resource: `apiVersion`, `kind`, `metadata`, and `spec` fields.
+  - Set `apiVersion` to `cognitivescale.io/v1`.
+  - Set `kind` to the name of the resource type: `Connection`, `DataSource`, or `ProfileSchema`.
+  - Define the `name` of the resource in the `metadata` object.
+  - List all other attributes of the resource in the `spec` object.
   - Example:
   ```yaml
   # in spec/connections.yaml

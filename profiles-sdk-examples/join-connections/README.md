@@ -1,10 +1,9 @@
 # Join Connections
 
 This example is a CLI application for Joining two Cortex Connections and saving the resulting dataset to
-another Cortex Connection. This builds off the [Local Clients](../local-clients/README.md) example for its setup
-(see [connections](../local-clients/README.md#connections)).
+another Cortex Connection. This builds off the [Local Clients](../local-clients/README.md) example for its setup.
 
-See [JoinConnections.java](./src/main/java/com/c12e/cortex/examples/joinconn/JoinConnections.java) for the full source.
+(See [JoinConnections.java](./src/main/java/com/c12e/cortex/examples/joinconn/JoinConnections.java) for the full source.)
 
 ## Running Locally
 
@@ -14,7 +13,7 @@ $ make build
 $ ./gradlew main-app:run --args="join-connections --project local -l member-base-file -r member-flu-risk-file -w member-joined-file -c member_id"
 ```
 
-This will merge the following connections defined in the Local Catalog, and will populate `member-joined-file` connection:
+This will merge the following connections defined in the Local Catalog, and will populate the `member-joined-file` [connection](../local-clients/README.md#connections):
 - `member-base-file`
 - `member-flu-risk-file`
 
@@ -60,11 +59,11 @@ Exit Code: 0
 Spark submit launches the task in the docker container, but local Cortex clients will be used.
 
 Notes:
-* The `$CORTEX_TOKEN` environment variable is required by the Spark Submit wrapper, and needs to be a valid JWT token. You can generate this via: `cortex configure token`
+* The `$CORTEX_TOKEN` environment variable is required by the Spark Submit wrapper, and needs to be a valid JWT token. You can generate this via: `cortex configure token`.
 * Port 4040 is forwarded from the container to expose the Spark UI (for debugging)
-* The 1st volume mount is sharing the [Spark submit config file](./src/main/resources/conf/spark-conf.json)
-* The 2cd volume mount shares the LocalCatalog contents and other local application resources
-* The 3rd volume mount is the output location of the joined connection
+* The first volume mount is sharing the [Spark submit config file](./src/main/resources/conf/spark-conf.json).
+* The second volume mount shares the LocalCatalog contents and other local application resources.
+* The third volume mount is the output location of the joined connection.
 
 ## Running locally against a Cortex Cluster
 
@@ -180,7 +179,6 @@ Example Spark configuration (`spark-conf.json`):
       "--class": "com.c12e.cortex.examples.Application",
       "--conf": {
         "spark.app.name": "CortexProfilesExamples",
-        "spark.sql.streaming.metricsEnabled": "true",
         "spark.cortex.client.phoenix.url": "http://cortex-api.cortex.svc.cluster.local:8080/fabric/v4/graphql",
         "spark.cortex.client.secrets.url": "http://cortex-accounts.cortex.svc.cluster.local:5000",
         "spark.cortex.catalog.impl": "com.c12e.cortex.profiles.catalog.CortexRemoteCatalog",

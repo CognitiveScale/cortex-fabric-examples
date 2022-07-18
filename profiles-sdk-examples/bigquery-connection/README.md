@@ -3,6 +3,8 @@
 This example is a CLI application that writes data from a Google BigQuery to the location of a Cortex Connection. This
 builds off the [Local Clients](../local-clients/README.md) example for its initial setup.
 
+(See [BigQuery.java](./src/main/java/com/c12e/cortex/examples/bigquery/BigQuery.java) for the source code.)
+
 ## Prerequisites
 
 * Download the [BigQuery Spark connector](https://repo1.maven.org/maven2/com/google/cloud/spark/spark-bigquery-with-dependencies_2.12/0.25.0/spark-bigquery-with-dependencies_2.12-0.25.0.jar)
@@ -12,7 +14,7 @@ builds off the [Local Clients](../local-clients/README.md) example for its initi
 * Get a GCP Service Account JSON as described in: https://docs.google.com/document/d/1T1u8RMZhDYMIXHk7v3lLF2rzag7xLTr5CLHC-49UiYU/edit#heading=h.756ioo8pxy08.
   Save this file in `profiles-examples/main-app/src/main/resources/credentials` for future use (e.g. `gcs-service-account.json`).
 
-## Running locally
+## Run Locally
 
 To run this example locally with local Cortex clients (from the parent directory):
 ```
@@ -50,9 +52,9 @@ See https://docs.gradle.org/7.4/userguide/command_line_interface.html#sec:comman
 BUILD SUCCESSFUL in 21s
 ```
 
-## Running locally in a Docker Container with Spark-Submit
+## Run Locally in a Docker Container With Spark-Submit
 
-To run this example in a docker container with local Cortex clients (from the parent directory):
+To run this example in a Docker container with local Cortex clients (from the parent directory):
 ```
 $ make build create-app-image
 
@@ -93,11 +95,11 @@ Exit Code: 0
 ```
 
 Notes:
-* Port 4040 is forwarded from the container to expose the Spark UI (for debugging)
-* The `BIGQUERY_CREDS_FILE` environment is the path to service account file in the container
-* The 1st volume mount is sharing the [Spark submit config file](./src/main/resources/conf/spark-conf.json)
-* The 2cd volume mount shares the LocalCatalog contents and other local application resources
-* The 3rd volume mount is the output location of the joined connection
+* Port 4040 is forwarded from the container to expose the Spark UI (for debugging).
+* The `BIGQUERY_CREDS_FILE` environment is the path to service account file in the container.
+* The first volume mount is sharing the [Spark submit config file](./src/main/resources/conf/spark-conf.json).
+* The second volume mount shares the LocalCatalog contents and other local application resources.
+* The third volume mount is the output location of the joined connection.
  
 The sink file can be found at `./main-app/build/tmp/test-data/sink-ds` after running the command.
 

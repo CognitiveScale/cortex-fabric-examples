@@ -1,10 +1,9 @@
 # Build Profiles
 
 This example is a CLI application for building Cortex Profiles. This builds off
-the [Local Clients](../local-clients/README.md) example for its setup 
-(see [ProfileSchemas](../local-clients/README.md#profile-schemas)).
+the [Local Clients](../local-clients/README.md) example for its setup.
 
-See [BuildProfile](./src/main/java/com/c12e/cortex/examples/profile/BuildProfile.java).
+(See [BuildProfile.java](./src/main/java/com/c12e/cortex/examples/profile/BuildProfile.java) for the source code.)
 
 ## Jobs
 
@@ -13,9 +12,11 @@ using pre-built Job flows for:
 - Ingesting a DataSource (`IngestDataSourceJob`)
 - Building Profiles (`BuildProfileJob`)
 
-These job flows provide existing functionality, similar to what happens when creating these resources in the Cortex Console.
+These job flows create Data Sources and Profiles similarly to how they are created in the Fabric Console. Building the
+resource using the Profiles SDK provides users with greater control of the ingestion process and the ability to
+incorporate additional computational functions.
 
-## Running Locally
+## Run Locally
 
 To run this example locally with local Cortex Clients:
 ```bash
@@ -92,9 +93,9 @@ computed and bucketed attributes.
 
 The built profiles will be saved at: `main-app/build/test-data/cortex-profiles/profiles/local/member-profile-delta`.
 
-## Running in a Docker Container with Spark-Submit
+## Run Locally in a Docker Container With Spark-Submit
 
-To run this example in a docker container with local Cortex clients (from the parent directory):
+To run this example in a Docker container with local Cortex clients (from the parent directory):
 ```
 $ make build create-app-image
 
@@ -147,10 +148,10 @@ Termination Reason:
 Exit Code: 0
 ```
 
-## Running locally against a Cortex Cluster
+## Run Locally Against a Cortex Cluster
 
 TODO.
 
-## Running as a Skill
+## Run as a Skill
 
 TODO.

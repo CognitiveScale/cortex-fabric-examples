@@ -29,7 +29,7 @@ public void createCortexSession(SparkSession sparkSession) {
 }
 ```
 
-See [SessionExample.java](src/main/java/com/c12e/cortex/examples/local/SessionExample.java) for an example.
+(See [SessionExample.java](src/main/java/com/c12e/cortex/examples/local/SessionExample.java) for the above example).
 
 ### Catalog
 
@@ -64,7 +64,7 @@ public void useCortexCatalog(CortexSession cortexSession) {
     catalog.saveDataSource(ds);
 }
 ```
-See [SessionExample.java](src/main/java/com/c12e/cortex/examples/local/SessionExample.java) for an example of the above.
+(See [CatalogExample.java](src/main/java/com/c12e/cortex/examples/local/CatalogExample.java) for the above example.)
 
 **NOTE**: While the Cortex Catalog is accessible from the `CortexSession`, it is not the entrypoint for reading and writing data!
 
@@ -81,13 +81,13 @@ See [join-connections](../join-connections/README.md) for an example of using Co
 
 #### Data Sources
 
-`DataSources` in the local Catalog are defined in [datasources.yml](../main-app/src/main/resources/spec/datasources.yml). There
-are 3 DataSources defined, each associated with a corresponding connection:
+Data Sources in the local Catalog are defined in [datasources.yml](../main-app/src/main/resources/spec/datasources.yml). There
+are 3 Data Sources defined, each associated with a corresponding connection:
 - member-base-ds
 - member-feedback-file-ds
 - member-flu-risk-file-ds
 
-See [datasource-refresh](../datasource-refresh/README.md) for an example of refreshing  a DataSource.
+See [datasource-refresh](../datasource-refresh/README.md) for an example of refreshing a Data Source.
 
 #### Profile Schemas
 
@@ -96,7 +96,7 @@ are 2 ProfileSchemas defined in the catalog:
 - `member-profile`, this `ProfileSchema` represents a member and is the result of joining the `member-base-ds` and `member-flu-risk-file-ds` DataSouces.
 - `member-profile-no-job`
 
-See [build-profiles](../build-profiles/README.md) for an example of using ProfileSchemas.
+See [build-profiles](../build-profiles/README.md) for an example of using Profile Schemas.
 
 ### Secrets
 
@@ -114,7 +114,8 @@ configuration options can be seen in the `spark-conf.json` files:
 The Secret Client is not intended to be accessed directly from the `CortexSession`. The specified implementation is used
 internally when using Connections.
 
-See [CustomSecretsClient.java](src/main/java/com/c12e/cortex/examples/local/CustomSecretsClient.java) for an example of the above.
+(See [CustomSecretsClient.java](src/main/java/com/c12e/cortex/examples/local/CustomSecretsClient.java) for an example of
+using Secrets.)
 
 ### Local Cortex Backend
 

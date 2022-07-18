@@ -1,9 +1,9 @@
 # Streaming Connections
 
-This example is contains a CLI application for refreshing a DataSource via streaming. This builds off
-the [Local Clients](../local-clients/README.md) example for its setup but uses a different set of Connections and DataSource for this example defined in [streaming-connections.yml](../main-app/src/main/resources/spec/streaming-connections.yml) and [streaming-datasource.yml](../main-app/src/main/resources/spec/streaming-datasources.yml) respectively.
+This example is contains a CLI application for refreshing a Data Source via streaming. This builds off
+the [Local Clients](../local-clients/README.md) example for its setup but uses a different set of Connections and Data Source for this example defined in [streaming-connections.yml](../main-app/src/main/resources/spec/streaming-connections.yml) and [streaming-datasource.yml](../main-app/src/main/resources/spec/streaming-datasources.yml) respectively.
 
-See [StreamDataSource.java](./src/main/java/com/c12e/cortex/examples/streaming/StreamingDataSource.java) for the full source.
+(See [StreamDataSource.java](./src/main/java/com/c12e/cortex/examples/streaming/StreamingDataSource.java) for the full source.)
 
 ## Prerequisites:
 
@@ -201,8 +201,8 @@ $ ./gradlew main-app:run --args="ds-streaming -p local -d member-base-s3-stream-
 ```
 
 **NOTE**: Because this is a running with a local Catalog and local filesystem as the Cortex backend, the result of
-the `member-base-s3-stream` DataSource will be written to a local
-DeltaTable (`../main-app/build/test-data/cortex-profiles/sources/local/member-base-s3-stream-write-delta/`) that does
+the `member-base-s3-stream` Data Source will be written to a local
+Delta Table (`../main-app/build/test-data/cortex-profiles/sources/local/member-base-s3-stream-write-delta/`) that does
 not exist prior to running.
 
 ## Running a Docker container with Spark-Submit
@@ -226,11 +226,11 @@ profiles-example submit_job.py "{ \"payload\" : { \"config\" : \"/app/conf/spark
 ```
 
 Notes:
-* The `$CORTEX_TOKEN` environment variable is required by the Spark Submit wrapper, and needs to be a valid JWT token. You can generate this via: `cortex configure token`
-* Port 4040 is forwarded from the container to expose the Spark UI (for debugging)
-* The 1st volume mount is sharing the [Spark submit config file](./src/main/resources/conf/spark-conf.json)
-* The 2cd volume mount shares the LocalCatalog contents and other local application resources
-* The 3rd volume mount is the output location of the joined connection
+* The `$CORTEX_TOKEN` environment variable is required by the Spark Submit wrapper, and needs to be a valid JWT token. You can generate this via: `cortex configure token`.
+* Port 4040 is forwarded from the container to expose the Spark UI (for debugging).
+* The first volume mount is sharing the [Spark submit config file](./src/main/resources/conf/spark-conf.json).
+* The second volume mount shares the LocalCatalog contents and other local application resources.
+* The third volume mount is the output location of the joined connection.
 
 ## Running locally against a Cortex Cluster
 

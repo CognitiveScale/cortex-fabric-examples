@@ -7,9 +7,10 @@ Configuration options will be specific to your use case and may depend on:
 - what resources are available in the target environment 
 - what you're use case is doing
 
+<-- TODO: General Spark configuration guidance (Spark UI, Debugging, metrics, fs performance)
 ## Spark Configuration Guidance
 
-TODO: General Spark configuration guidance (Spark UI, Debugging, metrics, fs performance)
+-->
 
 ### Local Development
 
@@ -18,7 +19,7 @@ When working locally it is useful to set:
 * `spark.cortex.catalog.local.dir` to the Local Catalog Directory
 * `spark.cortex.client.secrets.impl` to the local Secrets Client Implementation
 * `spark.cortex.proxy.impl` to a Guice MethodInterceptor implementation
-* `spark.cortex.storage.storageType` to `"file"` to use a local directory to mock Cortex Backend Storage
+* `spark.cortex.client.storage.impl` to `"com.c12e.cortex.profiles.client.InternalRemoteStorageClient"` to use a local directory to mock Cortex Backend Storage
 * `spark.cortex.storage.file.baseDir` to the base directory when working with a local directory
 
 Example usage of the above configuration options can be found [../local-clients](../local-clients/README.md).
