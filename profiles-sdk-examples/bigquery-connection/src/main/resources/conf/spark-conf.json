@@ -3,13 +3,13 @@
     "pyspark_bin": "bin/spark-submit",
     "app_command": [
       "bigquery",
-      "-p",
+      "--project",
       "local",
-      "-gp",
+      "--google-project",
       "fabric-qa",
-      "-t",
+      "--table",
       "bigquery-public-data.samples.shakespeare",
-      "-o",
+      "--output",
       "sink"
     ],
     "app_location": "local:///app/libs/app.jar",

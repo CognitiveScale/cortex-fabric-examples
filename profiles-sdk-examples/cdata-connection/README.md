@@ -47,7 +47,7 @@ $ export CDATA_OEM_KEY=...
 
 $ export CDATA_PRODUCT_CHECKSUM=...
 
-$ ./gradlew main-app:run --args="cdata -p local -i cdata-csv -o sink"
+$ ./gradlew main-app:run --args="cdata --project local --input cdata-csv --output sink"
 ```
 
 **NOTE**: This example is currently not working when running locally, because the Spark executors require a

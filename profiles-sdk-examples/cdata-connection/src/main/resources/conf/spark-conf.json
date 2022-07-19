@@ -3,11 +3,11 @@
     "pyspark_bin": "bin/spark-submit",
     "app_command": [
       "cdata",
-      "-p",
+      "--project",
       "local",
-      "-i",
+      "--input",
       "cdata-csv",
-      "-o",
+      "--output",
       "sink"
     ],
     "app_location": "local:///app/libs/app.jar",

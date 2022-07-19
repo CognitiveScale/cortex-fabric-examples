@@ -22,7 +22,7 @@ $ make build
 
 $ export BIGQUERY_CREDS_FILE=$(PWD)/main-app/src/main/resources/credentials/gcs-service-account.json
 
-$ ./gradlew main-app:run --args="cdata -p local -i cdata-csv -o sink"
+$ ./gradlew main-app:run --args="bigquery --project local --google-project fabric-qa --table bigquery-public-data.samples.shakespeare --output sink"
 ...
 
 (spark.databricks.delta.schema.autoMerge.enabled,true), (spark.cortex.catalog.local.dir,src/main/resources/spec), (spark.sql.warehouse.dir,file:/Users/laguirre/cortex/cortex-fabric-examples/profiles-sdk-examples/main-app/spark-warehouse)15:25:10.695 [main] INFO  c.g.c.s.b.d.DirectBigQueryRelation - |Querying table bigquery-public-data.samples.shakespeare, parameters sent from Spark:|requiredColumns=[word,word_count,corpus,corpus_date],|filters=[]

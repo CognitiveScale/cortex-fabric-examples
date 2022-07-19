@@ -11,7 +11,7 @@ To run this example locally with local Cortex clients:
 ```
 $ make clean build
 
-$ ./gradlew main-app:run --args="datasource-refresh -p local -d member-base-ds"
+$ ./gradlew main-app:run --args="datasource-refresh --project local --data-source member-base-ds"
 ```
 
 This will write the `member-base-ds` [Data Source](../local-clients/README.md#data-sources) to a local file.
@@ -115,9 +115,9 @@ deploying and invoking the skill.
     "pyspark_bin": "bin/spark-submit",
     "app_command": [
       "datasource-refresh",
-      "-p",
+      "--project",
       "testi-69257",
-      "-d",
+      "--data-source",
       "test-members"
     ],
     "app_location": "local:///app/libs/app.jar",

@@ -22,7 +22,7 @@ To run this example locally with local Cortex Clients:
 ```bash
 $ make build
 
-$ ./gradlew main-app:run --args="build-profile -p local -ps member-profile"
+$ ./gradlew main-app:run --args="build-profile --project local --profile-schema member-profile"
 16:23:37.979 [main] INFO  org.apache.spark.ui.SparkUI - Bound SparkUI to 0.0.0.0, and started at http://c02wq091htdf.attlocal.net:4040
 16:23:38.424 [main] INFO  o.s.j.server.handler.ContextHandler - Started o.s.j.s.ServletContextHandler@4cfa83f9{/metrics/json,null,AVAILABLE,@Spark}
 16:23:38.982 [main] INFO  o.s.j.server.handler.ContextHandler - Started o.s.j.s.ServletContextHandler@646cd766{/SQL,null,AVAILABLE,@Spark}

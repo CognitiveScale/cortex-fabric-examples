@@ -3,9 +3,9 @@
     "pyspark_bin": "bin/spark-submit",
     "app_command": [
       "ds-streaming",
-      "-p",
+      "--project",
       "local",
-      "-d",
+      "--data-source",
       "member-base-s3-stream-write"
     ],
     "app_location": "local:///app/libs/app.jar",

@@ -3,9 +3,9 @@
     "pyspark_bin": "bin/spark-submit",
     "app_command": [
       "build-profile",
-      "-p",
+      "--project",
       "local",
-      "-ps",
+      "--profile-schema",
       "member-profile"
     ],
     "app_location": "local:///app/libs/app.jar",

@@ -43,7 +43,7 @@ $ make clean build
 
 $ export STREAMING_SECRET_ENV=...
 
-$ ./gradlew main-app:run --args="ds-streaming -p local -d member-base-s3-stream-write"
+$ ./gradlew main-app:run --args="ds-streaming --project local --data-source member-base-s3-stream-write"
 
 > Task :main-app:run
 ...

@@ -3,9 +3,9 @@
     "pyspark_bin": "bin/spark-submit",
     "app_command": [
       "datasource-refresh",
-      "-p",
+      "--project",
       "local",
-      "-d",
+      "--data-source",
       "member-base-ds"
     ],
     "app_location": "local:///app/libs/app.jar",
