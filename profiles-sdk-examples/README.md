@@ -17,55 +17,55 @@ These examples are structured in step-by-step way to display the array of usages
 
 ## Overview
 
+![Cortex Profiles SDK Component Diagram](docs/profiles-sdk-components.svg)
+
+<!-- Component diagram is still experimental and not viewable on Github, hence using an SVG.
 ```mermaid
- C4Component
-    title Component diagram for Cortex Profiles SDK (in a Skill)
+C4Component
+   title Component diagram for Cortex Profiles SDK (in a Skill)
+   System_Boundary(cortex, "Cortex Cluster - DCI") {
+       Container(api, "Cortex Phoenix API Server", "Kotlin/Spring", "Exposes access to Cortex Catalog, Cortex Secrets")
 
-    System_Boundary(cortex, "Cortex Cluster - DCI") {
-        Container(api, "Cortex Phoenix API Server", "Kotlin/Spring", "Exposes access to Cortex Catalog, Cortex Secrets")
+       %% Not sure if this should be Container or SystemDB
+       SystemDb(minio, "Cortex Remote Storage", "Remote Storage for Managed Content, Profiles, and Campaigns data. One of: S3/GCS/Minio")
+   }
+   System_Boundary(local, "Local Machine") {
+       Person(dev, "Developer", "Skill Developer")
+   }
+   Container_Boundary(app, "Application (skill)") {
+       Boundary(sdk, "Cortex Profiles SDK", "CortexSession") {
+       Component(config, "Spark Based Configuration ", "Java/Kotlin lib", "Provides a dependency injected platform that allows for process, module, and environment specific customization")
+       Component(secrets, "Cortex Secrets Client", "HTTP Client", "Allows users to access Cortex Secrets")
+       Component(catalog, "Cortex Catalog Client", "HTTP Client", "Allows users to access registry of Agents, Skills, Types, Connections, Data Sources, Profiles, Campaigns")
+       Component(storage, "Remote Storage Management", "Java/Kotlin", "Allows users to access Cortex remote storage for Managed Content, Profiles Related Data, Campaigns")
+       Boundary(module, "Cortex Profiles Module", "Core Profiles Engine Library") {
+           Component(spark, "Spark Invocation Mapper", "Java/Kotlin", "Maps invocations of Cortex Profiles API to the Spark API - read, write, readStream, writeStream")
+           Component(process, "Job Flows", "Java/Kotlin", "Provides full configuration of Cortex Phoenix job flows - buidling profiles, ingesting data sources")
+           Component(validation, "Validator", "Java", "Custom validation points for post write, post read, etc.")
+       }
 
-        %% Not sure if this should be Container or SystemDB
-        SystemDb(minio, "Cortex Remote Storage", "Remote Storage for Managed Content, Profiles, and Campaigns data. One of: S3/GCS/Minio")
-    }
+       BiRel(catalog, api, "Reads from & writes to", "HTTP/GraphQL")
+       UpdateRelStyle(catalog, api, $offsetX="10", $offsetY="10")
 
-    System_Boundary(local, "Local Machine") {
-        Person(dev, "Developer", "Skill Developer")
-    }
+       Rel(storage, api, "Uses")
+       UpdateRelStyle(storage, api, $offsetX="80", $offsetY="10")
 
-    Container_Boundary(app, "Application (skill)") {
-        Boundary(sdk, "Cortex Profiles SDK", "CortexSession") {
-        Component(config, "Spark Based Configuration ", "Java/Kotlin lib", "Provides a dependency injected platform that allows for process, module, and environment specific customization")
-        Component(secrets, "Cortex Secrets Client", "HTTP Client", "Allows users to access Cortex Secrets")
-        Component(catalog, "Cortex Catalog Client", "HTTP Client", "Allows users to access registry of Agents, Skills, Types, Connections, Data Sources, Profiles, Campaigns")
-        Component(storage, "Remote Storage Management", "Java/Kotlin", "Allows users to access Cortex remote storage for Managed Content, Profiles Related Data, Campaigns")
-        Boundary(module, "Cortex Profiles Module", "Core Profiles Engine Library") {
-            Component(spark, "Spark Invocation Mapper", "Java/Kotlin", "Maps invocations of Cortex Profiles API to the Spark API - read, write, readStream, writeStream")
-            Component(process, "Job Flows", "Java/Kotlin", "Provides full configuration of Cortex Phoenix job flows - buidling profiles, ingesting data sources")
-            Component(validation, "Validator", "Java", "Custom validation points for post write, post read, etc.")
-        }
+       Rel(api, secrets, "Reads from")
+       UpdateRelStyle(api, secrets, $offsetX="-20", $offsetY="10")
 
-        BiRel(catalog, api, "Reads from & writes to", "HTTP/GraphQL")
-        UpdateRelStyle(catalog, api, $offsetX="10", $offsetY="10")
+       BiRel(storage, minio, "Reads & Writes to")
 
-        Rel(storage, api, "Uses")
-        UpdateRelStyle(storage, api, $offsetX="80", $offsetY="10")
+       Rel(dev, config, "Skill invoke - Spark config")
+       UpdateRelStyle(dev, config, $offsetY="20")
 
-        Rel(api, secrets, "Reads from")
-        UpdateRelStyle(api, secrets, $offsetX="-20", $offsetY="10")
-
-        BiRel(storage, minio, "Reads & Writes to")
-
-        Rel(dev, config, "Skill invoke - Spark config")
-        UpdateRelStyle(dev, config, $offsetY="20")
-
-        %% Skipping this component for now -> no auto check
-        %%Component(version, "Version Management", "Java/Kotlin", "Provides a version compatibility check with Platform dependencies - Spark, Haddoop, Cortex Cluster")
-        }
-    }
-
-    %% Set Layout, avoid multiple boundaries in a row
-    UpdateLayoutConfig($c4ShapeInRow="4", $c4BoundaryInRow="1")
+       %% Skipping this component for now -> no auto check
+       %%Component(version, "Version Management", "Java/Kotlin", "Provides a version compatibility check with Platform dependencies - Spark, Haddoop, Cortex Cluster")
+       }
+   }
+   %% Set Layout, avoid multiple boundaries in a row
+   UpdateLayoutConfig($c4ShapeInRow="4", $c4BoundaryInRow="1")
 ```
+-->
 
 The core of the Profiles SDK is a library that exposes an interface to Cortex for utilizing Spark for custom processing
 of Profile related data. The entrypoint to the Profiles SDK is the `CortexSession`, a session based API around Spark and the `SparkSession`.
