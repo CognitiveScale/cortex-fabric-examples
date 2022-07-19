@@ -2,10 +2,10 @@
 
 Cortex configuration properties can be specified in the [Spark Configurations](https://spark.apache.org/docs/latest/index.html).
 
-Configuration options will be specific to your use case and may depend on:
-- how/where you intend to run your application
-- what resources are available in the target environment 
-- what you're use case is doing
+Configuration options are specific to your use case and may depend on:
+- How/where you intend to run your application?
+- What resources are available in the target environment?
+- What your use case is?
 
 <-- TODO: General Spark configuration guidance (Spark UI, Debugging, metrics, fs performance)
 ## Spark Configuration Guidance
@@ -15,16 +15,16 @@ Configuration options will be specific to your use case and may depend on:
 ### Local Development
 
 When working locally it is useful to set:
-* `spark.cortex.catalog.impl` to the Local Catalog implementation
-* `spark.cortex.catalog.local.dir` to the Local Catalog Directory
-* `spark.cortex.client.secrets.impl` to the local Secrets Client Implementation
-* `spark.cortex.proxy.impl` to a Guice MethodInterceptor implementation
-* `spark.cortex.client.storage.impl` to `"com.c12e.cortex.profiles.client.InternalRemoteStorageClient"` to use a local directory to mock Cortex Backend Storage
-* `spark.cortex.storage.file.baseDir` to the base directory when working with a local directory
+* `spark.cortex.catalog.impl` to the local Catalog implementation.
+* `spark.cortex.catalog.local.dir` to the local Catalog directory.
+* `spark.cortex.client.secrets.impl` to the local Secrets Client implementation.
+* `spark.cortex.proxy.impl` to a Guice `MethodInterceptor` implementation.
+* `spark.cortex.client.storage.impl` to `"com.c12e.cortex.profiles.client.InternalRemoteStorageClient"` to use a local directory to mock Cortex backend storage.
+* `spark.cortex.storage.file.baseDir` to the base directory when working with a local directory.
 
-Example usage of the above configuration options can be found [../local-clients](../local-clients/README.md).
+Example usage of the above configuration options can be found at [../local-clients](../local-clients/README.md).
 
-### Using a remote Catalog
+### Use a Remote Catalog
 
 When running outside the cluster, set:
 * `spark.cortex.client.phoenix.url`
@@ -32,25 +32,24 @@ When running outside the cluster, set:
 
 ### Cortex Backend Storage 
 
-* Set `spark.cortex.client.storage.impl` to set the client implementation you will be
-  using <!-- TODO: config not in table -->
-* If using the local Remote Storage client implementation, then set `spark.cortex.storage.storageType` to `file` and
+* Set `spark.cortex.client.storage.impl` to set the client implementation you are  using. <!-- TODO: config not in table -->
+* If using the local remote storage client implementation, then set `spark.cortex.storage.storageType` to `file` and
   update `spark.cortex.storage.file.baseDir` to the base directory in the local filesystem. You can optionally configure
-  the bucket names (local file path) used
+  the bucket names to refer to a specific file path:
   - `spark.cortex.storage.bucket.managedContent`
   - `spark.cortex.storage.bucket.profiles`
   - `spark.cortex.storage.bucket.amp`
-  * If using the default (in-cluster) Remote Storage Client implementation, then configuration options for remote storage
-  will be provided by the cluster and **need not be set**. Configuration options prefixed with `spark.cortex.storage`
+  * If using the default (in-cluster) remote storage client implementation, then configuration options for remote storage
+  are provided by the cluster and **need not be set**. Configuration options prefixed with `spark.cortex.storage`
   can override values provided by the client implementation.
 
-Hierarchy for loading Storage Configuration options (least to most priority)
-* Values provided by Storage Client Implementation
-* Spark Configuration Properties
-* Environment Variables (see table below)
-* Programmatic Configuration Overrides
+The hierarchy for loading Storage Configuration options (least to most priority)
+* Values provided by the storage client implementation
+* Spark configuration properties
+* Environment variables (see table below)
+* Programmatic configuration overrides
 
-Example: If a user has a Spark Configuration file with the following options and no configuration options are set programmatically.
+**Example**: Assume a user has a Spark configuration file with the following options, and no configuration options are set programmatically:
 ```json
 {
   "spark.cortex.client.storage.impl": "com.c12e.cortex.profiles.client.InternalRemoteStorageClient",
@@ -69,14 +68,14 @@ Example: If a user has a Spark Configuration file with the following options and
 }
 ```
 
-The in-cluster [remote storage client](backendstorage.md#remote-storage-client) will be used, but instead of using the
-clusters remote storage, the SDK would use `s3` compatible storage hosted at `"https://minio.example.com"` using the
+The in-cluster [remote storage client](backendstorage.md#remote-storage-client) is used, but instead of using the
+clusters remote storage, the SDK uses `s3` compatible storage hosted at `"https://minio.example.com"` with the
 given access keys. This is because the S3 related environment variables are overriding the option set via configuration
 properties (`spark.cortex.storage.storageType`), as well as the values provided by the client implementation.
 
 ## Cortex Config options
 
-Below is a full table of options (examples are defaults).
+Below is a table of configuration options. Examples are defaults.
 
 Cortex Config Options:
 

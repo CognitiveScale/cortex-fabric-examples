@@ -121,9 +121,9 @@ in [cdata-connections.yml](../main-app/src/main/resources/spec/cdata-connections
 
 The sink file can be found at `./main-app/build/tmp/test-data/sink-ds` after running the command.
 
-## Run Locally in a Docker Container with Spark-Submit
+## Run Locally in a Docker Container With Spark-submit
 
-To run this example in a docker container with local Cortex clients (from the parent directory):
+To run this example in a Docker container with local Cortex clients (from the parent directory):
 ```
 $ make clean build create-app-image
 
@@ -226,7 +226,7 @@ at `./main-app/build/tmp/test-data/sink-ds` after running the command.
 
 Notes:
 * Port 4040 is forwarded from the container to expose the Spark UI (for debugging).
-* The first volume mount is sharing the [Spark submit config file](./src/main/resources/conf/spark-conf.json).
+* The first volume mount is sharing the [spark-submit config file](./src/main/resources/conf/spark-conf.json).
 * The second volume mount shares the LocalCatalog contents and other local application resources.
 * The third volume mount is the output location of the joined connection.
 

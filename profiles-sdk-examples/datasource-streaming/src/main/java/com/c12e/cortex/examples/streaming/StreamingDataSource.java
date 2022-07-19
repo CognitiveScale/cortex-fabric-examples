@@ -31,14 +31,14 @@ import java.util.concurrent.TimeoutException;
 import com.c12e.cortex.examples.local.SessionExample;
 
 /**
- * Example CLI application that refreshes a DataSource via streaming (reading and writing).
+ * Example CLI application that refreshes a Data Source via streaming (reading and writing).
  */
-@Command(name = "ds-streaming", description = "Example Streaming DataSource", mixinStandardHelpOptions = true)
+@Command(name = "ds-streaming", description = "Example Streaming Data Source", mixinStandardHelpOptions = true)
 public class StreamingDataSource implements Runnable {
     @Option(names = {"-p", "--project"}, description = "Project to use", required = true)
     String project;
 
-    @Option(names = {"-d", "--data-source"}, description = "DataSource Name", required = true)
+    @Option(names = {"-d", "--data-source"}, description = "Data Source Name", required = true)
     String dataSourceName;
 
     Logger logger = LoggerFactory.getLogger(StreamingDataSource.class);
@@ -58,18 +58,18 @@ public class StreamingDataSource implements Runnable {
         TestStreamQueryListener queryListener = new TestStreamQueryListener(session);
         session.streams().addListener(queryListener);
 
-        // Get the DataSource from the Catalog. This is done to get a back-reference to the underlying Connection
+        // Get the Data Source from the Catalog. This is done to get a back-reference to the underlying Connection
         DataSource dataSource = cortexSession.catalog().getDataSource(project, dataSourceName);
 
-        // Read (stream) the DataSource. This returns a CortexDataSourcePair, which holds a static and streaming
-        // representation of the DataSource.
+        // Read (stream) the Data Source. This returns a CortexDataSourcePair, which holds a static and streaming
+        // representation of the Data Source.
         CortexDataSourcePair dsPair = cortexSession.readStream().readConnection(project, dataSource.getConnection().getName()).load();
 
-        // Log information about the
+        // Log information about static sample
         Dataset<Row> staticDf = dsPair.getStaticDf();
         logger.info("Static dataframe has {} rows", staticDf.count());
 
-        // Write (stream) the DataSource. Here we
+        // Write (stream) the Data Source. Skip performing aggregation on micro-batches when writing the Data Source.
         logger.info("Starting stream");
         CortexDataSourceStreamWriter writer = cortexSession.writeStream()
                 .writeDataSource(dsPair, project, dataSourceName)
@@ -82,7 +82,7 @@ public class StreamingDataSource implements Runnable {
         // Don't perform groupBy on micro-batch.
         writer.performAggregation(false);
 
-        // supported modes
+        // Perform a Delta Table merge when writing the data.
         writer.deltaMerge(CortexDeltaMergeBuilder.getInstance());
         //writer.mode(SaveMode.Overwrite);
         //writer.mode(SaveMode.Append);

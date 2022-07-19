@@ -1,24 +1,12 @@
 # Internal Developer Notes
 
-## Recommended JVM Settings
-
-These can also be set/controlled through the `~/.gradle/gradle.properties` file that needs to be setup.
-```
-export GRADLE_OPTS="-Dorg.gradle.jvmargs='-Xmx2g -XX:MaxMetaspaceSize=512m -XX:+UseG1GC -XX:+UseStringDeduplication -XX:+OptimizeStringConcat'"
-```
-
-## JFrog Artifactory Setup
-
-1. Java 11 (use Openjdk, see the link in [Resources](../README.md#resources) section)
-1. JFrog Artifactory credentials (shared in LastPass with everyone in `Shared-Engineering` folder)
-1. Install IntelliJ IDEA with the latest Kotlin plugin enabled ([Intellij IDEA](https://www.jetbrains.com/idea/))
-1. Put JFrog Artifactory credentials in `$USER_HOME/.gradle/gradle.properties` file. See `gradle.properties.template` for instructions. 
-
+## Prerequisites
+* Set the [recommended JVM settings](../README.md#recommended-jvm-settings).
+* Follow the [JFrog Artifactory setup](../README.md#jfrog-artifactory-setup).
 
 ## Local Developer Setup
-
-To work with a locally built Profiles SDK JAR **in a container** you put built profiles-sdk jar in
-`main-app/src/main/resources/lib/` to override the version used in the docker container (by the spark executors).
+To work with a locally built Profiles SDK JAR **in a container** put the built Profiles SDK jar file in
+`main-app/src/main/resources/lib/` to override the version used in the Docker container by the Spark executors.
 
 If you have built `distro` jar w/ the SDK and all dependencies, you can update `build.gradle.kts`, from:
 
@@ -41,7 +29,7 @@ dependencies {
 }
 ```
 
-## Checking all manual links (should be automated)
+## Check Manual Links (Should be automated)
 
 Would be nice to automate testing of links as part of unit testing, but couldn't find packages in Java. I've manually used npm packages (both don't work perfectly out of the box):
 - https://github.com/webhintio/markdown-link-validator
@@ -52,9 +40,9 @@ Would be nice to automate testing of links as part of unit testing, but couldn't
 #### Secret does not exist
 
 When a secret does not exist then check:
-- which Secret Client is being used
-- If using a `LocalSecretClient` subclass, then check said implementation (java file) includes the secret
-- If using the Remote client, then check the Cortex Console or Cortex CLI to see if the secret exists
+- Which Secret Client is being used.
+- If using a `LocalSecretClient` subclass, then check said implementation (java file) includes the secret.
+- If using the Remote client, then check the Cortex Console or Cortex CLI to see if the secret exists.
 
 ```
 ...
@@ -100,17 +88,17 @@ Exit Code: 0
 
 #### Skill stays in ACTIVE state
 
-* If the entrypoint for the Docker container is not `scuttle`, then Skill activation (Task) will stay `ACTIVE`.
-  Additionally, the Spark Driver Pod will not exit because of the istio-proxy continues (this is only viewable with
-  Kubernetes access). This can happen if you build the Skill template using a Dockerfile/Docker Image meant to be run
-  locally. You will need to delete the corresponding task (`cortex task delete`), and manually delete the Pod.
+* If the entrypoint for the Docker container is not `scuttle`, then Skill activation (Task) stays `ACTIVE`.
+  Additionally, the Spark Driver Pod will not exit because the Istio-proxy continues running (This is only viewable with
+  Kubernetes access). This can happen if you build the Skill template using a Dockerfile/Docker image meant to be run
+  locally. You must delete the corresponding Task (`cortex task delete`), and manually delete the Pod.
 
 #### Guice Injection Errors
 
-If you see a NullPointerException, ClassNotFoundException, or Guice DI related exception then double check that ALL
-configuration options are set correctly and refer to the configuration options.
+If you see a `NullPointerException`, `ClassNotFoundException`, or Guice DI related exception then double check that ALL
+configuration options are set correctly, and refer to the configuration options.
 
-Usually the result of misconfiguration, ex:
+Usually the result of misconfiguration or a class path issue, ex:
 ```
 com.google.inject.ProvisionException: Unable to provision, see the following errors:
 
@@ -195,7 +183,7 @@ Table of which example flows have been fully documented:
 | [bigquery-connection](../bigquery-connection/README.md)   | [x]                                                  | [x]                      | [ ]                                                                    | [ ]                                                                       | [ ]                                                   |
 
 Notes:
-* It is also possible to run with a non-local Spark Session, but not including that as it requires kube access and not practical for a lot of users.
+* It is also possible to run with a non-local Spark Session, but not including that as it requires Kubernetes access and not practical for a lot of users.
 
 ## TODOs
 * additional unit tests

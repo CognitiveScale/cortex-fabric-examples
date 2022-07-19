@@ -9,7 +9,7 @@ the [Local Clients](../local-clients/README.md) example for its setup.
 
 This example builds Profiles for the `member-profile` [Profile Schema](../local-clients/README.md#profile-schemas) by
 using pre-built Job flows for:
-- Ingesting a DataSource (`IngestDataSourceJob`)
+- Ingesting a Data Source (`IngestDataSourceJob`)
 - Building Profiles (`BuildProfileJob`)
 
 These job flows create Data Sources and Profiles similarly to how they are created in the Fabric Console. Building the
@@ -93,7 +93,7 @@ computed and bucketed attributes.
 
 The built profiles will be saved at: `main-app/build/test-data/cortex-profiles/profiles/local/member-profile-delta`.
 
-## Run Locally in a Docker Container With Spark-Submit
+## Run Locally in a Docker Container With Spark-submit
 
 To run this example in a Docker container with local Cortex clients (from the parent directory):
 ```

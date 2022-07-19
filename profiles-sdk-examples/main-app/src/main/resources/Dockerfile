@@ -9,7 +9,7 @@ RUN pip3 install -r requirements.txt
 
 COPY ./libs/main-app-1.0.0-SNAPSHOT.jar /app/libs/app.jar
 
-# Include the application in Spark Jars so app source is in the classpath of these jars, otherwise Config based
+# Include the application in Spark Jars, so app source is in the classpath of these jars, otherwise config-based
 # implementation injection will raise a ClassNotFoundException for modules in the app.
 COPY ./libs/main-app-1.0.0-SNAPSHOT.jar /opt/spark/jars
 

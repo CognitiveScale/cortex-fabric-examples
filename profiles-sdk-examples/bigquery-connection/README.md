@@ -1,16 +1,16 @@
 # Reading from BigQuery
 
-This example is a CLI application that writes data from a Google BigQuery to the location of a Cortex Connection. This
-builds off the [Local Clients](../local-clients/README.md) example for its initial setup.
+This example is a CLI application that writes data from a Google BigQuery Table to the location of a Cortex Connection.
+This builds off the [Local Clients](../local-clients/README.md) example for its initial setup.
 
 (See [BigQuery.java](./src/main/java/com/c12e/cortex/examples/bigquery/BigQuery.java) for the source code.)
 
 ## Prerequisites
 
-* Download the [BigQuery Spark connector](https://repo1.maven.org/maven2/com/google/cloud/spark/spark-bigquery-with-dependencies_2.12/0.25.0/spark-bigquery-with-dependencies_2.12-0.25.0.jar)
-  and save the file in [../main-ap/src/main/resources/lib/](../main-app/src/main/resources/lib/).
 * The BigQuery Spark Connector is a required dependency to run this
-  example (`com.google.cloud.spark:spark-bigquery-with-dependencies_2.12:0.25.0`).
+  example (`com.google.cloud.spark:spark-bigquery-with-dependencies_2.12:0.25.0`). Download
+  the [BigQuery Spark connector](https://repo1.maven.org/maven2/com/google/cloud/spark/spark-bigquery-with-dependencies_2.12/0.25.0/spark-bigquery-with-dependencies_2.12-0.25.0.jar)
+  and save the file in [../main-ap/src/main/resources/lib/](../main-app/src/main/resources/lib/).
 * Get a GCP Service Account JSON as described in: https://docs.google.com/document/d/1T1u8RMZhDYMIXHk7v3lLF2rzag7xLTr5CLHC-49UiYU/edit#heading=h.756ioo8pxy08.
   Save this file in `profiles-examples/main-app/src/main/resources/credentials` for future use (e.g. `gcs-service-account.json`).
 
@@ -52,7 +52,12 @@ See https://docs.gradle.org/7.4/userguide/command_line_interface.html#sec:comman
 BUILD SUCCESSFUL in 21s
 ```
 
-## Run Locally in a Docker Container With Spark-Submit
+
+The sink connection is defined in the [cdata-connections.yml](../main-app/src/main/resources/spec/cdata-connections.yml) file,
+and can be found at `./main-app/build/tmp/test-data/sink-ds` after running the command. The above example is writing
+data to the Connection from a [BigQuery Sample table](https://cloud.google.com/bigquery/public-data#sample_tables).
+
+## Run Locally in a Docker Container With Spark-submit
 
 To run this example in a Docker container with local Cortex clients (from the parent directory):
 ```
@@ -60,7 +65,7 @@ $ make build create-app-image
 
 $ export CORTEX_TOKEN=...
 
-# directory is in docker container
+# directory is in Docker container
 $ export BIGQUERY_CREDS_FILE=/opt/spark/work-dir/src/main/resources/credentials/gcs-service-account.json
 
 $ docker run -p 4040:4040 \
@@ -94,14 +99,12 @@ Termination Reason:
 Exit Code: 0
 ```
 
-Notes:
+NOTES:
 * Port 4040 is forwarded from the container to expose the Spark UI (for debugging).
-* The `BIGQUERY_CREDS_FILE` environment is the path to service account file in the container.
-* The first volume mount is sharing the [Spark submit config file](./src/main/resources/conf/spark-conf.json).
+* The `BIGQUERY_CREDS_FILE` environment variable is the path to the GCP Service Account JSON file in the container.
+* The first volume mount is sharing the [Spark-submit config file](./src/main/resources/conf/spark-conf.json).
 * The second volume mount shares the LocalCatalog contents and other local application resources.
 * The third volume mount is the output location of the joined connection.
  
-The sink file can be found at `./main-app/build/tmp/test-data/sink-ds` after running the command.
-
-**NOTE:** The sink connection is defined in the [cdata-connections.yml](../main-app/src/main/resources/spec/cdata-connections.yml) file, and the above
-is using a [BigQuery Sample table](https://cloud.google.com/bigquery/public-data#sample_tables).
+The sink connection is defined in the [cdata-connections.yml](../main-app/src/main/resources/spec/cdata-connections.yml) file,
+and can be found at `./main-app/build/tmp/test-data/sink-ds` after running the command.

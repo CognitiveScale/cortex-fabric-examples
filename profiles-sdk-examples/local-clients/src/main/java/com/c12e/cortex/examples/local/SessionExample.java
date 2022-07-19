@@ -9,20 +9,33 @@ import org.apache.spark.sql.SparkSession;
 import java.util.HashMap;
 import java.util.Map;
 
+
+/**
+ * Class providing a CortexSession.
+ */
 public class SessionExample {
+
+    private static final String SPARK_HOME = "SPARK_HOME";
+    private static boolean shouldUseDefaultOptions() {
+        // Use the SPARK_HOME env variable as a proxy for whether this is running in-cluster or locally, and
+        // whether to load spark-submit config file. (Guarding against missing config file & required properties).
+        return System.getenv(SPARK_HOME) == null;
+    }
 
     protected Map<String, String> getDefaultOptions() {
         var options = new HashMap<>(Map.of(
                 // Use local catalog implementation
                 CortexSession.CATALOG_KEY, LocalCatalog.class.getName(),
-                CortexSession.LOCAL_CATALOG_DIR_KEY,  "src/main/resources/spec",
+                CortexSession.LOCAL_CATALOG_DIR_KEY, "src/main/resources/spec",
 
                 // Use a local secret client implementation
                 CortexSession.SECRETS_CLIENT_KEY, CustomSecretsClient.class.getName(),
 
-                // Set the Backend Storage Client implementation
+                // Set the Storage Client implementation
                 CortexSession.STORAGE_CLIENT_KEY, LocalRemoteStorageClient.class.getName()
         ));
+
+        // Default options for these examples.
         options.put("spark.ui.enabled", "true");
         options.put("spark.ui.prometheus.enabled", "true");
         options.put("spark.delta.logStore.gs.impl", "io.delta.storage.GCSLogStore");
@@ -58,10 +71,6 @@ public class SessionExample {
                 .getOrCreate();
     }
 
-    public SparkSession sparkSessionWithDefaultOptions() {
-        return sparkSessionWithOptions(getDefaultOptions());
-    }
-
     public SparkSession sparkSessionWithOptions(Map<String, String> options) {
         SparkConf sparkConf = new SparkConf();
         options.forEach((k, v) -> sparkConf.set(k, v));
@@ -71,21 +80,19 @@ public class SessionExample {
                 .getOrCreate();
     }
 
+    public SparkSession sparkSessionWithDefaultOptions() {
+        return sparkSessionWithOptions(getDefaultOptions());
+    }
+
     public CortexSession getCortexSession() {
-        // Use the SPARK_HOME env variable as a proxy for whether this is running in-cluster or locally, and
-        // whether to load spark submit config file. (Guarding against missing config file & required properties).
-        boolean useDefaultOptions = System.getenv("SPARK_HOME") == null;
-        if (useDefaultOptions) {
+        if (shouldUseDefaultOptions()) {
             return CortexSession.newSession(sparkSessionWithDefaultOptions(), getDefaultOptions());
         }
         return CortexSession.newSession(sparkSessionFromConfig());
     }
 
     public CortexSession getCortexSessionWithOverrides(Map<String, String> overrides) {
-        // Use the SPARK_HOME env variable as a proxy for whether this is running in-cluster or locally, and
-        // whether to load spark submit config file. (Guarding against missing config file & required properties).
-        boolean useDefaultOptions = System.getenv("SPARK_HOME") == null;
-        if (useDefaultOptions) {
+        if (shouldUseDefaultOptions()) {
             var options = new HashMap<>(getDefaultOptions());
             options.putAll(overrides);
             return CortexSession.newSession(sparkSessionWithOptions(options), options);

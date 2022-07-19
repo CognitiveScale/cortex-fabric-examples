@@ -14,9 +14,9 @@ Base Interface: `com.c12e.cortex.profiles.client.CortexRemoteStorageClient`
 
 ## Remote Storage Client
 
-By default, the Profiles SDK (`CortexSession`) will utilize a Remote Storage client to get
+By default, the Profiles SDK (`CortexSession`) utilizes a remote storage client to get
 the [bucket configuration](../docs/config.md#cortex-backend-storage) for the Cortex Fabric cluster. This is such that
-deployed Agents containing your application will be able to access Managed Content and Profile Data.
+deployed Agents containing your application will be able to access Managed Content and Profile data.
 
 **This implementation will not work when running outside the cluster**. <!-- TODO: Show error when using it outside the cluster? -->
 
@@ -28,7 +28,7 @@ The remote client implementation requires setting:
 * The Cortex API endpoint to be specified (`https://api.<dci-base-domain>`) - `spark.cortex.client.phoenix.url`.
 * A Cortex API Token - `spark.cortex.client.phoenix.token`.
 
-The Spark-Submit configuration options should include:
+The Spark-submit configuration options should include:
 ```json
 {
   "spark.cortex.client.storage.impl": "com.c12e.cortex.profiles.client.InternalRemoteStorageClient",
@@ -36,16 +36,16 @@ The Spark-Submit configuration options should include:
 }
 ```
 
-(Note: The Cortex API token referenced above is NOT set in the configuration file.)
+**NOTE**: The Cortex API token referenced above is NOT set in the configuration file.
 
 Additional [configuration properties](./config.md#cortex-backend-storage) can be set to override which remote storage is
-used by the SDK. When packaged in an Agent, no additional configuration options need be set.
+used by the SDK. When packaged in an Agent, no additional configuration options need to be set.
 
-## Local Remote Storage Client
+## Local Storage Client
 
 The Profiles SDK supports configuring a local filesystem as the backend Cortex Storage. This is useful when working
 outside the cluster, but may require additional setup because there is no starting data for Managed Content, Profiles,
-Campaigns, etc.
+or Campaigns.
 
 Implementation: `com.c12e.cortex.profiles.client.LocalRemoteStorageClient` <!-- TODO: Link to javadoc -->
 
@@ -53,7 +53,7 @@ Implementation: `com.c12e.cortex.profiles.client.LocalRemoteStorageClient` <!-- 
 
 The local client implementation requires setting the base directory for the file implementation - `spark.cortex.storage.file.baseDir`.
 
-The Spark-Submit [configuration options](./config.md#cortex-backend-storage) should look similar to:
+The Spark-submit [configuration options](./config.md#cortex-backend-storage) should look similar to:
 ```json
 {
   "spark.cortex.client.storage.impl": "com.c12e.cortex.profiles.client.LocalRemoteStorageClient",
@@ -65,7 +65,7 @@ The Spark-Submit [configuration options](./config.md#cortex-backend-storage) sho
 ```
 
 Note that the base directory can be configured and that the storage buckets are optional. The above example
-will configure the Profiles SDK be use the local filesystem at:
+configures the Profiles SDK be use the local filesystem at:
 - `/tmp/local-data/cortex-content`
 - `/tmp/local-data/cortex-profiles`
 - `/tmp/local-data/cortex-amp`

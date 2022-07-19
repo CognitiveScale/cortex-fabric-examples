@@ -5,7 +5,7 @@
 
 The Profiles SDK includes a client for the Cortex Catalog that utilizes
 the [Cortex Fabric GraphQL API](https://cognitivescale.github.io/cortex-fabric/docs/reference-guides/apis/#graphql-api).
-Deployed Agents will interact with the actual Cortex Catalog instance. The Profiles SDK includes a local
+Deployed Agents interacts with the Cortex Catalog instance. The Profiles SDK includes a local
 implementation of the Catalog that may be easier to use during development.
 
 Base Interface: `com.c12e.cortex.phoenix.Catalog` <!-- TODO: Link to javadoc -->

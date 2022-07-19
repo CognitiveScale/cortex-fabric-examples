@@ -2,28 +2,29 @@
 
 This example is intended to introduce working with the Cortex Profiles SDK in local development environment. This
 example specifically introduces:
-- creating a `CortexSession` with [Spark](https://spark.apache.org/docs/latest/index.html) in local mode
-- using a local [Cortex Catalog](../docs/catalog.md)
-- using a local [Cortex Secret Client](../docs/secrets.md)
-- loading Cortex configuration properties from a Spark Config file
+- Creating a `CortexSession` with [Spark](https://spark.apache.org/docs/latest/index.html) in local mode.
+- Using a local [Cortex Catalog](../docs/catalog.md).
+- Using a local [Cortex Secret Client](../docs/secrets.md).
+- Using a local [Remote Storage Client](../docs/backendstorage.md).
+- Loading Cortex configuration properties from a Spark Config file and from programatically.
 
 ## Introduction
 
-The entrypoint to the Profiles SDK is the `CortexSession`, a session based API around Spark and the `SparkSession`.
+The entrypoint to the Profiles SDK is the `CortexSession`, a session-based API around Spark and the `SparkSession`.
 The `CortexSession` can be created via a static factory method after having initialized a `SparkSession`. Configuration
-options will be taken from the provided `SparkSession` and can also be overridden, e.g.
+options are taken from the provided `SparkSession` and can also be overridden, for example
 ```java
 public void createCortexSession(SparkSession sparkSession) {
-    // create the session
+    // Create the session using options taken from the SparkSession
     CortexSession session = CortexSession.newSession(sparkSession);
 
-    // create the session and apply properties programmatically
+    // Create the session and apply properties programmatically
     CortexSession alternativeSession = CortexSession.newSession(sparkSession, Map.of(
-        "spark.cortex.catalog.impl", "com.c12e.cortex.phoenix.LocalCatalog",
+        // The '.getName()' method is useful for setting a class implementation.
+        "spark.cortex.catalog.impl", LocalCatalog.class.getName(),
         "spark.cortex.catalog.local.dir",  "src/main/resources/spec",
 
-        // a static variable is used for the secret client implementation key
-        // the '.getName()' method is useful for setting an implementation value
+        // A static variable is used for the Secret client implementation key.
         CortexSession.SECRETS_CLIENT_KEY, CustomSecretClient.class.getName()
         ));
 }
@@ -35,7 +36,7 @@ public void createCortexSession(SparkSession sparkSession) {
 
 The application is configured to use a local Cortex Catalog with the catalog directory pointing to `spec/` in
 the [application resources](../main-app/src/main/resources/spec). The configuration options can be seen in
-the `spark-conf.json` files in other examples, e.g.
+the `spark-conf.json` files in other examples, for example:
 
 ```json
 {
@@ -46,7 +47,7 @@ the `spark-conf.json` files in other examples, e.g.
 }
 ```
 
-The `CortexSession` exposes a client to the [Cortex Catalog](../docs/catalog.md) and can be used to access cortex resources.
+The `CortexSession` exposes a client to the [Cortex Catalog](../docs/catalog.md) and can be used to access Cortex resources.
 ```java
 public void useCortexCatalog(CortexSession cortexSession) {
     Catalog catalog = cortexSession.catalog();
@@ -70,39 +71,38 @@ public void useCortexCatalog(CortexSession cortexSession) {
 
 #### Connections
 
-`Connections` for the local catalog are defined in [connectors.yaml](../main-app/src/main/resources/spec/connectors.yml). There
-are 4 connections defined which are each associated with local csv/parquet [files](../main-app/src/main/resources/data):
+`Connections` for the local catalog are defined in [connectors.yaml](../main-app/src/main/resources/spec/connectors.yml).
+Four connections are defined and each is associated with a local csv or parquet [file](../main-app/src/main/resources/data):
 - [member-base-file](../main-app/src/main/resources/data/members_100_v14.csv) - contains base member information
 - [member-feedback-file](../main-app/src/main/resources/data/feedback_100_v14.csv) - contains member feedback information
 - [member-flu-risk-file](../main-app/src/main/resources/data/member_flu_risk_100_v14.parquet) - contains a predicted member flu risk score
 - member-joined-file - this Connection will contain the results of merging the other Connections
 
-See [join-connections](../join-connections/README.md) for an example of using Connections.
+(See [join-connections](../join-connections/README.md) for an example of using Connections.)
 
 #### Data Sources
 
-Data Sources in the local Catalog are defined in [datasources.yml](../main-app/src/main/resources/spec/datasources.yml). There
-are 3 Data Sources defined, each associated with a corresponding connection:
+Data Sources in the local Catalog are defined in [datasources.yml](../main-app/src/main/resources/spec/datasources.yml).
+Three Data Sources are defined and each is associated with a corresponding connection.
 - member-base-ds
 - member-feedback-file-ds
 - member-flu-risk-file-ds
 
-See [datasource-refresh](../datasource-refresh/README.md) for an example of refreshing a Data Source.
+(See [datasource-refresh](../datasource-refresh/README.md) for an example of refreshing a Data Source.)
 
 #### Profile Schemas
 
-`ProfileSchemas` in the local Catalog are defined in [profileSchemas.yml](../main-app/src/main/resources/spec/profileSchemas.yml). There
-are 2 ProfileSchemas defined in the catalog:
-- `member-profile`, this `ProfileSchema` represents a member and is the result of joining the `member-base-ds` and `member-flu-risk-file-ds` DataSouces.
+`ProfileSchemas` in the local Catalog are defined in [profileSchemas.yml](../main-app/src/main/resources/spec/profileSchemas.yml). 
+Two Profile Schemas are defined in the Catalog:
+- `member-profile`, this Profile Schema represents a member and is the result of joining the `member-base-ds` and `member-flu-risk-file-ds` Data Sources.
 - `member-profile-no-job`
 
-See [build-profiles](../build-profiles/README.md) for an example of using Profile Schemas.
+(See [build-profiles](../build-profiles/README.md) for an example of using Profile Schemas.)
 
 ### Secrets
 
-The example is configured to use a [local Secret Client](../docs/secrets.md) implemented in this package. The
-configuration options can be seen in the `spark-conf.json` files:
-
+The application is configured to use a local [Secret client](../docs/secrets.md) implemented in this package. The
+configuration options can be in the `spark-conf.json` files in other examples, for example:
 ```json
 {
   "options": {
@@ -119,5 +119,5 @@ using Secrets.)
 
 ### Local Cortex Backend
 
-The example is configured to use the local filesystem (`./main-app/build/test-data`) as the backend storage implementation for Cortex.
-See [Local Managed Content and Profile Data](../docs/catalog.md#local-managed-content-and-profile-data) for more details.
+The application is configured to use the local filesystem (`./main-app/build/test-data`) as Cortex's remote storage.
+(See [Local Storage Client](../docs/backendstorage.md#local-remote-storage-client) for more details.)

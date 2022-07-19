@@ -1,4 +1,4 @@
-# Data Source Refresh
+# Refresh a Data Source
 
 This example is a CLI application for refreshing a Data Source by reading its Cortex Connection and writing the
 dataset to the Data Source. This builds off of the [Local Clients](../local-clients/README.md) example for its setup.
@@ -21,7 +21,7 @@ Data Source will be written to a local file and does not exist prior to running 
 
 The resulting Data Source is saved as a Delta Table in `../main-app/build/test-data/cortex-profiles/sources/local/member-base-ds-delta`.
 
-## Run Locally in a Docker Container with Spark-Submit
+## Run Locally in a Docker Container With Spark-submit
 
 Run this example in a Docker container with local clients (from the parent directory):
 ```bash
@@ -35,29 +35,29 @@ profiles-example submit_job.py "{ \"payload\" : { \"config\" : \"/app/conf/spark
 ```
 
 Notes:
-* The `$CORTEX_TOKEN` environment variable is required by the Spark Submit wrapper, and needs to be a valid JWT token. You can generate this via: `cortex configure token`.
+* The `$CORTEX_TOKEN` environment variable is required by the Spark-submit wrapper, and needs to be a valid JWT token. You can generate this via: `cortex configure token`.
 * Port 4040 is forwarded from the container to expose the Spark UI (for debugging purposes).
-* The first volume mount is sharing the [Spark submit config file](./src/main/resources/conf/spark-conf.json).
+* The first volume mount is sharing the [Spark-submit config file](./src/main/resources/conf/spark-conf.json).
 * The second volume mount shares the LocalCatalog contents and other local application resources.
 * The third volume mount is the output location of the Data Source.
 
-## Run Locally against a Cortex Cluster
+## Run Locally Against a Cortex Cluster
 
-**Note**: Because this is running outside the Cortex Cluster you will need to know the value of any Secrets ued by the
+**Note**: Because this is running outside the Cortex Cluster you must know the value of any Secrets ued by the
 Connections. For access to Cortex Secrets, see [Run as a Skill](#run-as-a-skill).
 
 ### Prerequisites
 
-To run this example in a Spark local mode against a Cortex Cluster with access to the Catalog and Secrets, you will need to:
+To run this example in a Spark local mode against a Cortex Cluster with access to remote storage, the Cortex Catalog, and local Secrets you must:
 * Know the [backend storage configuration](../docs/config.md#cortex-backend-storage) for the Cluster, which includes
   names of buckets and access keys for remote storage. If you do not know this, then see [Run as a Skill](#run-as-a-skill).
-* Know the values of Cortex secrets used by the Connection
-* Generate a `CORTEX_TOKEN`
-* Ensures the Cortex resources exist, namely the Project, Data Source, and its Connection
+* Know the values of Cortex secrets used by the Connection.
+* Generate a `CORTEX_TOKEN`.
+* Ensure that the Cortex resources exist, namely the Project, Data Source, and its Connection.
 * Update the [spark-conf.json](./src/main/resources/conf/spark-conf.json) file to:
-    - use the [Remote Catalog](../docs/catalog.md#remote-catalog) implementation by setting the Cortex URL (`spark.cortex.client.phoenix.url`) to the GraphQL API endpoint (e.g. `https://api.<domain>/fabric/v4/graphql`) and removing the Local Catalog implementation (`spark.cortex.catalog.impl`).
-    - update [Local Secret Client](../local-clients/README.md#secrets) with any secrets required by your Connection(s). Ensure to update the project, Secret name, and secret value.
-    - Update the `app_command` arguments to match your Cortex project and Connections (`-p`, `-d`)
+    - Use the [Remote Catalog](../docs/catalog.md#remote-catalog) implementation by setting the Cortex URL (`spark.cortex.client.phoenix.url`) to the GraphQL API endpoint (e.g. `https://api.<domain>/fabric/v4/graphql`) and removing the Local Catalog implementation (`spark.cortex.catalog.impl`).
+    - Update [Local Secret Client](../local-clients/README.md#secrets) with any secrets required by your Connection(s). Ensure to update the project, Secret name, and secret value.
+    - Update the `app_command` arguments to match your Cortex project and Connections (`--project`, `--data-source`).
 
 **NOTE**: If your connections do not use Cortex Secrets because the Cortex cluster has [IRSA enabled](https://cognitivescale.github.io/cortex-charts/docs/platforms/aws/aws-irsa), then you may
 not be able to run this example without editing the Connection. This is because IRSA provides authentication within the
@@ -65,12 +65,12 @@ cluster, and cannot be leveraged when running locally. Try [Running the example 
 
 ### Example
 
-**Note**: The cortex backend storage configuration could be set in the `spark-conf.json`, but environment variables are
+**NOTE**: The cortex backend storage configuration could be set in the `spark-conf.json`, but environment variables are
 used below to avoid hardcoding access keys in the source.
 
 The below example command is assuming:
-* the Cortex backend is using the `minio` instance packaged in  the [Cortex Charts](https://github.com/CognitiveScale/cortex-charts) with access and secret keys `xxxxx`/`xxxxx`
-* the [CustomSecretClient](../local-clients/README.md#secrets) provides the secret used by the Connections (loaded from `CONNECTION_SECRET_VALUE`)
+* The Cortex backend is using the `minio` instance packaged in  the [Cortex Charts](https://github.com/CognitiveScale/cortex-charts) with access and secret keys `xxxxx`/`xxxxx`.
+* The [CustomSecretClient](../local-clients/README.md#secrets) provides the secret used by the Connections (loaded from `CONNECTION_SECRET_VALUE`).
 
 ```
 # from the parent directory
@@ -92,18 +92,18 @@ profiles-example submit_job.py "{ \"payload\" : { \"config\" : \"/app/conf/spark
 ## Run as a Skill
 
 ### Prerequisites
-* Ensures the Cortex resources exist, namely the Project, Data Source, and its Connection
-* Generate a `CORTEX_TOKEN`
+* Ensure that the Cortex resources exist, namely the Project, Data Source, and its Connection.
+* Generate a `CORTEX_TOKEN`.
 * Update the [spark-conf.json](./src/main/resources/conf/spark-conf.json) file to:
-    - use the [Remote Catalog](../docs/catalog.md#remote-catalog) implementation by setting the Cortex URL (`spark.cortex.client.phoenix.url`) to the GraphQL API endpoint (e.g. `https://api.<domain>/fabric/v4/graphql`) and removing the Local Catalog implementation (`spark.cortex.catalog.impl`).
-    - remove the Local Secret Client implementation (`spark.cortex.client.secrets.impl`)
-    - Update the `app_command` arguments to match your Cortex project and Data Source names (`-p`, `-d`)
+    - Use the [Remote Catalog](../docs/catalog.md#remote-catalog) implementation by setting the Cortex URL (`spark.cortex.client.phoenix.url`) to the GraphQL API endpoint (e.g. `https://api.<domain>/fabric/v4/graphql`) and removing the Local Catalog implementation (`spark.cortex.catalog.impl`).
+    - Remove the Local Secret Client implementation (`spark.cortex.client.secrets.impl`).
+    - Update the `app_command` arguments to match your Cortex project and Data Source names (`--project`, `--data-source`).
 
-To run this example in Spark local mode against a Cortex Cluster with access to the Catalog and Secrets, you will need to
+To run this example in Spark local mode against a Cortex Cluster with access to the Catalog and Secrets, you must
 update the spark configuration file (e.g. `spark-conf.json`) used by the main application to match configuration for
 this example.
 
-Refer to the [instructions for running the Skill Template](../README.md#skill-template) in the top level README for
+Refer to the [instructions for running the Skill template](../README.md#skill-template) in the top level README for
 deploying and invoking the skill.
 
 ### Example
@@ -135,11 +135,6 @@ deploying and invoking the skill.
         "spark.executor.instances": 2,
         "spark.executor.memory": "4g",
         "spark.driver.memory": "2g",
-        "spark.kubernetes.driverEnv.STORAGE_TYPE": "s3",
-        "spark.kubernetes.driverEnv.S3_ENDPOINT": "http://cortex-minio.cortex.svc.cluster.local:9000",
-        "spark.kubernetes.driverEnv.S3_SSL_ENABLED": "false",
-        "spark.kubernetes.driverEnv.AWS_ACCESS_KEY_ID": "****",
-        "spark.kubernetes.driverEnv.AWS_SECRET_KEY": "****",
         "spark.kubernetes.authenticate.driver.serviceAccountName": "default",
         "spark.kubernetes.namespace": "cortex-compute",
         "spark.kubernetes.driver.master": "https://kubernetes.default.svc",
@@ -182,5 +177,5 @@ deploying and invoking the skill.
 ```
 
 **NOTES**:
-* The `--master` and `--deploy-mode` have been set to run the Spark job in the Cortex (Kubernetes) Cluster.
-* The Phoenix Client URL and Secret Client URL are referring to services in Kubernetes Cluster.
+* The `--master` and `--deploy-mode` have been set to run the Spark job in the Cortex (Kubernetes) cluster.
+* The Phoenix Client URL and Secret client URL are referring to services in Kubernetes cluster.

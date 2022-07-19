@@ -49,7 +49,6 @@ public class CData implements Runnable {
             // load 'oem_key' secret in the "local" project
             localSecrets.setSecretsForProject("local", Map.of(
                     "oem_key", System.getenv(CDATA_KEY_ENV)
-                    //"secret", System.getenv().getOrDefault("CONNECTION_SECRET_VALUE", "")
             ));
         }}
 
@@ -85,17 +84,13 @@ public class CData implements Runnable {
     }
 
     public void readConnection(CortexSession cortexSession, String project, String source, String sink) {
-        // read CData connection
+        // Read CData connection
         Dataset<Row> ds = cortexSession.read().connection(project, source).load();
 
-        //TODO Perform some type of transform
+        //TODO: Perform some type of transform
 
-        // write to a connection
+        // Write to a connection
         cortexSession.write().connection(ds, project, sink).mode(SaveMode.Overwrite).save();
-
-        //TODO add CDATA jar to build dependencies
-
-        //TODO whatever is easiest...salesforce?
     }
 
 }

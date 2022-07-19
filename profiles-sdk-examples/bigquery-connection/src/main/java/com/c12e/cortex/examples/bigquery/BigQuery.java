@@ -51,18 +51,18 @@ public class BigQuery implements Runnable {
 
     @Override
     public void run() {
-        // Create cortex session
+        // Create cortex session.
         var sessionExample = new SessionExample();
         CortexSession cortexSession = sessionExample.getCortexSession();
         writeFromBigQuery(cortexSession);
     }
 
     public void writeFromBigQuery(CortexSession cortexSession) {
-        // Get spark session
+        // Get spark session.
         SparkSession session = cortexSession.spark();
         session.conf().getAll().toStream().print();
 
-        // Read from bigquery table
+        // Read from bigquery table.
         Dataset<Row> ds = session.read()
                 .format("bigquery")
                 .option("parentProject", parentProject)
@@ -70,11 +70,11 @@ public class BigQuery implements Runnable {
                 .option("table", tableName)
                 .load();
 
-        // show the first row
+        // Show the first row.
         ds.show(1);
 
         // Write result. Note `SaveMode.Overwrite` will cause the bigquery table to override any existing
-        // data in the sink
+        // data in the sink.
         cortexSession.write()
                 .connection(ds, project, sink)
                 .mode(SaveMode.Overwrite)

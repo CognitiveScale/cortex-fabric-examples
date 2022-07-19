@@ -21,7 +21,7 @@ plugins {
 
 
 // Exclude potential duplicate classpath during build. This may be the result of supplying a dependency defined here
-// as a jar in `main-app/src/main/resources/lib/` so said jar can be shared with spark executors.
+// as a jar in `main-app/src/main/resources/lib/`, so said jar can be shared with Spark executors.
 tasks.withType<Tar> {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }

@@ -1,4 +1,4 @@
-# Streaming Connections
+# Streaming to a Data Source
 
 This example is contains a CLI application for refreshing a Data Source via streaming. This builds off
 the [Local Clients](../local-clients/README.md) example for its setup but uses a different set of Connections and Data Source for this example defined in [streaming-connections.yml](../main-app/src/main/resources/spec/streaming-connections.yml) and [streaming-datasource.yml](../main-app/src/main/resources/spec/streaming-datasources.yml) respectively.
@@ -7,14 +7,14 @@ the [Local Clients](../local-clients/README.md) example for its setup but uses a
 
 ## Prerequisites:
 
-**NOTE:** Streaming is only supported for S3 File Stream and GCS File Stream Connection types. See, [Connection Types](https://cognitivescale.github.io/cortex-fabric/docs/reference-guides/connection-types).
-This example will assume an S3 File Stream is being used, but you can update Connection definition and secrets accordingly.
+**NOTE:** Streaming is only supported for S3 File Stream and GCS File Stream Connection types. (See [Connection Types](https://cognitivescale.github.io/cortex-fabric/docs/reference-guides/connection-types).)
+This example will assume an S3 File Stream is being used, but you can update Connection definition and Secrets accordingly.
 
-* Upload data to S3 that can be used for the connection. You can optionally use the [member dataset](../main-app/src/main/resources/data/members_100_v14.csv) used in local examples.
+* Upload data to S3 that can be used for the Connection. You can optionally use the [member dataset](../main-app/src/main/resources/data/members_100_v14.csv) used in local examples.
 * Update the `member-base-s3-stream` [S3 File Stream](https://cognitivescale.github.io/cortex-fabric/docs/reference-guides/connection-types#s3-file-stream-connections)
-  Connection parameters with your data. Specifically, `uri`, `streamReadDir`, `s3Endpoint`, `publicKey`, and `secretKey`
-  (this should be a [secret](https://cognitivescale.github.io/cortex-fabric/docs/administration/secrets),
-* Update the [CustomSecretsClient](../local-clients/README.md#secrets) to load the Secret. For example, supposing the Connection's `secretKey` is `#SECURE.streaming-secret` and the key will be loaded from the `STREAMING_SECRET_KEY`:
+  Connection parameters with your data. Specifically: `uri`, `streamReadDir`, `s3Endpoint`, `publicKey`, and `secretKey`
+  (this should be a [secret](https://cognitivescale.github.io/cortex-fabric/docs/administration/secrets).
+* Update the [CustomSecretsClient](../local-clients/README.md#secrets) to load the Secret. For example, supposing the Connection's `secretKey` is `#SECURE.streaming-secret` and the key is loaded from the `STREAMING_SECRET_KEY`:
 ```java
 public class CustomSecretsClient extends LocalSecretClient {
     private static final String STREAMING_SECRET_ENV = "STREAMING_SECRET_KEY";
@@ -33,9 +33,9 @@ public class CustomSecretsClient extends LocalSecretClient {
 }
 ```
 
-This example additionally uses a `StreamingQueryListener` to log the Streaming progress, which will end after a sequence of empty polls.
+This example additionally uses a `StreamingQueryListener` to log the streaming progress, which ends after a sequence of empty polls.
 
-## Running Locally
+## Run Locally
 
 To run this example locally with local Cortex clients (from the parent directory):
 ```
@@ -201,17 +201,14 @@ $ ./gradlew main-app:run --args="ds-streaming -p local -d member-base-s3-stream-
 ```
 
 **NOTE**: Because this is a running with a local Catalog and local filesystem as the Cortex backend, the result of
-the `member-base-s3-stream` Data Source will be written to a local
+the `member-base-s3-stream` Data Source is written to a local
 Delta Table (`../main-app/build/test-data/cortex-profiles/sources/local/member-base-s3-stream-write-delta/`) that does
 not exist prior to running.
 
-## Running a Docker container with Spark-Submit
+## Run Locally in a Docker Container With Spark-submit
 
-**NOTE**: This is currently not working, because gradle is failing pull the sourceSet for this module into the
-main-app (so its not included in the jar at the moment).
-
-Make sure to update the [Spark submit config file](./src/main/resources/conf/spark-conf.json) with the appropriate Connection name.
-To run this example in a docker container with local Cortex clients (from the parent directory):
+Make sure to update the [Spark-submit config file](./src/main/resources/conf/spark-conf.json) with the appropriate Connection name.
+To run this example in a Docker container with local Cortex clients (from the parent directory):
 
 ```
 $ make build create-app-image
@@ -219,23 +216,26 @@ $ make build create-app-image
 $ docker run -p 4040:4040 --entrypoint="python" \
   -e CORTEX_TOKEN="${CORTEX_TOKEN}" \
   -e STREAMING_SECRET_KEY="${STREAMING_SECRET_KEY}" \
+  -e STORAGE_TYPE="file" \
+  -e AWS_ACCESS_KEY_ID="xxx" \
+  -e AWS_SECRET_ACCESS_KEY="xxx" \
   -v $(pwd)/datasource-streaming/src/main/resources/conf:/app/conf \
   -v $(pwd)/main-app/src:/opt/spark/work-dir/src \
   -v $(pwd)/main-app/build:/opt/spark/work-dir/build \
 profiles-example submit_job.py "{ \"payload\" : { \"config\" : \"/app/conf/spark-conf.json\" } }"
 ```
 
-Notes:
-* The `$CORTEX_TOKEN` environment variable is required by the Spark Submit wrapper, and needs to be a valid JWT token. You can generate this via: `cortex configure token`.
+NOTES:
+* The `$CORTEX_TOKEN` environment variable is required by the Spark-submit wrapper, and needs to be a valid JWT token. You can generate this via: `cortex configure token`.
 * Port 4040 is forwarded from the container to expose the Spark UI (for debugging).
-* The first volume mount is sharing the [Spark submit config file](./src/main/resources/conf/spark-conf.json).
+* The first volume mount is sharing the [Spark-submit config file](./src/main/resources/conf/spark-conf.json).
 * The second volume mount shares the LocalCatalog contents and other local application resources.
-* The third volume mount is the output location of the joined connection.
+* The third volume mount sharing the output of the local Data Source.
 
-## Running locally against a Cortex Cluster
+## Run Locally Against a Cortex Cluster
 
 TODO.
 
-## Running as a Skill
+## Run as a Skill
 
 TODO.
