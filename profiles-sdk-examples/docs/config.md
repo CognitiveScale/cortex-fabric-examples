@@ -7,7 +7,7 @@ Configuration options are specific to your use case and may depend on:
 - What resources are available in the target environment
 - What your use case is
 
-<--! TODO: General Spark configuration guidance (Spark UI, Debugging, metrics, fs performance)
+<!-- TODO: General Spark configuration guidance (Spark UI, Debugging, metrics, fs performance)
 ## Spark Configuration Guidance
 -->
 
