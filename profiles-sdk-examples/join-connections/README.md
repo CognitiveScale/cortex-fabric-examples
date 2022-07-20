@@ -8,37 +8,63 @@ another Cortex Connection. This builds off the [Local Clients](../local-clients/
 ## Run Locally
 
 To run this example locally with local Cortex clients (from the parent directory):
-```
-$ make build
-$ ./gradlew main-app:run --args="join-connections --project local -l member-base-file -r member-flu-risk-file -w member-joined-file -c member_id"
-```
+1. Build the application.
+    ```
+    make build
+    ```
+1. Run the application with Gradle.
+    ```
+    ./gradlew main-app:run --args="join-connections --project local -l member-base-file -r member-flu-risk-file -w member-joined-file -c member_id"
+    ```
 
-This will merge the following connections defined in the Local Catalog, and will populate the `member-joined-file` [connection](../local-clients/README.md#connections):
+This will merge the following connections defined in the local Catalog, and will populate the `member-joined-file` [Connection](../local-clients/README.md#connections) at `main-app/build/tmp/test-data/joined_v14.csv`:
 - `member-base-file`
 - `member-flu-risk-file`
 
 <!-- Flowchart showing merge of Connections to result connection. I wish mermaid had [venn diagrams](https://github.com/mermaid-js/mermaid/issues/2583) -->
 ```mermaid
 flowchart TB
-  member-base-file --> id(("Inner Join on member_id"))
-  member-flu-risk-file --> id(("Inner Join on member_id"))
-  id(("Inner Join on member_id")) --> member-joined-file
+  member-base-file --> id1{"Inner Join on member_id"}
+  member-flu-risk-file --> id1{"Inner Join on member_id"}
+  id1{"Inner Join on member_id"} --> member-joined-file
 ```
 
-The joined connection file will be at: `main-app/build/tmp/test-data/joined_v14.csv`
+**NOTE:** Because this is running with a local Catalog and local filesystem as the Cortex backend, the result of the
+Connection will be written to a local file and does not exist prior to running the above.
 
-## Run in a Docker container with Spark-submit
+## Run Locally in a Docker Container With Spark-submit
 
 To run this example in a Docker container with local Cortex clients (from the parent directory):
+1. Build the application.
+    ```
+    make build
+    ```
+2. Create the Skill Docker image.
+    ```
+    make create-app-image
+    ```
+3. Export a Cortex token.
+    ```
+    export CORTEX_TOKEN=<token>
+    ```
+4. Run the application with Docker.
+    ```
+    docker run -p 4040:4040 --entrypoint="python" \
+      -e CORTEX_TOKEN="${CORTEX_TOKEN}" \
+      -v $(pwd)/join-connections/src/main/resources/conf:/app/conf \
+      -v $(pwd)/main-app/src:/opt/spark/work-dir/src \
+      -v $(pwd)/main-app/build:/opt/spark/work-dir/build \
+      profiles-example submit_job.py "{ \"payload\" : { \"config\" : \"/app/conf/spark-conf.json\" } }"
+    ```
+   NOTES:
+    * The `$CORTEX_TOKEN` environment variable is required by the Spark-submit wrapper, and needs to be a valid JWT token. You can generate this via: `cortex configure token`.
+    * Port 4040 is forwarded from the container to expose the Spark UI (for debugging)
+    * The first volume mount is sharing the [Spark-submit config file](./src/main/resources/conf/spark-conf.json).
+    * The second volume mount shares the LocalCatalog contents and other local application resources.
+    * The third volume mount is the output location of the joined connection.
+
+The logs should be similar to:
 ```
-$ make clean build create-app-image
-
-$ docker run -p 4040:4040 --entrypoint="python" -e CORTEX_TOKEN="${CORTEX_TOKEN}" \
-  -v $(pwd)/join-connections/src/main/resources/conf:/app/conf \
-  -v $(pwd)/main-app/src:/opt/spark/work-dir/src \
-  -v $(pwd)/main-app/build:/opt/spark/work-dir/build \
-  profiles-example submit_job.py "{ \"payload\" : { \"config\" : \"/app/conf/spark-conf.json\" } }"
-
 ['/opt/spark/bin/spark-submit', '--master', 'local[*]', '--class', 'com.c12e.cortex.examples.Application', '--conf', 'spark.app.name=CortexProfilesExamples', '--conf', 'spark.ui.enabled=true', '--conf', 'spark.ui.prometheus.enabled=true', '--conf', 'spark.sql.streaming.metricsEnabled=true', '--conf', 'spark.cortex.catalog.impl=com.c12e.cortex.phoenix.LocalCatalog', '--conf', 'spark.cortex.catalog.local.dir=src/main/resources/spec', '--conf', 'spark.cortex.client.secrets.impl=com.c12e.cortex.examples.local.CustomSecretsClient', '--conf', 'spark.cortex.storage.storageType=file', '--conf', 'spark.cortex.storage.file.baseDir=src/main/resources/data', '--conf', 'spark.kubernetes.driverEnv.CORTEX_TOKEN=eyJhbGciOiJFZERTQSIsImtpZCI6Im5YMHZfcjdiMGJKOC1UVW5Sc3U2cHB2OFVUX0szYVMzdE11d3JzVVp1aEEifQ.eyJzdWIiOiI5ZGMxMjY2Mi1jZDUxLTQ5NDYtYTdmYy0zMTJmZWNlNzg5NTEiLCJhdWQiOiJjb3J0ZXgiLCJpc3MiOiJjb2duaXRpdmVzY2FsZS5jb20iLCJpYXQiOjE2NTcxMzkxMDUsImV4cCI6MTY1Nzc0MzkwNX0.XoOTCwmbe6Ja2HQKNug5YSxze8r9pCdFEYzFJULhkTPBb8OPe9CGNvuymPwgBWyooBSy9rMrOehhv9ay8LGbCw', '--conf', 'spark.cortex.phoenix.token=eyJhbGciOiJFZERTQSIsImtpZCI6Im5YMHZfcjdiMGJKOC1UVW5Sc3U2cHB2OFVUX0szYVMzdE11d3JzVVp1aEEifQ.eyJzdWIiOiI5ZGMxMjY2Mi1jZDUxLTQ5NDYtYTdmYy0zMTJmZWNlNzg5NTEiLCJhdWQiOiJjb3J0ZXgiLCJpc3MiOiJjb2duaXRpdmVzY2FsZS5jb20iLCJpYXQiOjE2NTcxMzkxMDUsImV4cCI6MTY1Nzc0MzkwNX0.XoOTCwmbe6Ja2HQKNug5YSxze8r9pCdFEYzFJULhkTPBb8OPe9CGNvuymPwgBWyooBSy9rMrOehhv9ay8LGbCw', 'local:///app/libs/app.jar', 'join-connections', '-p', 'local', '-l', 'member-base-file', '-r', 'member-flu-risk-file', '-w', 'member-joined-file', '-c', 'member_id']
   ...
 
@@ -56,34 +82,29 @@ Termination Reason:
 Exit Code: 0
 ```
 
-Notes:
-* The `$CORTEX_TOKEN` environment variable is required by the Spark-submit wrapper, and needs to be a valid JWT token. You can generate this via: `cortex configure token`.
-* Port 4040 is forwarded from the container to expose the Spark UI (for debugging)
-* The first volume mount is sharing the [Spark-submit config file](./src/main/resources/conf/spark-conf.json).
-* The second volume mount shares the LocalCatalog contents and other local application resources.
-* The third volume mount is the output location of the joined connection.
-
 ## Run Locally Against a Cortex Cluster
 
-**Note**: Because this is running outside the Cortex Cluster you will need to know the value of any Secrets used by
-the connections. For access to Cortex Secrets try [running as a Skill](#run-as-a-skill).
+**Note**: Because this is running outside the Cortex Cluster you must know the value of any Secrets used by
+the Connections. For access to Cortex Secrets try [running as a Skill](#run-as-a-skill).
 
 ### Prerequisites
 
-To run this example in Spark local mode against a Cortex Cluster with access to the Catalog and Secrets, you will need to:
+To run this example in Spark local mode against a Cortex Cluster with access to remote storage, the Cortex Catalog, and
+local Secrets, you must:
 * Know the [backend storage configuration](../docs/config.md#cortex-backend-storage) for the Cluster, which includes
   names of buckets and access keys for remote storage. If you do not know this, then try [running as a Skill](#run-as-a-skill).
 * Know the values of Cortex Secrets used by the Connection.
 * Generate a `CORTEX_TOKEN`.
 * Ensure the Cortex resources exist, specifically the Project and Joining Connections (Left, Right, and Result).
 * Update the [spark-conf.json](./src/main/resources/conf/spark-conf.json) file to:
-  - Use the [Remote Catalog](../docs/catalog.md#remote-catalog) implementation by setting the Cortex URL (`spark.cortex.client.phoenix.url`) to the GraphQL API endpoint (e.g. `https://api.<domain>/fabric/v4/graphql`) and removing the Local Catalog implementation (`spark.cortex.catalog.impl`).
+  - Use the [Remote Catalog](../docs/catalog.md#remote-catalog) implementation by setting the Cortex URL (`spark.cortex.client.phoenix.url`) to the GraphQL API endpoint (e.g. `https://api.<domain>/fabric/v4/graphql`), and remove the local Catalog implementation (`spark.cortex.catalog.impl`).
+  - Use the [remote storage client](../docs/backendstorage.md#remote-storage-client) implementation by setting the Cortex URL (`spark.cortex.client.phoenix.url`) to the GraphQL API endpoint, and remove the local storage client implementation (`spark.cortex.client.storage.impl`).
   - Update [Local Secret Client](../local-clients/README.md#secrets) with any secrets required by your Connection(s). Ensure to update the project, Secret name, and secret value.
   - Update the `app_command` arguments to match your Cortex project and Connections (`--project`,  `--left-conn`, `--right-conn`, `--write-conn` `--column`).
 
 **NOTE**: If your connections do not use Cortex Secrets because the Cortex cluster has [IRSA enabled](https://cognitivescale.github.io/cortex-charts/docs/platforms/aws/aws-irsa), then you may
 not be able to run this example without editing the Connection. This is because IRSA provides authentication within the
-cluster, and cannot be leveraged when running locally. Try [Running the example as a Skill](#run-as-a-skill).
+cluster, and cannot be leveraged when running locally. Try [running the example as a Skill](#run-as-a-skill).
 
 ### Example
 
@@ -94,23 +115,37 @@ The below example command is assuming:
 * The Cortex backend is using the `minio` instance packaged in  the [Cortex Charts](https://github.com/CognitiveScale/cortex-charts) with access and secret keys `xxxxx`/`xxxxx`.
 * The [CustomSecretClient](../local-clients/README.md#secrets) provides the secret used by the Connections (loaded from `CONNECTION_SECRET_VALUE`).
 
+From the parent directory:
+1. Build the application.
+    ```
+   make build
+    ```
+2. Create the Skill Docker image.
+    ```
+    make create-app-image
+    ```
+3. Export the Cortex token and (optionally) the Secret value used by your connection.
+    ```
+    export CORTEX_TOKEN=<token>
+    export CONNECTION_SECRET_VALUE=<secret-value>
+    ```
+4. Run the application with Docker.
+    ```
+    docker run -p 4040:4040 --entrypoint="python" \
+      -e CORTEX_TOKEN="${CORTEX_TOKEN}" \
+      -e CONNECTION_SECRET_VALUE="${CONNECTION_SECRET_VALUE}" \
+      -e STORAGE_TYPE=s3 \
+      -e AWS_ACCESS_KEY_ID=xxxxx \
+      -e AWS_SECRET_KEY=xxxxx \
+      -e S3_ENDPOINT=http://host.docker.internal:9000 \
+      -v $(pwd)/join-connections/src/main/resources/conf:/app/conf \
+      -v $(pwd)/main-app/src:/opt/spark/work-dir/src \
+      -v $(pwd)/main-app/build:/opt/spark/work-dir/build \
+    profiles-example submit_job.py "{ \"payload\" : { \"config\" : \"/app/conf/spark-conf.json\" } }"
+    ```
+
+The tail end of the logs should look similar to:
 ```
-# from the parent directory
-$ make clean build create-app-image
-
-$ docker run -p 4040:4040 --entrypoint="python" \
-  -e CORTEX_TOKEN="${CORTEX_TOKEN}" \
-  -e CONNECTION_SECRET_VALUE="${CONNECTION_SECRET_VALUE}" \
-  -e STORAGE_TYPE=s3 \
-  -e AWS_ACCESS_KEY_ID=xxxxx \
-  -e AWS_SECRET_KEY=xxxxx \
-  -e S3_ENDPOINT=http://host.docker.internal:9000 \
-  -v $(pwd)/join-connections/src/main/resources/conf:/app/conf \
-  -v $(pwd)/main-app/src:/opt/spark/work-dir/src \
-  -v $(pwd)/main-app/build:/opt/spark/work-dir/build \
-profiles-example submit_job.py "{ \"payload\" : { \"config\" : \"/app/conf/spark-conf.json\" } }"
-
-...
 23:37:27.873 [main] DEBUG c.c.c.p.m.c.DefaultCortexConnectionReader - Removed hadoop filesystem - format_type: csv, uri: s3a://fabric-dev-laguirre/members/members_v14_100.csv, extra
 23:37:28.110 [main] WARN  o.a.h.metrics2.impl.MetricsConfig - Cannot locate configuration: tried hadoop-metrics2-s3a-file-system.properties,hadoop-metrics2.properties
 23:37:33.636 [main] DEBUG c.c.c.p.m.c.DefaultCortexConnectionReader - Inferred schema from sample of connection (CSV) - project: 'laguirre-testi-69257', connectionName: 'member-base'
@@ -138,11 +173,11 @@ Exit Code: 0
 * Generate a `CORTEX_TOKEN`.
 * Update the [spark-conf.json](./src/main/resources/conf/spark-conf.json) file to:
   - Use the [Remote Catalog](../docs/catalog.md#remote-catalog) implementation by setting the Cortex URL (`spark.cortex.client.phoenix.url`) to the in-cluster GraphQL API endpoint (`"http://cortex-api.cortex.svc.cluster.local:8080/fabric/v4/graphql"`) and removing the Local Catalog implementation (`spark.cortex.catalog.impl`).
+  - Use the [remote storage client](../docs/backendstorage.md#remote-storage-client) implementation by setting the Cortex URL (`spark.cortex.client.phoenix.url`) to the GraphQL API endpoint, and remove the local storage client implementation (`spark.cortex.client.storage.impl`).
   - Remove the local Secret client implementation (`spark.cortex.client.secrets.impl`).
   - Update the `app_command` arguments to match your Cortex project and Connections (`--project`,  `--left-conn`, `--right-conn`, `--write-conn` `--column`).
-  <!-- TODO: Remove usage of local backend storage client -->
 
-To run this example in Spark local mode against a Cortex Cluster with access to the Catalog and Secrets, you will need to
+To run this example in Spark local mode against a Cortex Cluster with access to the Catalog and Secrets, you must
 update the spark configuration file (e.g. `spark-conf.json`) used by the main application to match configuration for
 this example. 
 

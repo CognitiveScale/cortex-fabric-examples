@@ -13,7 +13,7 @@ This example will assume an S3 File Stream is being used, but you can update Con
 * Upload data to S3 that can be used for the Connection. You can optionally use the [member dataset](../main-app/src/main/resources/data/members_100_v14.csv) used in local examples.
 * Update the `member-base-s3-stream` [S3 File Stream](https://cognitivescale.github.io/cortex-fabric/docs/reference-guides/connection-types#s3-file-stream-connections)
   Connection parameters with your data. Specifically: `uri`, `streamReadDir`, `s3Endpoint`, `publicKey`, and `secretKey`
-  (this should be a [secret](https://cognitivescale.github.io/cortex-fabric/docs/administration/secrets).
+  (this should be a [secret](https://cognitivescale.github.io/cortex-fabric/docs/administration/secrets)).
 * Update the [CustomSecretsClient](../local-clients/README.md#secrets) to load the Secret. For example, supposing the Connection's `secretKey` is `#SECURE.streaming-secret` and the key is loaded from the `STREAMING_SECRET_KEY`:
 ```java
 public class CustomSecretsClient extends LocalSecretClient {
@@ -38,13 +38,21 @@ This example additionally uses a `StreamingQueryListener` to log the streaming p
 ## Run Locally
 
 To run this example locally with local Cortex clients (from the parent directory):
+1. Build the application.
+    ```
+    make build
+    ```
+2. Export the secret value for your streaming Connection.
+    ```
+    export STREAMING_SECRET_KEY=<value>
+    ```
+4. Run the application with Gradle.
+    ```
+   ./gradlew main-app:run --args="ds-streaming --project local --data-source member-base-s3-stream-write"
+    ```
+
+The end of the log output should be similar to:
 ```
-$ make clean build
-
-$ export STREAMING_SECRET_ENV=...
-
-$ ./gradlew main-app:run --args="ds-streaming --project local --data-source member-base-s3-stream-write"
-
 > Task :main-app:run
 ...
 
@@ -210,27 +218,38 @@ not exist prior to running.
 Make sure to update the [Spark-submit config file](./src/main/resources/conf/spark-conf.json) with the appropriate Connection name.
 To run this example in a Docker container with local Cortex clients (from the parent directory):
 
-```
-$ make build create-app-image
-
-$ docker run -p 4040:4040 --entrypoint="python" \
-  -e CORTEX_TOKEN="${CORTEX_TOKEN}" \
-  -e STREAMING_SECRET_KEY="${STREAMING_SECRET_KEY}" \
-  -e STORAGE_TYPE="file" \
-  -e AWS_ACCESS_KEY_ID="xxx" \
-  -e AWS_SECRET_ACCESS_KEY="xxx" \
-  -v $(pwd)/datasource-streaming/src/main/resources/conf:/app/conf \
-  -v $(pwd)/main-app/src:/opt/spark/work-dir/src \
-  -v $(pwd)/main-app/build:/opt/spark/work-dir/build \
-profiles-example submit_job.py "{ \"payload\" : { \"config\" : \"/app/conf/spark-conf.json\" } }"
-```
-
-NOTES:
-* The `$CORTEX_TOKEN` environment variable is required by the Spark-submit wrapper, and needs to be a valid JWT token. You can generate this via: `cortex configure token`.
-* Port 4040 is forwarded from the container to expose the Spark UI (for debugging).
-* The first volume mount is sharing the [Spark-submit config file](./src/main/resources/conf/spark-conf.json).
-* The second volume mount shares the LocalCatalog contents and other local application resources.
-* The third volume mount sharing the output of the local Data Source.
+1. Build the application.
+    ```
+    make build
+    ```
+1. Create the Skill Docker image.
+    ```
+    make create-app-image
+    ```
+2. Export the secret value for your streaming Connection and a Cortex Token.
+    ```
+    export STREAMING_SECRET_KEY=<value>
+    export CORTEX_TOKEN=<token>
+    ```
+4. Run the application with Gradle.
+    ```
+    docker run -p 4040:4040 --entrypoint="python" \
+      -e CORTEX_TOKEN="${CORTEX_TOKEN}" \
+      -e STREAMING_SECRET_KEY="${STREAMING_SECRET_KEY}" \
+      -e STORAGE_TYPE="file" \
+      -e AWS_ACCESS_KEY_ID="xxx" \
+      -e AWS_SECRET_ACCESS_KEY="xxx" \
+      -v $(pwd)/datasource-streaming/src/main/resources/conf:/app/conf \
+      -v $(pwd)/main-app/src:/opt/spark/work-dir/src \
+      -v $(pwd)/main-app/build:/opt/spark/work-dir/build \
+      profiles-example submit_job.py "{ \"payload\" : { \"config\" : \"/app/conf/spark-conf.json\" } }"
+    ```
+   NOTES:
+    * The `$CORTEX_TOKEN` environment variable is required by the Spark-submit wrapper, and needs to be a valid JWT token. You can generate this via: `cortex configure token`.
+    * Port 4040 is forwarded from the container to expose the Spark UI (for debugging).
+    * The first volume mount is sharing the [Spark-submit config file](./src/main/resources/conf/spark-conf.json).
+    * The second volume mount shares the LocalCatalog contents and other local application resources.
+    * The third volume mount sharing the output of the local Data Source.
 
 ## Run Locally Against a Cortex Cluster
 

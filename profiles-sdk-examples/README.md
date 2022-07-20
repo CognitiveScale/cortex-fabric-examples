@@ -157,56 +157,15 @@ in a Docker container locally, you should set the `--entrypoint` option.
 * Verify the Skill's `payload.json` file refers to the above Spark configuration file (in the built container).
 
 
-2. **Build the Skill** by running: `make all`.
+2. **Build the Skill**.
     ```
-    $ make all
-    ./gradlew clean
+    make all
+    ```
 
-    Deprecated Gradle features were used in this build, making it incompatible with Gradle 8.0.
-
-    You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
-
-    See https://docs.gradle.org/7.4/userguide/command_line_interface.html#sec:command_line_warnings
-
-    BUILD SUCCESSFUL in 1s
-    8 actionable tasks: 8 executed
-    ./gradlew build
-
-    > Task :main-app:test
-    WARNING: An illegal reflective access operation has occurred
-    WARNING: Illegal reflective access by org.apache.spark.unsafe.Platform (file:/Users/laguirre/.gradle/caches/modules-2/files-2.1/org.apache.spark/spark-unsafe_2.12/3.2.1/f39757a794dc7407591e606d3a73187767fee310/spark-unsafe_2.12-3.2.1.jar) to constructor java.nio.DirectByteBuffer(long,int)
-    WARNING: Please consider reporting this to the maintainers of org.apache.spark.unsafe.Platform
-    WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
-    WARNING: All illegal access operations will be denied in a future release
-
-    ProfilesExamplesTest > (local) build-profile -p local -ps member-profile PASSED
-
-    ProfilesExamplesTest > (local) cdata -p local -i cdata-csv -o sink SKIPPED
-
-    ProfilesExamplesTest > ds-streaming -p local -d member-base-s3-stream-write SKIPPED
-
-    ProfilesExamplesTest > (local) join-connections -p local  -l member-base-file -r member-feedback-file -w member-joined-file -c member_id PASSED
-
-    ProfilesExamplesTest > (local) datasource-refresh -p local -d member-base-ds PASSED
-
-    ProfilesExamplesTest > bigquery -p mctest30 -i bigquery -o sink SKIPPED
-
-    TestLocalClient > testUseSecretClient() PASSED
-
-    TestLocalClient > testUseCortexCatalog() PASSED
-    17:22:09.977 [shutdown-hook-0] INFO  o.s.jetty.server.AbstractConnector - Stopped Spark@abad89c{HTTP/1.1, (http/1.1)}{0.0.0.0:4040}
-    17:22:09.979 [shutdown-hook-0] INFO  org.apache.spark.ui.SparkUI - Stopped Spark web UI at http://c02wq091htdf.attlocal.net:4040
-
-    Deprecated Gradle features were used in this build, making it incompatible with Gradle 8.0.
-
-    You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
-
-    See https://docs.gradle.org/7.4/userguide/command_line_interface.html#sec:command_line_warnings
-
-    BUILD SUCCESSFUL in 4m 28s
-    64 actionable tasks: 64 executed
+    The final output should look similar to:
+    ```
     docker build --build-arg base_img=c12e/spark-template:profile-jar-base-6.3.0-M.2.1 -t profiles-example:latest -f ./main-app/build/resources/main/Dockerfile ./main-app/build
-   [+] Building 1.5s (17/17) FINISHED
+    [+] Building 1.5s (17/17) FINISHED
     => [internal] load build definition from Dockerfile                                                                                                                                                                                     0.0s
     => => transferring dockerfile: 37B                                                                                                                                                                                                      0.0s
     => [internal] load .dockerignore                                                                                                                                                                                                        0.0s
@@ -247,7 +206,7 @@ in a Docker container locally, you should set the `--entrypoint` option.
     5f70bf18a086: Layer already exists
     7723dc94285f: Layer already exists
     latest: digest: sha256:aa4c3a4dc42a4af55ab0eac6d5bdc3c226828b133013bdea21d297698b43471d size: 2830
-    cortex types save -y templates/types.yaml --project laguirre-testi-69257
+    cortex types save -y templates/types.yaml --project testi-69257
     Type definition saved
     cortex actions deploy --actionName profiles-example --actionType job --docker private-registry.dci-dev.dev-eks.insights.ai/profiles-example:latest --project laguirre-testi-69257 --cmd '["scuttle", "python", "submit_job.py"]' --podspec ./templates/podspec.yaml
         {
@@ -275,21 +234,24 @@ in a Docker container locally, you should set the `--entrypoint` option.
             "_version": 8
         }
     }
-    cortex skills save -y templates/skill.yaml --project laguirre-testi-69257
+    cortex skills save -y templates/skill.yaml --project testi-69257
     Skill saved: {"success":true,"version":8,"message":"Skill definition profiles-example saved."}
     ```
 
-3. **Invoke the Skill** by running `make invoke`
+3. **Invoke the Skill**.
     ```
-    $ make invoke
+    make invoke
+    ```
+
+    Example Output:
+    ```
     cortex skills invoke --params-file templates/payload.json profiles-example params --project laguirre-testi-69257
     {
       "success": true,
       "activationId": "115d1196-408a-47fa-91c4-6f8e8a391641"
     }
     ```
-
-Run `cortex agents get-activation <activation-id>` or `cortex tasks logs <task-name>` to view logs of the skill activation.
+4. Run `cortex agents get-activation <activation-id>` or `cortex tasks logs <task-name>` to view logs of the skill activation.
 
 <!--
 # Version Compatibility

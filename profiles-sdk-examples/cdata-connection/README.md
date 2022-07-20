@@ -40,22 +40,25 @@ secrets. Database passwords, SSL certs, service account JSON file contents, and 
 the [CData.java](./src/main/java/com/c12e/cortex/examples/cdata/CData.java) file via environment variables.
 
 To run this example locally with local Cortex clients (from the parent directory):
-```
-$ make build
-
-$ export CDATA_OEM_KEY=...
-
-$ export CDATA_PRODUCT_CHECKSUM=...
-
-$ ./gradlew main-app:run --args="cdata --project local --input cdata-csv --output sink"
-```
+1. Build the application.
+    ```
+    make build
+    ```
+1. Set the CData OEM Key and Product Checksum.
+    ```
+    export CDATA_OEM_KEY=key
+    export CDATA_PRODUCT_CHECKSUM=checksum
+    ```
+1. Run the application with Gradle.
+    ```
+    ./gradlew main-app:run --args="cdata --project local --input cdata-csv --output sink"
+    ```
 
 **NOTE**: This example is currently not working when running locally, because the Spark executors require a
-scratch-directory (`/opt-spark/work-dir`) which does not exist (setting ). This should be sett-able
-via `spark.local.dir`/`SPARK_LOCAL_DIRS`, but this configuration has not been overrideable. If you see an error similar
-to the following, then instead try
+scratch-directory (`/opt-spark/work-dir`) which does not exist. This should be sett-able
+via `spark.local.dir` in the spark-conf.json file or via the `SPARK_LOCAL_DIRS` env var, but this configuration
+has not been taking effect. If you see an error similar  to the following, then instead try
 [running this example in a Docker container](#run-locally-in-a-docker-container-with-spark-submit):
-
 ```
 16:29:55.486 [main] DEBUG c.c.c.p.m.c.DefaultCortexConnectionWriter - Writing to connection: 'file:///opt/spark/work-dir/build/tmp/test-data/sink-ds/'
 16:29:56.005 [main] ERROR o.a.h.m.l.output.FileOutputCommitter - Mkdirs failed to create file:/opt/spark/work-dir/build/tmp/test-data/sink-ds/_temporary/0
@@ -124,24 +127,44 @@ The sink file can be found at `./main-app/build/tmp/test-data/sink-ds` after run
 ## Run Locally in a Docker Container With Spark-submit
 
 To run this example in a Docker container with local Cortex clients (from the parent directory):
+1. Build the application.
+    ```
+    make build
+    ```
+2. Create the Skill Docker image.
+    ```
+    make create-app-image
+    ```
+4. Export the Cortex token, CDATA OEM Key, and Product Checksum environment variables.
+    ```
+    export CORTEX_TOKEN=<token>
+    export CDATA_OEM_KEY=<key>
+    export CDATA_PRODUCT_CHECKSUM=<checksum>
+    ```
+5. Run the application with Docker.
+    ```
+    docker run -p 4040:4040 --entrypoint="python" \
+        -e "CORTEX_TOKEN=${CORTEX_TOKEN}" \
+        -e "CDATA_OEM_KEY=${CDATA_OEM_KEY}" \
+        -e "CDATA_PRODUCT_CHECKSUM=${CDATA_PRODUCT_CHECKSUM}" \
+        -v $(pwd)/cdata-connection/src/main/resources/conf:/app/conf \
+        -v $(pwd)/main-app/src:/opt/spark/work-dir/src \
+        -v $(pwd)/main-app/build:/opt/spark/work-dir/build \
+        profiles-example submit_job.py "{\"payload\" : {\"config\": \"/app/conf/spark-conf.json\"}}"
+    ```
+   NOTES:
+    * Port 4040 is forwarded from the container to expose the Spark UI (for debugging).
+    * The first volume mount is sharing the [spark-submit config file](./src/main/resources/conf/spark-conf.json).
+    * The second volume mount shares the LocalCatalog contents and other local application resources.
+    * The third volume mount is sharing output location of the sink connection.
+
+  This will read the `cdata-csv` Connection and write it to the `sink` connection defined
+  in [cdata-connections.yml](../main-app/src/main/resources/spec/cdata-connections.yml). The sink file can be found
+  at `./main-app/build/tmp/test-data/sink-ds` after running the command.
+
+
+The logs should be similar to:
 ```
-$ make clean build create-app-image
-
-$ export CORTEX_TOKEN=...
-
-$ export CDATA_OEM_KEY=...
-
-$ export CDATA_PRODUCT_CHECKSUM=...
-
-$ docker run -p 4040:4040 --entrypoint="python" \
-    -e "CORTEX_TOKEN=${CORTEX_TOKEN}" \
-    -e "CDATA_OEM_KEY=${CDATA_OEM_KEY}" \
-    -e "CDATA_PRODUCT_CHECKSUM=${CDATA_PRODUCT_CHECKSUM}" \
-    -v $(pwd)/cdata-connection/src/main/resources/conf:/app/conf \
-    -v $(pwd)/main-app/src:/opt/spark/work-dir/src \
-    -v $(pwd)/main-app/build:/opt/spark/work-dir/build \
-    profiles-example submit_job.py "{\"payload\" : {\"config\": \"/app/conf/spark-conf.json\"}}"
-    
 ['/opt/spark/bin/spark-submit', '--master', 'local[*]', '--class', 'com.c12e.cortex.examples.Application', '--conf', 'spark.app.name=CortexProfilesExamples', '--conf', 'spark.ui.enabled=true', '--conf', 'spark.ui.prometheus.enabled=true', '--conf', 'spark.sql.streaming.metricsEnabled=true', '--conf', 'spark.cortex.catalog.impl=com.c12e.cortex.phoenix.LocalCatalog', '--conf', 'spark.cortex.catalog.local.dir=src/main/resources/spec', '--conf', 'spark.cortex.client.secrets.impl=com.c12e.cortex.examples.cdata.CData$CDataSecretClient', '--conf', 'spark.cortex.storage.storageType=file', '--conf', 'spark.cortex.storage.file.baseDir=src/main/resources/data', '--conf', 'spark.kubernetes.driverEnv.CORTEX_TOKEN=eyJhbGciOiJFZERTQSIsImtpZCI6Im5YMHZfcjdiMGJKOC1UVW5Sc3U2cHB2OFVUX0szYVMzdE11d3JzVVp1aEEifQ.eyJzdWIiOiI5ZGMxMjY2Mi1jZDUxLTQ5NDYtYTdmYy0zMTJmZWNlNzg5NTEiLCJhdWQiOiJjb3J0ZXgiLCJpc3MiOiJjb2duaXRpdmVzY2FsZS5jb20iLCJpYXQiOjE2NTc1NTEwNjMsImV4cCI6MTY1ODE1NTg2M30.WS-xexxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxU4ZnCevMfMGR7mfxZq6ofAra_FM0SQOeqruyJuidmdB1Cg', '--conf', 'spark.cortex.phoenix.token=eyJhbGciOiJFZERTQSIsImtpZCI6Im5YMHZfcjdiMGJKOC1UVW5Sc3U2cHB2OFVUX0szYVMzdE11d3JzVVp1aEEifQ.eyJzdWIiOiI5ZGMxMjY2Mi1jZDUxLTQ5NDYtYTdmYy0zMTJmZWNlNzg5NTEiLCJhdWQiOiJjb3J0ZXgiLCJpc3MiOiJjb2duaXRpdmVzY2FsZS5jb20iLCJpYXQiOjE2NTc1NTEwNjMsImV4cCI6MTY1ODE1NTg2M30.WS-xeXI3cphyuJ7iqgbmCRqZwaiN6ERxl8PglEDFU4ZnCevMfMGR7mfxZq6ofAra_FM0SQOeqruyJxxxxxxxxx', 'local:///app/libs/app.jar', 'cdata', '-p', 'local', '-i', 'cdata-csv', '-o', 'sink']
 21:05:06,331 |-INFO in ch.qos.logback.classic.LoggerContext[default] - Could NOT find resource [logback-test.xml]
 21:05:06,333 |-INFO in ch.qos.logback.classic.LoggerContext[default] - Found resource [logback.xml] at [file:/opt/spark/conf/logback.xml]
@@ -220,16 +243,6 @@ Termination Reason:
 Exit Code: 0
 ```
 
-This will read the `cdata-csv` Connection and write it to the `sink` connection defined
-in [cdata-connections.yml](../main-app/src/main/resources/spec/cdata-connections.yml). The sink file can be found
-at `./main-app/build/tmp/test-data/sink-ds` after running the command.
-
-Notes:
-* Port 4040 is forwarded from the container to expose the Spark UI (for debugging).
-* The first volume mount is sharing the [spark-submit config file](./src/main/resources/conf/spark-conf.json).
-* The second volume mount shares the LocalCatalog contents and other local application resources.
-* The third volume mount is the output location of the joined connection.
-
 ## Notes on CData BigQuery Connection
 
 The CData BigQuery Connection (shown below) requires authenticating to Google Cloud Storage along with providing the
@@ -278,7 +291,7 @@ $ docker run -p 4040:4040 \
 ```
 
 
-Currently, CData BigQuery JDBC connection is failing with:
+This example is failing when using the CData BigQuery JDBC Connection:
 ```
  java.sql.SQLException: 'port' is not a valid connection property.
         at XcoreXgooglebigqueryX210X8059.qrc.a(Unknown Source)
@@ -287,4 +300,4 @@ Currently, CData BigQuery JDBC connection is failing with:
         at org.apache.spark.sql.execution.datasources.jdbc.connection.BasicConnectionProvider.getConnection(BasicConnectionProvider.scala:49)
         at org.apache.spark.sql.execution.datasources.jdbc.connection.ConnectionProvider$.create(ConnectionProvider.scala:77)
 ```
-Looks like Spark is passing `port` implicitly.
+(Looks like Spark is passing `port` implicitly.)
