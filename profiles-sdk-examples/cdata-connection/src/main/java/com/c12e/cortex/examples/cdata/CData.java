@@ -47,12 +47,13 @@ public class CData implements Runnable {
         private static LocalSecrets localSecrets = new LocalSecrets();
         static {{
             // load 'oem_key' secret in the "local" project
+            requireEnvExists(List.of(CDATA_KEY_ENV, CDATA_CHECKSUM_ENV));
             localSecrets.setSecretsForProject("local", Map.of(
                     "oem_key", System.getenv(CDATA_KEY_ENV)
             ));
         }}
 
-        public void requireEnvExists(List<String> env) {
+        public static void requireEnvExists(List<String> env) {
             var envNotExist = env.stream().map(e -> System.getenv(e) == null).collect(Collectors.toList());
             var missingEnv = IntStream.range(0, env.size())
                     .filter(i -> envNotExist.get(i))
@@ -70,7 +71,7 @@ public class CData implements Runnable {
         public CDataSecretClient() {
             super(localSecrets);
             requireEnvExists(List.of(CDATA_KEY_ENV, CDATA_CHECKSUM_ENV));
-            System.setProperty("product_checksum", System.getenv(CDATA_CHECKSUM_ENV)); // TODO(LA): Why do we need this?
+            System.setProperty("product_checksum", System.getenv(CDATA_CHECKSUM_ENV));
         }
     }
 
