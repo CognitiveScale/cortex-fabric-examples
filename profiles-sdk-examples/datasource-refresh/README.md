@@ -153,13 +153,13 @@ To run this example in a Spark local mode against a Cortex Cluster with access t
 and local Secrets you must:
 * Know the [backend storage configuration](../docs/config.md#cortex-backend-storage) for the Cluster, which includes
   names of buckets and access keys for remote storage. If you do not know this, then try [running as a Skill](#run-as-a-skill).
-* Know the values of Cortex secrets used by the Connection.
+* Know the values of Cortex Secrets used by the Connection.
 * Generate a `CORTEX_TOKEN`.
 * Ensure that the Cortex resources exist, namely the Project, Data Source, and its Connection.
 * Update the [spark-conf.json](./src/main/resources/conf/spark-conf.json) file to:
     - Use the [Remote Catalog](../docs/catalog.md#remote-catalog) implementation by setting the Cortex URL (`spark.cortex.client.phoenix.url`) to the GraphQL API endpoint (e.g. `https://api.<domain>/fabric/v4/graphql`) and removing the Local Catalog implementation (`spark.cortex.catalog.impl`).
     - Use the [remote storage client](../docs/backendstorage.md#remote-storage-client) implementation by setting the Cortex URL (`spark.cortex.client.phoenix.url`) to the GraphQL API endpoint, and remove the local storage client implementation (`spark.cortex.client.storage.impl`).
-    - Update [Local Secret Client](../local-clients/README.md#secrets) with any secrets required by your Connection(s). Ensure to update the project, Secret name, and secret value.
+    - Update [Local Secret Client](../local-clients/README.md#secrets) with any Secrets required by your Connection(s). Ensure to update the project, Secret name, and Secret value.
     - Update the `app_command` arguments to match your Cortex project and Connections (`--project`, `--data-source`).
 
 **NOTE**: If your connections do not use Cortex Secrets because the Cortex cluster has [IRSA enabled](https://cognitivescale.github.io/cortex-charts/docs/platforms/aws/aws-irsa), then you may
@@ -173,7 +173,7 @@ used below to avoid hardcoding access keys in the source.
 
 The below example commanads are assuming:
 * The Cortex backend is using the `minio` instance packaged in  the [Cortex Charts](https://github.com/CognitiveScale/cortex-charts) with access and secret keys `xxxxx`/`xxxxx`.
-* The [CustomSecretClient](../local-clients/README.md#secrets) provides the secret used by the Connections (loaded from `CONNECTION_SECRET_VALUE`).
+* The [CustomSecretClient](../local-clients/README.md#secrets) provides the Secret used by the Connections (loaded from `CONNECTION_SECRET_VALUE`).
 
 From the parent directory:
 1. Build the application.

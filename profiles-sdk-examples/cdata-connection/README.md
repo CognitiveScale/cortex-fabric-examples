@@ -35,8 +35,8 @@ testRuntimeOnly(fileTree("src/main/resources/lib"){ include("*.jar") })
 
 ## Run Locally
 
-This example allows you to use the Profiles SDK locally. It utilizes a local Secret Client for manging the connection
-secrets. Database passwords, SSL certs, service account JSON file contents, and other variables. should be set in
+This example allows you to use the Profiles SDK locally. It utilizes a local Secret Client for manging the Connection
+Secrets. Database passwords, SSL certs, service account JSON file contents, and other variables. should be set in
 the [CData.java](./src/main/java/com/c12e/cortex/examples/cdata/CData.java) file via environment variables.
 
 To run this example locally with local Cortex clients (from the parent directory):

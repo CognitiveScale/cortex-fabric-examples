@@ -18,11 +18,18 @@ incorporate additional computational functions.
 
 ## Run Locally
 
-To run this example locally with local Cortex Clients:
-```bash
-$ make build
+To run this example locally with local Cortex Clients (from the parent directory):
+1. Build the application.
+    ```
+    make build
+    ```
+2. Run the application with Gradle.
+    ```
+    ./gradlew main-app:run --args="build-profile --project local --profile-schema member-profile"
+    ```
 
-$ ./gradlew main-app:run --args="build-profile --project local --profile-schema member-profile"
+The end of the log output should be similar to:
+```
 16:23:37.979 [main] INFO  org.apache.spark.ui.SparkUI - Bound SparkUI to 0.0.0.0, and started at http://c02wq091htdf.attlocal.net:4040
 16:23:38.424 [main] INFO  o.s.j.server.handler.ContextHandler - Started o.s.j.s.ServletContextHandler@4cfa83f9{/metrics/json,null,AVAILABLE,@Spark}
 16:23:38.982 [main] INFO  o.s.j.server.handler.ContextHandler - Started o.s.j.s.ServletContextHandler@646cd766{/SQL,null,AVAILABLE,@Spark}
@@ -96,16 +103,30 @@ The built profiles will be saved at: `main-app/build/test-data/cortex-profiles/p
 ## Run Locally in a Docker Container With Spark-submit
 
 To run this example in a Docker container with local Cortex clients (from the parent directory):
+1. Build the application.
+    ```
+    make build
+    ```
+2. Create the Skill Docker image.
+    ```
+    make create-app-image
+    ```
+3. Export Cortex token.
+    ```
+    export CORTEX_TOKEN=<token>
+    ```
+4. Run the application with Docker.
+    ```
+    docker run -p 4040:4040 --entrypoint="python" \
+      -e CORTEX_TOKEN="${CORTEX_TOKEN}" \
+      -v $(pwd)/build-profiles/src/main/resources/conf:/app/conf \
+      -v $(pwd)/main-app/src:/opt/spark/work-dir/src \
+      -v $(pwd)/main-app/build:/opt/spark/work-dir/build \
+    profiles-example submit_job.py "{ \"payload\" : { \"config\" : \"/app/conf/spark-conf.json\" } }"
+    ```
+
+The end of the log output should be similar to:
 ```
-$ make build create-app-image
-
-$ docker run -p 4040:4040 --entrypoint="python" -e CORTEX_TOKEN="${CORTEX_TOKEN}" \
-  -v $(pwd)/build-profiles/src/main/resources/conf:/app/conf \
-  -v $(pwd)/main-app/src:/opt/spark/work-dir/src \
-  -v $(pwd)/main-app/build:/opt/spark/work-dir/build \
-profiles-example submit_job.py "{ \"payload\" : { \"config\" : \"/app/conf/spark-conf.json\" } }"
-....
-
 22:01:40.685 [main] DEBUG c.c.c.p.m.c.DefaultCortexConnectionReader - Reading connection from file_path 'src/main/resources/data/cortex-profiles/sources/local/member-flu-risk-file-ds-delta'
 root
  |-- profile_id: integer (nullable = true)

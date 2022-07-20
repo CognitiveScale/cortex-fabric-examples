@@ -13,7 +13,7 @@ This example will assume an S3 File Stream is being used, but you can update Con
 * Upload data to S3 that can be used for the Connection. You can optionally use the [member dataset](../main-app/src/main/resources/data/members_100_v14.csv) used in local examples.
 * Update the `member-base-s3-stream` [S3 File Stream](https://cognitivescale.github.io/cortex-fabric/docs/reference-guides/connection-types#s3-file-stream-connections)
   Connection parameters with your data. Specifically: `uri`, `streamReadDir`, `s3Endpoint`, `publicKey`, and `secretKey`
-  (this should be a [secret](https://cognitivescale.github.io/cortex-fabric/docs/administration/secrets)).
+  (this should be a [Secret](https://cognitivescale.github.io/cortex-fabric/docs/administration/secrets)).
 * Update the [CustomSecretsClient](../local-clients/README.md#secrets) to load the Secret. For example, supposing the Connection's `secretKey` is `#SECURE.streaming-secret` and the key is loaded from the `STREAMING_SECRET_KEY`:
 ```java
 public class CustomSecretsClient extends LocalSecretClient {
@@ -26,8 +26,8 @@ public class CustomSecretsClient extends LocalSecretClient {
     }}
     public CustomSecretsClient() {
         super(localSecrets);
-        if (System.getenv(STREAMING_SECRET_ENV) == null) { // missing secret key
-            throw new RuntimeException(String.format("Missing environment variable '%s' for local secrets client", STREAMING_SECRET_ENV));
+        if (System.getenv(STREAMING_SECRET_ENV) == null) { // missing Secret key
+            throw new RuntimeException(String.format("Missing environment variable '%s' for local Secrets client", STREAMING_SECRET_ENV));
         }
     }
 }
@@ -42,7 +42,7 @@ To run this example locally with local Cortex clients (from the parent directory
     ```
     make build
     ```
-2. Export the secret value for your streaming Connection.
+2. Export the Secret value for your streaming Connection.
     ```
     export STREAMING_SECRET_KEY=<value>
     ```
@@ -226,12 +226,12 @@ To run this example in a Docker container with local Cortex clients (from the pa
     ```
     make create-app-image
     ```
-2. Export the secret value for your streaming Connection and a Cortex Token.
+2. Export the Secret value for your streaming Connection and a Cortex token.
     ```
     export STREAMING_SECRET_KEY=<value>
     export CORTEX_TOKEN=<token>
     ```
-4. Run the application with Gradle.
+4. Run the application with Docker.
     ```
     docker run -p 4040:4040 --entrypoint="python" \
       -e CORTEX_TOKEN="${CORTEX_TOKEN}" \

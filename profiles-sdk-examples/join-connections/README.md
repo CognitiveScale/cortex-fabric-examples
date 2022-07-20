@@ -99,7 +99,7 @@ local Secrets, you must:
 * Update the [spark-conf.json](./src/main/resources/conf/spark-conf.json) file to:
   - Use the [Remote Catalog](../docs/catalog.md#remote-catalog) implementation by setting the Cortex URL (`spark.cortex.client.phoenix.url`) to the GraphQL API endpoint (e.g. `https://api.<domain>/fabric/v4/graphql`), and remove the local Catalog implementation (`spark.cortex.catalog.impl`).
   - Use the [remote storage client](../docs/backendstorage.md#remote-storage-client) implementation by setting the Cortex URL (`spark.cortex.client.phoenix.url`) to the GraphQL API endpoint, and remove the local storage client implementation (`spark.cortex.client.storage.impl`).
-  - Update [Local Secret Client](../local-clients/README.md#secrets) with any secrets required by your Connection(s). Ensure to update the project, Secret name, and secret value.
+  - Update [Local Secret Client](../local-clients/README.md#secrets) with any Secrets required by your Connection(s). Ensure to update the project, Secret name, and Secret value.
   - Update the `app_command` arguments to match your Cortex project and Connections (`--project`,  `--left-conn`, `--right-conn`, `--write-conn` `--column`).
 
 **NOTE**: If your connections do not use Cortex Secrets because the Cortex cluster has [IRSA enabled](https://cognitivescale.github.io/cortex-charts/docs/platforms/aws/aws-irsa), then you may
@@ -113,7 +113,7 @@ used below to avoid hardcoding access keys in the source.
 
 The below example command is assuming:
 * The Cortex backend is using the `minio` instance packaged in  the [Cortex Charts](https://github.com/CognitiveScale/cortex-charts) with access and secret keys `xxxxx`/`xxxxx`.
-* The [CustomSecretClient](../local-clients/README.md#secrets) provides the secret used by the Connections (loaded from `CONNECTION_SECRET_VALUE`).
+* The [CustomSecretClient](../local-clients/README.md#secrets) provides the Secret used by the Connections (loaded from `CONNECTION_SECRET_VALUE`).
 
 From the parent directory:
 1. Build the application.

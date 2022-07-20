@@ -17,14 +17,21 @@ This builds off the [Local Clients](../local-clients/README.md) example for its 
 ## Run Locally
 
 To run this example locally with local Cortex clients (from the parent directory):
+1. Build the application.
+    ```
+    make build
+    ```
+2. Export the path to the GCP Service Account JSON file.
+    ```
+    export BIGQUERY_CREDS_FILE=$(PWD)/main-app/src/main/resources/credentials/gcs-service-account.json
+    ```
+3. Run the application with Gradle.
+    ```
+    ./gradlew main-app:run --args="bigquery --project local --google-project fabric-qa --table bigquery-public-data.samples.shakespeare --output sink"
+    ```
+
+The end of the log output should be similar to:
 ```
-$ make build
-
-$ export BIGQUERY_CREDS_FILE=$(PWD)/main-app/src/main/resources/credentials/gcs-service-account.json
-
-$ ./gradlew main-app:run --args="bigquery --project local --google-project fabric-qa --table bigquery-public-data.samples.shakespeare --output sink"
-...
-
 (spark.databricks.delta.schema.autoMerge.enabled,true), (spark.cortex.catalog.local.dir,src/main/resources/spec), (spark.sql.warehouse.dir,file:/Users/laguirre/cortex/cortex-fabric-examples/profiles-sdk-examples/main-app/spark-warehouse)15:25:10.695 [main] INFO  c.g.c.s.b.d.DirectBigQueryRelation - |Querying table bigquery-public-data.samples.shakespeare, parameters sent from Spark:|requiredColumns=[word,word_count,corpus,corpus_date],|filters=[]
 15:25:13.052 [main] INFO  c.g.c.s.b.direct.BigQueryRDDFactory - Created read session for table 'bigquery-public-data.samples.shakespeare': projects/fabric-qa/locations/us/sessions/CAISDHVzbzczR0xLdjVLbBoCamQaAmpmGgJpchoCb2oaAmpxGgJuYRoCb3MaAm93GgJqchoCaXcaAmpjGgJwehoCcHkaAmpzGgJweBoCb3YaAmppGgJpYRoCaWMaAnBs
 15:25:14.476 [Executor task launch worker for task 0.0 in stage 0.0 (TID 0)] INFO  c.g.c.s.b.r.o.a.a.m.BaseAllocator - Debug mode disabled.
@@ -52,7 +59,6 @@ See https://docs.gradle.org/7.4/userguide/command_line_interface.html#sec:comman
 BUILD SUCCESSFUL in 21s
 ```
 
-
 The sink connection is defined in the [cdata-connections.yml](../main-app/src/main/resources/spec/cdata-connections.yml) file,
 and can be found at `./main-app/build/tmp/test-data/sink-ds` after running the command. The above example is writing
 data to the Connection from a [BigQuery Sample table](https://cloud.google.com/bigquery/public-data#sample_tables).
@@ -60,23 +66,40 @@ data to the Connection from a [BigQuery Sample table](https://cloud.google.com/b
 ## Run Locally in a Docker Container With Spark-submit
 
 To run this example in a Docker container with local Cortex clients (from the parent directory):
+To run this example locally with local Cortex clients (from the parent directory):
+1. Build the application.
+    ```
+    make build
+    ```
+2. Crate the Skill Docker image.
+    ```
+    make create-app-image
+    ```
+3. Export the path to the GCP Service Account JSON file and a Cortex Token. The path to the JSON file should be within the Docker container.
+    ```
+    export CORTEX_TOKEN=<token>
+    export BIGQUERY_CREDS_FILE=/opt/spark/work-dir/src/main/resources/credentials/gcs-service-account.json
+    ```
+4. Run the application with Docker.
+    ```
+    docker run -p 4040:4040 \
+      --entrypoint="python" \
+      -e CORTEX_TOKEN="${CORTEX_TOKEN}" \
+      -e BIGQUERY_CREDS_FILE="${BIGQUERY_CREDS_FILE}" \
+      -v $(pwd)/bigquery-connection/src/main/resources/conf:/app/conf \
+      -v $(pwd)/main-app/src:/opt/spark/work-dir/src \
+      -v $(pwd)/main-app/build:/opt/spark/work-dir/build \
+      profiles-example submit_job.py "{\"payload\" : {\"config\": \"/app/conf/spark-conf.json\"}}"
+    ```
+   NOTES:
+    * Port 4040 is forwarded from the container to expose the Spark UI (for debugging).
+    * The `BIGQUERY_CREDS_FILE` environment variable is the path to the GCP Service Account JSON file in the container.
+    * The first volume mount is sharing the [Spark-submit config file](./src/main/resources/conf/spark-conf.json).
+    * The second volume mount shares the LocalCatalog contents and other local application resources.
+    * The third volume mount is the output location of the joined connection.
+
+The end of the logs should be similar to:
 ```
-$ make build create-app-image
-
-$ export CORTEX_TOKEN=...
-
-# directory is in Docker container
-$ export BIGQUERY_CREDS_FILE=/opt/spark/work-dir/src/main/resources/credentials/gcs-service-account.json
-
-$ docker run -p 4040:4040 \
-  --entrypoint="python" \
-  -e CORTEX_TOKEN="${CORTEX_TOKEN}" \
-  -e BIGQUERY_CREDS_FILE="${BIGQUERY_CREDS_FILE}" \
-  -v $(pwd)/bigquery-connection/src/main/resources/conf:/app/conf \
-  -v $(pwd)/main-app/src:/opt/spark/work-dir/src \
-  -v $(pwd)/main-app/build:/opt/spark/work-dir/build \
-profiles-example submit_job.py "{\"payload\" : {\"config\": \"/app/conf/spark-conf.json\"}}"
-
 19:29:19.134 [main] INFO  c.g.c.s.b.direct.BigQueryRDDFactory - Created read session for table 'bigquery-public-data.samples.shakespeare': projects/fabric-qa/locations/us/sessions/CAISDC1DWTRobUhUWThuTxoCamQaAmpmGgJpchoCb2oaAmpxGgJuYRoCb3MaAm93GgJqchoCaXcaAmpjGgJwehoCcHkaAmpzGgJweBoCb3YaAmppGgJpYRoCaWMaAnBs
 19:29:21.220 [Executor task launch worker for task 0.0 in stage 0.0 (TID 0)] INFO  c.g.c.s.b.r.o.a.a.m.BaseAllocator - Debug mode disabled.
 19:29:21.224 [Executor task launch worker for task 0.0 in stage 0.0 (TID 0)] INFO  c.g.c.s.b.r.o.a.a.m.DefaultAllocationManagerOption - allocation manager type not specified, using netty as the default type
@@ -99,12 +122,5 @@ Termination Reason:
 Exit Code: 0
 ```
 
-NOTES:
-* Port 4040 is forwarded from the container to expose the Spark UI (for debugging).
-* The `BIGQUERY_CREDS_FILE` environment variable is the path to the GCP Service Account JSON file in the container.
-* The first volume mount is sharing the [Spark-submit config file](./src/main/resources/conf/spark-conf.json).
-* The second volume mount shares the LocalCatalog contents and other local application resources.
-* The third volume mount is the output location of the joined connection.
- 
 The sink connection is defined in the [cdata-connections.yml](../main-app/src/main/resources/spec/cdata-connections.yml) file,
 and can be found at `./main-app/build/tmp/test-data/sink-ds` after running the command.
