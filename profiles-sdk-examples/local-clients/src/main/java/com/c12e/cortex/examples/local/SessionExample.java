@@ -41,7 +41,6 @@ public class SessionExample {
         options.put("spark.delta.logStore.gs.impl", "io.delta.storage.GCSLogStore");
         options.put("spark.shuffle.service.enabled", "false");
         options.put("spark.dynamicAllocation.enabled", "false");
-        options.put("spark.scheduler.mode", "FAIR");
         options.put("spark.sql.streaming.schemaInference", "true");
         options.put("spark.sql.legacy.timeParserPolicy", "LEGACY");
         options.put("spark.sql.adaptive.enabled", "true");

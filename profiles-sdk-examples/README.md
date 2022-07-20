@@ -120,16 +120,35 @@ Examples are structured to build upon themselves and grow in complexity. Each pr
 running as well as additional context. The top level [main-app](./main-app/README.md) is a CLI wrapper around the other
 examples:
 
-* [Local Cortex Clients](./local-clients/README.md)
-* [Join Connections](./join-connections/README.md)
-* [DataSource Refresh](./datasource-refresh/README.md)
+* [Using Local Cortex Clients](./local-clients/README.md)
+* [Join Two Connections](./join-connections/README.md)
+* [Refresh a DataSource](./datasource-refresh/README.md)
 * [Build Profiles](./build-profiles/README.md)
-* [DataSource Streaming](./datasource-streaming/README.md)
-* [CData Connections](./cdata-connection/README.md)
-* [BigQuery Connection](./bigquery-connection/README.md)
+* [Streaming to a Data Source](./datasource-streaming/README.md)
+* [Using a CData Connection](./cdata-connection/README.md)
+* [Reading From BigQuery](./bigquery-connection/README.md)
 
 [picocli](https://picocli.info/) is used by each example to create a minimal CLI application for running the example.
 Refer to the instructions in each example.
+
+### Add a Java Module Example
+
+The examples are structured as a [Gradle multi-project build](https://docs.gradle.org/current/userguide/multi_project_builds.html).
+
+To include a new project in the example Profiles application you will need to:
+* Create a new Java module. Ensure the new project is included in the `settings.gradle.kts` file.
+* Include the `com.c12e.cortex.profiles:profiles-sdk` and `com.c12e.cortex.profiles:platform-dependencies`
+  as [api dependencies](https://docs.gradle.org/current/userguide/dependency_management_for_java_projects.html#sec:configurations_java_tutorial)
+  in your configuration. You can refer to the [join-connections/build.gradle.kts](join-connections/build.gradle.kts) for
+  an example setup including the Profiles SDK, [picocli](https://picocli.info/), and Junit dependencies.
+* (Optional) Include a main CLI entrypoint in your module using [picocli](https://picocli.info/).
+* Include your project in the main application.
+  - Add your project as a dependency of the `main-app`. In `main-app/build.gradle.kts` add `implementation(project(":<your-project>"))` to `dependencies`.
+  - Add your project source to `main-app` jar file. In `main-app/build.gradle.kts` add `from(project(":<your-project>"))` to the `Jar` task (`tasks.withType<Jar>`).
+  - (Optional) If you included a CLI entrypoint in your module, then you can list it as a subcommand by importing the
+    class in [Application.java](main-app/src/main/java/com/c12e/cortex/examples/Application.java). Refer to the existing
+    subcommands in [Application.java](main-app/src/main/java/com/c12e/cortex/examples/Application.java) for an example
+    on how to include the class as a subcommand.
 
 ## Skill Template
 
