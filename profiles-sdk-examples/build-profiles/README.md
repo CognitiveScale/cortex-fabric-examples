@@ -98,7 +98,7 @@ Schema to be created by ingesting and joining the `member-base-ds` and `member-f
 [DataSources](../main-app/src/main/resources/spec/datasources.yml). The Profile Schema will additionally have various
 computed and bucketed attributes.
 
-The built profiles will be saved at: `main-app/build/test-data/cortex-profiles/profiles/local/member-profile-delta`.
+The built profiles are saved at: `main-app/build/test-data/cortex-profiles/profiles/local/member-profile-delta`.
 
 ## Run Locally in a Docker Container With Spark-submit
 

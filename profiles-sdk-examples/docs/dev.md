@@ -8,7 +8,7 @@
 To work with a locally built Profiles SDK JAR **in a container** put the built Profiles SDK jar file in
 `main-app/src/main/resources/lib/` to override the version used in the Docker container by the Spark executors.
 
-If you have built `distro` jar w/ the SDK and all dependencies, you can update `build.gradle.kts`, from:
+If you have built `distro` jar with the SDK and all dependencies, you can update `build.gradle.kts`, from:
 
 ```kotlin
 dependencies {
@@ -95,10 +95,12 @@ Exit Code: 0
 
 #### Guice Injection Errors
 
-If you see a `NullPointerException`, `ClassNotFoundException`, or Guice DI related exception then double check that ALL
+If you see a `NullPointerException`, `ClassNotFoundException`, or Guice DI related exception, then double check that ALL
 configuration options are set correctly, and refer to the configuration options.
 
-Usually the result of misconfiguration or a class path issue, ex:
+The issue is usually the result of misconfiguration or a class path issue (the class is not found).
+
+EXAMPLE:
 ```
 com.google.inject.ProvisionException: Unable to provision, see the following errors:
 
@@ -157,10 +159,10 @@ docker run -p 4040:4040 \
     profiles-example
 ```
 
-#### GQL Query Template:
+#### GraphQL Related Errors
 
-* GraphQL 302 HTTP response - double check API endpoint and Cortex Token
-* GraphQL general non-200 HTTP response related to connections -> Double check all Cortex resources exist and match the config options
+* GraphQL 302 HTTP response -> double check API endpoint and Cortex Token
+* GraphQL general non-200 HTTP response related to connections -> Verify that all Cortex resources exist and are set in the configuration options.
 
 Connection By Name
 ```bash
@@ -171,7 +173,7 @@ curl -i -H 'Content-Type: application/json' \
 
 ## Examples
 
-Table of which example flows have been fully documented:
+Example flows table:
 
 | Example                                                   | All Local (Spark, Catalog, Secrets, Backend Storage) | All Local (in container) | Semi-Local (Local Spark, Local Secrets, Local Backend, Remote Catalog) | Semi-Local (Local Spark, Local Secrets, Remote Catalog + Backend Storage) | Job Skill (In Cluster Spark Session + Cortex clients) |
 |-----------------------------------------------------------|------------------------------------------------------|--------------------------|------------------------------------------------------------------------|---------------------------------------------------------------------------|-------------------------------------------------------|
@@ -182,7 +184,7 @@ Table of which example flows have been fully documented:
 | [cdata-connection](../cdata-connection/README.md)         | [ ]                                                  | [x]                      | [ ]                                                                    | [ ]                                                                       | [ ]                                                   |
 | [bigquery-connection](../bigquery-connection/README.md)   | [x]                                                  | [x]                      | [ ]                                                                    | [ ]                                                                       | [ ]                                                   |
 
-Notes:
+**NOTES:**
 * It is also possible to run with a non-local Spark Session, but not including that as it requires Kubernetes access and not practical for a lot of users.
 
 ## TODOs

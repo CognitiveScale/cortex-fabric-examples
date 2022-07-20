@@ -1,6 +1,6 @@
 # Secrets
 
-When packaged in an Agent, the Profiles SDK will have access to Cortex Secrets in the cluster. However,
+When packaged in an Agent, the Profiles SDK has access to Cortex Secrets in the cluster. However,
 Secrets are not exposed to applications running outside the Cortex cluster. Although this may seem like a limitation, the
 Profiles SDK includes a local mock-client for providing Secrets.
 
@@ -36,7 +36,7 @@ public class CustomSecretsClient extends LocalSecretClient {
     }
 }
 ```
-See [./config.md](./config.md#local-development) for more information on configuration options.
+(See [./config.md](./config.md#local-development) for more information on configuration options.)
 
 ## Resources
 * [Manage Cortex Secrets](https://cognitivescale.github.io/cortex-fabric/docs/administration/secrets)

@@ -8,7 +8,7 @@ the [Local Clients](../local-clients/README.md) example for its setup but uses a
 ## Prerequisites:
 
 **NOTE:** Streaming is only supported for S3 File Stream and GCS File Stream Connection types. (See [Connection Types](https://cognitivescale.github.io/cortex-fabric/docs/reference-guides/connection-types).)
-This example will assume an S3 File Stream is being used, but you can update Connection definition and Secrets accordingly.
+This example assumes an S3 File Stream is being used, but you can update Connection definition and Secrets accordingly.
 
 * Upload data to S3 that can be used for the Connection. You can optionally use the [member dataset](../main-app/src/main/resources/data/members_100_v14.csv) used in local examples.
 * Update the `member-base-s3-stream` [S3 File Stream](https://cognitivescale.github.io/cortex-fabric/docs/reference-guides/connection-types#s3-file-stream-connections)
@@ -245,7 +245,7 @@ To run this example in a Docker container with local Cortex clients (from the pa
       profiles-example submit_job.py "{ \"payload\" : { \"config\" : \"/app/conf/spark-conf.json\" } }"
     ```
    NOTES:
-    * The `$CORTEX_TOKEN` environment variable is required by the Spark-submit wrapper, and needs to be a valid JWT token. You can generate this via: `cortex configure token`.
+    * The `$CORTEX_TOKEN` environment variable is required by the Spark-submit wrapper and needs to be a valid JWT token. You can generate this via: `cortex configure token`.
     * Port 4040 is forwarded from the container to expose the Spark UI (for debugging).
     * The first volume mount is sharing the [Spark-submit config file](./src/main/resources/conf/spark-conf.json).
     * The second volume mount shares the LocalCatalog contents and other local application resources.

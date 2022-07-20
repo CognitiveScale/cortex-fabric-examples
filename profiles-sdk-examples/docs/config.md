@@ -3,13 +3,12 @@
 Cortex configuration properties can be specified in the [Spark Configurations](https://spark.apache.org/docs/latest/index.html).
 
 Configuration options are specific to your use case and may depend on:
-- How/where you intend to run your application?
-- What resources are available in the target environment?
-- What your use case is?
+- How/where you intend to run your application
+- What resources are available in the target environment
+- What your use case is
 
-<-- TODO: General Spark configuration guidance (Spark UI, Debugging, metrics, fs performance)
+<--! TODO: General Spark configuration guidance (Spark UI, Debugging, metrics, fs performance)
 ## Spark Configuration Guidance
-
 -->
 
 ### Local Development
@@ -93,7 +92,7 @@ Cortex Config Options:
 | spark.cortex.writer.dataSource.validator.impl | CortexValidator implementation used for writing DataSources                                                                                  |                         |                                 | false     |
 | spark.cortex.reader.connection.impl           | CortexConnectionReader implementation                                                                                                        |                         |                                 | false     |
 | spark.cortex.reader.connection.validator.impl | CortexValidator implementation used for reading Connections                                                                                  |                         |                                 | false     |
-| spark.cortex.client.phoenix.impl              | ???????                                                                                                                                      |                         |                                 | false     |
+| spark.cortex.client.phoenix.impl              |                                                                                                                                              |                         |                                 | false     |
 | spark.cortex.storage.remote.impl              | PhoenixRemoteStorage implementation                                                                                                          |                         |                                 | false     |
 | spark.cortex.phoenix.token                    | Phoenix Token Key Path.                                                                                                                      |                         |                                 | true      |
 | spark.cortex.client.phoenix.url               | Phoenix Client URL Key Path.                                                                                                                 |                         |                                 | true      |

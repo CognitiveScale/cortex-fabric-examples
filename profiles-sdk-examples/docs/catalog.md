@@ -5,7 +5,7 @@
 
 The Profiles SDK includes a client for the Cortex Catalog that utilizes
 the [Cortex Fabric GraphQL API](https://cognitivescale.github.io/cortex-fabric/docs/reference-guides/apis/#graphql-api).
-Deployed Agents interacts with the Cortex Catalog instance. The Profiles SDK includes a local
+Deployed Agents interact with the Cortex Catalog instance. The Profiles SDK includes a local
 implementation of the Catalog that may be easier to use during development.
 
 Base Interface: `com.c12e.cortex.phoenix.Catalog` <!-- TODO: Link to javadoc -->
@@ -13,7 +13,7 @@ Base Interface: `com.c12e.cortex.phoenix.Catalog` <!-- TODO: Link to javadoc -->
 ## Remote Catalog
 
 By default, the Profiles SDK (`CortexSession`) utilizes remote Cortex Catalog. This is such that deployed Agents
-containing your application (and the Cortex Profiles SDK) communicates with the Cortex Catalog instance in your
+containing your application (and the Cortex Profiles SDK) communicate with the Cortex Catalog instance in your
 Cortex Cluster.
 
 Implementation: `com.c12e.cortex.profiles.catalog.CortexRemoteCatalog` <!-- TODO: Link to javadoc -->
@@ -24,8 +24,8 @@ The `CortexRemoteCatalog` implementation requires:
 * The Cortex API endpoint to be specified (`https://api.<dci-base-domain>`) - `spark.cortex.client.phoenix.url`
 * A Cortex API Token - `spark.cortex.client.phoenix.token`
 
-When packaged as a Skill with the existing templates then token and URL are handled by the Cortex Cluster. These
-configuration options need only be set when running outside the Cortex cluster (i.e. locally).
+When packaged as a Skill with the existing templates, the token is set by the Cortex Cluster. This
+configuration option need only be set when running outside the Cortex cluster (i.e. locally).
 
 **WARNING**: The `CortexRemoteCatalog` implementation is being developed and not all methods (GraphQL endpoints) are
 currently supported. Unsupported methods will return a `NotImplementedError` or `RuntimeException` error.
@@ -36,7 +36,9 @@ The `LocalCatalog` provides a file-based implementation for mocking the actual C
 your solution because
 - Cortex Resources (Data Sources, Connections, and Profile Schemas) can be written locally in YAML.
 - Smaller datasets can be used for Data Sources and Connections before actual deployment.
-- Local files can be used for datasets, which need not require Secrets or authentication in general. (NOTE: Remote connections are supported but require setting up a secrets client).
+- Local files can be used for datasets, which need not require Secrets or authentication in general.
+
+  **NOTE:** Remote connections are supported but require setting up a Secrets client.
 - Authentication to Cortex is not required.
 
 **WARNING**: The `LocalCatalog` implementation is being developed and not all methods (GraphQL endpoints) are currently
@@ -73,7 +75,7 @@ Follow the instructions below to setup a local catalog directory.
     touch spec/profileschemas.yaml
     ```
 * Define the resources in each file. The YAML representation expected by the `LocalCatalog` is not dissimilar from
-  the associated [Cortex Fabric GraphQL API Reference](https://cognitivescale.github.io/cortex-fabric/docs/reference-guides/apis/#graphql-api) but there
+  the associated [Cortex Fabric GraphQL API Reference](https://cognitivescale.github.io/cortex-fabric/docs/reference-guides/apis/#graphql-api) but, there
   are some differences. The general pattern for representing each resource is listed below, followed by an annotated example of a Connection.
   - Include at the top level of each resource: `apiVersion`, `kind`, `metadata`, and `spec` fields.
   - Set `apiVersion` to `cognitivescale.io/v1`.

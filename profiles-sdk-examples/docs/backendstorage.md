@@ -1,6 +1,6 @@
 # Cortex Backend Storage
 
-When packaged in an Agent the Profiles SDK will have access to the Cortex Clusters remote storage
+When packaged in an Agent, the Profiles SDK will has access to the Cortex Clusters remote storage
 for [Managed Content](https://cognitivescale.github.io/cortex-fabric/docs/manage-data/managed-content),
 [Cortex Profile](https://cognitivescale.github.io/cortex-fabric/docs/introduction/intro-fabric-profiles),
 and [Cortex Campaigns](https://cognitivescale.github.io/cortex-fabric/docs/introduction/intro-fabric-campaigns) data.
@@ -16,7 +16,7 @@ Base Interface: `com.c12e.cortex.profiles.client.CortexRemoteStorageClient`
 
 By default, the Profiles SDK (`CortexSession`) utilizes a remote storage client to get
 the [bucket configuration](../docs/config.md#cortex-backend-storage) for the Cortex Fabric cluster. This is such that
-deployed Agents containing your application will be able to access Managed Content and Profile data.
+deployed Agents containing your application are able to access Managed Content and Profile data.
 
 **This implementation will not work when running outside the cluster**. <!-- TODO: Show error when using it outside the cluster? -->
 

@@ -72,7 +72,7 @@ public void useCortexCatalog(CortexSession cortexSession) {
 #### Connections
 
 `Connections` for the local catalog are defined in [connectors.yaml](../main-app/src/main/resources/spec/connectors.yml).
-Four connections are defined and each is associated with a local csv or parquet [file](../main-app/src/main/resources/data):
+Four connections are defined, and each is associated with a local csv or parquet [file](../main-app/src/main/resources/data):
 - [member-base-file](../main-app/src/main/resources/data/members_100_v14.csv) - contains base member information
 - [member-feedback-file](../main-app/src/main/resources/data/feedback_100_v14.csv) - contains member feedback information
 - [member-flu-risk-file](../main-app/src/main/resources/data/member_flu_risk_100_v14.parquet) - contains a predicted member flu risk score
@@ -83,7 +83,7 @@ Four connections are defined and each is associated with a local csv or parquet 
 #### Data Sources
 
 Data Sources in the local Catalog are defined in [datasources.yml](../main-app/src/main/resources/spec/datasources.yml).
-Three Data Sources are defined and each is associated with a corresponding connection.
+Three Data Sources are defined, and each is associated with a corresponding connection.
 - member-base-ds
 - member-feedback-file-ds
 - member-flu-risk-file-ds
