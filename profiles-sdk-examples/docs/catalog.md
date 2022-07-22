@@ -172,7 +172,8 @@ spec:
 Supported Catalog methods:
 - `listConnections`
 - `getConnection`
-- `saveConnection`
+- `createConnection`
+- `updateConnection`
 - `deleteConnection`
 
 Reference:
@@ -215,7 +216,8 @@ spec:
 Supported Catalog Methods:
 * `listDataSources`
 * `getDataSource`
-* `saveDataSource`
+* `createDataSource`
+* `updateDataSource`
 * `deleteDataSource`
  
 Resources: 
@@ -318,7 +320,7 @@ Implemented Methods
 * `listProfileSchemas`
 * `getProfileSchema`
 * `createProfileSchema`
-* `saveProfileSchema`
+* `updateProfileSchema`
 * `deleteProfileSchema`
 
 Reference:
