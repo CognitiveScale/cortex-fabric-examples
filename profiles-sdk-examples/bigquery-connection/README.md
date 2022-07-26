@@ -131,7 +131,7 @@ and can be found at `./main-app/build/tmp/test-data/sink-ds` after running the c
 * Generate a `CORTEX_TOKEN`.
 * Save the GCP Service Account JSON file as a Cortex Secret by base64 encoding the value. The JSON file was exposed to
   the Skill Docker Image as a mounted volume when [running locally](#run-locally-in-a-docker-container-with-spark-submit).
-  However, these credentials will not be available when deployed. The Application includes a `--secretKey` option for
+  However, these credentials will not be available when deployed. The Application includes a `--secret` option for
   referencing the Secret you saved. Example encoding the JSON value:
    ```
    jq '. | @base64' < main-app/src/main/resources/credentials/gcs-service-account.json
@@ -140,7 +140,7 @@ and can be found at `./main-app/build/tmp/test-data/sink-ds` after running the c
     - Use the [Remote Catalog](../docs/catalog.md#remote-catalog) implementation by setting the Cortex URL (`spark.cortex.client.phoenix.url`) to the in-cluster GraphQL API endpoint (`"http://cortex-api.cortex.svc.cluster.local:8080"`) and removing the Local Catalog implementation (`spark.cortex.catalog.impl`).
     - Use the [remote storage client](../docs/backendstorage.md#remote-storage-client) implementation by setting the Cortex URL (`spark.cortex.client.phoenix.url`) to the GraphQL API endpoint, and remove the local storage client implementation (`spark.cortex.client.storage.impl`).
     - Remove the local Secret client implementation (`spark.cortex.client.secrets.impl`).
-    - Update the `app_command` arguments to match your Cortex Project and Profile Schema (`--project`, `--google-project`, `--table`, `--output`, `--secretKey`).
+    - Update the `app_command` arguments to match your Cortex Project and Profile Schema (`--project`, `--google-project`, `--table`, `--output`, `--secret`).
 
 ### Example
 
@@ -158,7 +158,7 @@ and can be found at `./main-app/build/tmp/test-data/sink-ds` after running the c
       "bigquery-public-data.samples.shakespeare",
       "--output",
       "bigquery-shake-c2942",
-      "--secretKey",
+      "--secret",
       "gcp-fabric"
     ],
     "app_location": "local:///app/libs/app.jar",
@@ -223,4 +223,4 @@ Notes on the above example:
 * The Phoenix Client URL and Secret Client URL are referring to services in Kubernetes Cluster
 * The Spark Driver and Spark Executors (`"spark.executor.instances"`) have a 2g and 4g of memory respectively. **Adjust the amount of resources used for your cluster/data.**
 * The Cortex [Backend Storage configuration](../docs/config.md#cortex-backend-storage) is configured by the default remote  storage client implementation.
-* THe `--secretKey` is set in the `app_command`.
+* THe `--secret` is set in the `app_command`.
