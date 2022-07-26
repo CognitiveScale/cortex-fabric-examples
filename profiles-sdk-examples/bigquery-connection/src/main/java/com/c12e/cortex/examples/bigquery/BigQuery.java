@@ -13,7 +13,9 @@
 package com.c12e.cortex.examples.bigquery;
 
 import com.c12e.cortex.examples.local.SessionExample;
+import com.c12e.cortex.phoenix.InternalSecretsClient;
 import com.c12e.cortex.profiles.CortexSession;
+import com.c12e.cortex.profiles.client.CortexSecretsClient;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SaveMode;
@@ -22,10 +24,13 @@ import org.apache.spark.sql.SparkSession;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
+import java.util.Map;
+import java.util.NoSuchElementException;
+
 /**
  * Example CLI application reading data from BigQuery and writing the result to a Cortex Connection.
  */
-@Command(name = "bigquery", description = "Example Spark Bigquery Connection", mixinStandardHelpOptions = true)
+@Command(name = "bigquery", description = "Example writing to a Cortex Connection from Google Bigquery with Spark", mixinStandardHelpOptions = true)
 public class BigQuery implements Runnable {
     @Option(names = {"-p", "--project"}, description = "Project to use", required = true)
     String project;
@@ -39,42 +44,81 @@ public class BigQuery implements Runnable {
     @Option(names = {"-t", "--table"}, description = "BigQuery table name", required = true)
     String tableName;
 
+    @Option(names = {"-s", "--secret"}, description = "Cortex Secret Key to use for BigQuery Credentials. Optional if the 'BIGQUERY_CREDS_FILE' environment variable is set.")
+    String secretKey;
+
     public static final String BIGQUERY_CREDS_FILE = "BIGQUERY_CREDS_FILE";
 
-    private String getBigQueryCreds() {
+    /**
+     * Retrieves the BigQuery credential from a Cortex Secret. Only applicable when running in the cluster.
+     * @param session Cortex Session
+     * @return Secret value
+     * @throws RuntimeException If the Secret doesn't exist.
+     */
+    private String getBigqueryCredsFromSecret(CortexSession session) {
+        if (secretKey == null) {
+            throw new RuntimeException("Missing Secret name for BigQuery credentials. Try setting '--secret'");
+        }
+        // Retrieve the Cortex Token and Secrets URL from the Spark Configuration
+        String token = session.spark().conf().get(CortexSession.PHOENIX_TOKEN_KEY);
+        String url = session.spark().conf().get(CortexSession.SECRET_CLIENT_URL_KEY);
+
+        // Retrieve the Secret.
+        var client = new InternalSecretsClient(url, token);
+        var secret = client.getSecret(project, secretKey);
+        System.out.println(String.format("Secret (%s): '%s'", secretKey, secret));
+        return secret;
+    }
+
+    private String getBigQueryCredsFromEnv() {
         var credentials = System.getenv(BIGQUERY_CREDS_FILE);
         if (credentials == null) {
-            throw new RuntimeException(String.format("Missing BigQuery JSON credentials path (environment variable): '%s'", BIGQUERY_CREDS_FILE));
+            throw new RuntimeException(String.format("Missing BigQuery JSON credentials. Try setting (environment variable): '%s'", BIGQUERY_CREDS_FILE));
         }
         return credentials;
     }
 
+    private boolean useCredentialsFile(CortexSession session) {
+        // Check if Secret Client URL is set in the Spark Configuration. If not, then use credentials file.
+        try {
+            session.spark().conf().get(CortexSession.SECRET_CLIENT_URL_KEY);
+        } catch (NoSuchElementException ne) {
+            return true;
+        }
+        return false;
+    }
+
     @Override
     public void run() {
-        // Create cortex session.
+        // Create cortex session
         var sessionExample = new SessionExample();
         CortexSession cortexSession = sessionExample.getCortexSession();
         writeFromBigQuery(cortexSession);
     }
 
     public void writeFromBigQuery(CortexSession cortexSession) {
-        // Get spark session.
+        // Get spark session
         SparkSession session = cortexSession.spark();
         session.conf().getAll().toStream().print();
 
-        // Read from bigquery table.
-        Dataset<Row> ds = session.read()
+        // Read the BigQuery table
+        var reader = session.read()
                 .format("bigquery")
                 .option("parentProject", parentProject)
-                .option("credentialsFile", getBigQueryCreds())
-                .option("table", tableName)
-                .load();
+                .option("table", tableName);
+        // Apply credentials either via file (local use) or Secret (in cluster)
+        if (useCredentialsFile(cortexSession)) {
+            reader = reader.option("credentialsFile", getBigQueryCredsFromEnv());
+        } else {
+            reader = reader.option("credentials", getBigqueryCredsFromSecret(cortexSession));
+        }
+        Dataset<Row> ds = reader.load();
 
-        // Show the first row.
+        // Show the first row
         ds.show(1);
 
         // Write result. Note `SaveMode.Overwrite` will cause the bigquery table to override any existing
-        // data in the sink.
+        // data in the sink
         cortexSession.write()
                 .connection(ds, project, sink)
                 .mode(SaveMode.Overwrite)

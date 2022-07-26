@@ -79,9 +79,6 @@ public class StreamingDataSource implements Runnable {
         // (e.g. name, min, max, etc.).
         writer.performFeatureCatalogCalculations(false);
 
-        // Don't perform groupBy on micro-batch.
-        writer.performAggregation(false);
-
         // Perform a Delta Table merge when writing the data.
         writer.deltaMerge(CortexDeltaMergeBuilder.getInstance());
         //writer.mode(SaveMode.Overwrite);

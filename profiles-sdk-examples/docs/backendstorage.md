@@ -32,7 +32,7 @@ The Spark-submit configuration options should include:
 ```json
 {
   "spark.cortex.client.storage.impl": "com.c12e.cortex.profiles.client.InternalRemoteStorageClient",
-  "spark.cortex.client.phoenix.url": "http://cortex-api.cortex.svc.cluster.local:8080/fabric/v4/graphql"
+  "spark.cortex.client.phoenix.url": "http://cortex-api.cortex.svc.cluster.local:8080"
 }
 ```
 

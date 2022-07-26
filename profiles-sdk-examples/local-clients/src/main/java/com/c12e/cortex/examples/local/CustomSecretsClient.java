@@ -14,14 +14,17 @@ public class CustomSecretsClient extends LocalSecretClient {
     public static final String STREAMING_SECRET_ENV = "STREAMING_SECRET_KEY";
     public static final String CONNECTION_SECRET_ENV = "CONNECTION_SECRET_VALUE";
 
-    // Stores a map of secret name (key) and values for each project.
+    // Stores a map of Secret key and values per Project.
     private static final LocalSecretClient.LocalSecrets localSecrets = new LocalSecretClient.LocalSecrets();
     static {{
         localSecrets.setSecretsForProject("local", Map.of(
-                // load 'secret' from environment variables to avoid harcoding
-                "secret", System.getenv().getOrDefault(CONNECTION_SECRET_ENV, ""),
+                // Add 'secret-key' to the "local" Project
+                "secret-key", "secret-value",
 
-                // load 'streaming-secret' from environment variables (for streaming-connections)
+                // Load the Secret value from an environment variable to avoid hardcoding
+                "secret-from-env", System.getenv().getOrDefault(CONNECTION_SECRET_ENV, ""),
+
+                // Load 'streaming-secret' from an environment variable (for streaming-connections)
                 "streaming-secret", System.getenv().getOrDefault(STREAMING_SECRET_ENV, "")
         ));
     }}

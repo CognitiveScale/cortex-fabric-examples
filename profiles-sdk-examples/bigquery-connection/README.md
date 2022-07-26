@@ -66,7 +66,6 @@ data to the Connection from a [BigQuery Sample table](https://cloud.google.com/b
 ## Run Locally in a Docker Container With Spark-submit
 
 To run this example in a Docker container with local Cortex clients (from the parent directory):
-To run this example locally with local Cortex clients (from the parent directory):
 1. Build the application.
     ```
     make build
@@ -124,3 +123,104 @@ Exit Code: 0
 
 The sink connection is defined in the [cdata-connections.yml](../main-app/src/main/resources/spec/cdata-connections.yml) file,
 and can be found at `./main-app/build/tmp/test-data/sink-ds` after running the command.
+
+### Run as a Skill
+
+### Prerequisites
+* Ensure that the Cortex resources exist, specifically the Cortex Project and Connection. **The underlying source of the Connection does not need to exist.**
+* Generate a `CORTEX_TOKEN`.
+* Save the GCP Service Account JSON file as a Cortex Secret by base64 encoding the value. The JSON file was exposed to
+  the Skill Docker Image as a mounted volume when [running locally](#run-locally-in-a-docker-container-with-spark-submit).
+  However, these credentials will not be available when deployed. The Application includes a `--secretKey` option for
+  referencing the Secret you saved. Example encoding the JSON value:
+   ```
+   jq '. | @base64' < main-app/src/main/resources/credentials/gcs-service-account.json
+   ```
+* Update the [spark-conf.json](./src/main/resources/conf/spark-conf.json) file to:
+    - Use the [Remote Catalog](../docs/catalog.md#remote-catalog) implementation by setting the Cortex URL (`spark.cortex.client.phoenix.url`) to the in-cluster GraphQL API endpoint (`"http://cortex-api.cortex.svc.cluster.local:8080"`) and removing the Local Catalog implementation (`spark.cortex.catalog.impl`).
+    - Use the [remote storage client](../docs/backendstorage.md#remote-storage-client) implementation by setting the Cortex URL (`spark.cortex.client.phoenix.url`) to the GraphQL API endpoint, and remove the local storage client implementation (`spark.cortex.client.storage.impl`).
+    - Remove the local Secret client implementation (`spark.cortex.client.secrets.impl`).
+    - Update the `app_command` arguments to match your Cortex Project and Profile Schema (`--project`, `--google-project`, `--table`, `--output`, `--secretKey`).
+
+### Example
+
+```json
+{
+  "pyspark": {
+    "pyspark_bin": "bin/spark-submit",
+    "app_command": [
+      "bigquery",
+      "--project",
+      "testi-69257",
+      "--google-project",
+      "fabric",
+      "--table",
+      "bigquery-public-data.samples.shakespeare",
+      "--output",
+      "bigquery-shake-c2942",
+      "--secretKey",
+      "gcp-fabric"
+    ],
+    "app_location": "local:///app/libs/app.jar",
+    "options": {
+      "--master": "k8s://https://kubernetes.default.svc:443",
+      "--deploy-mode": "cluster",
+      "--name": "profile-examples",
+      "--class": "com.c12e.cortex.examples.Application",
+      "--conf": {
+        "spark.app.name": "CortexProfilesExamples",
+        "spark.cortex.client.phoenix.url": "http://cortex-api.cortex.svc.cluster.local:8080",
+        "spark.cortex.client.secrets.url": "http://cortex-accounts.cortex.svc.cluster.local:5000",
+        "spark.cortex.catalog.impl": "com.c12e.cortex.profiles.catalog.CortexRemoteCatalog",
+        "spark.executor.cores": 1,
+        "spark.executor.instances": 2,
+        "spark.executor.memory": "2g",
+        "spark.driver.memory": "2g",
+        "spark.kubernetes.authenticate.driver.serviceAccountName": "default",
+        "spark.kubernetes.namespace": "cortex-compute",
+        "spark.kubernetes.driver.master": "https://kubernetes.default.svc",
+        "spark.kubernetes.driver.container.image": "private-registry.dci-dev.dev-eks.insights.ai/profiles-example:latest",
+        "spark.kubernetes.executor.container.image": "private-registry.dci-dev.dev-eks.insights.ai/profiles-example:latest",
+        "spark.kubernetes.driver.podTemplateContainerName": "fabric-action",
+        "spark.kubernetes.executor.annotation.traffic.sidecar.istio.io/excludeOutboundPorts": "7078,7079",
+        "spark.kubernetes.driver.annotation.traffic.sidecar.istio.io/excludeInboundPorts": "7078,7079",
+        "spark.kubernetes.container.image.pullPolicy": "Always",
+
+        "spark.ui.enabled":"false",
+        "spark.ui.prometheus.enabled": "false",
+        "spark.sql.streaming.metricsEnabled": "false",
+        "spark.executor.processTreeMetrics.enabled": "false",
+        "spark.metrics.conf.*.sink.prometheusServlet.class": "org.apache.spark.metrics.sink.PrometheusServlet",
+        "spark.metrics.conf.*.sink.prometheusServlet.path": "/metrics/prometheus",
+        "spark.metrics.conf.master.sink.prometheusServlet.path": "/metrics/master/prometheus",
+        "spark.metrics.conf.applications.sink.prometheusServlet.path": "/metrics/applications/prometheus",
+
+        "spark.delta.logStore.gs.impl": "io.delta.storage.GCSLogStore",
+        "spark.hadoop.fs.AbstractFileSystem.gs.impl": "com.google.cloud.hadoop.fs.gcs.GoogleHadoopFS",
+        "spark.sql.shuffle.partitions": "10",
+        "spark.hadoop.fs.s3a.impl": "org.apache.hadoop.fs.s3a.S3AFileSystem",
+        "spark.hadoop.fs.s3a.fast.upload.buffer": "disk",
+        "spark.hadoop.fs.s3a.fast.upload": "true",
+        "spark.hadoop.fs.s3a.block.size": "128M",
+        "spark.hadoop.fs.s3a.multipart.size": "512M",
+        "spark.hadoop.fs.s3a.multipart.threshold": "512M",
+        "spark.hadoop.fs.s3a.fast.upload.active.blocks": "2048",
+        "spark.hadoop.fs.s3a.committer.threads": "2048",
+        "spark.hadoop.fs.s3a.max.total.tasks": "2048",
+        "spark.hadoop.fs.s3a.threads.max": "2048",
+        "spark.sql.extensions": "io.delta.sql.DeltaSparkSessionExtension",
+        "spark.sql.catalog.spark_catalog": "org.apache.spark.sql.delta.catalog.DeltaCatalog",
+        "spark.databricks.delta.schema.autoMerge.enabled": "true",
+        "spark.databricks.delta.merge.repartitionBeforeWrite.enabled": "true"
+      }
+    }
+  }
+}
+```
+
+Notes on the above example:
+* The `--master` and `--deploy-mode` have been set to run the Spark job in the Cortex (Kubernetes) Cluster.
+* The Phoenix Client URL and Secret Client URL are referring to services in Kubernetes Cluster
+* The Spark Driver and Spark Executors (`"spark.executor.instances"`) have a 2g and 4g of memory respectively. **Adjust the amount of resources used for your cluster/data.**
+* The Cortex [Backend Storage configuration](../docs/config.md#cortex-backend-storage) is configured by the default remote  storage client implementation.
+* THe `--secretKey` is set in the `app_command`.

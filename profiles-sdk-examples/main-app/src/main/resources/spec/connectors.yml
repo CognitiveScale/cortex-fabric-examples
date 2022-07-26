@@ -45,7 +45,7 @@ spec:
     - name: uri
       value: ./src/main/resources/data/member_flu_risk_100_v14.parquet
     - name: secretParam
-      value: "#SECURE.secret"
+      value: "#SECURE.secret-key"
 ---
 apiVersion: cognitivescale.io/v1
 kind: Connection

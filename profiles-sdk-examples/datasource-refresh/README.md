@@ -210,14 +210,14 @@ From the parent directory:
 * Ensure that the Cortex resources exist, namely the Project, Data Source, and its Connection.
 * Generate a `CORTEX_TOKEN`.
 * Update the [spark-conf.json](./src/main/resources/conf/spark-conf.json) file to:
-    - Use the [Remote Catalog](../docs/catalog.md#remote-catalog) implementation by setting the Cortex URL (`spark.cortex.client.phoenix.url`) to the GraphQL API endpoint (e.g. `https://api.<domain>/fabric/v4/graphql`) and removing the Local Catalog implementation (`spark.cortex.catalog.impl`).
+    - Use the [Remote Catalog](../docs/catalog.md#remote-catalog) implementation by setting the Cortex URL (`spark.cortex.client.phoenix.url`) to the in-cluster GraphQL API endpoint (`"http://cortex-api.cortex.svc.cluster.local:8080"`) and removing the Local Catalog implementation (`spark.cortex.catalog.impl`).
     - Use the [remote storage client](../docs/backendstorage.md#remote-storage-client) implementation by setting the Cortex URL (`spark.cortex.client.phoenix.url`) to the GraphQL API endpoint, and remove the local storage client implementation (`spark.cortex.client.storage.impl`).
     - Remove the Local Secret Client implementation (`spark.cortex.client.secrets.impl`).
     - Update the `app_command` arguments to match your Cortex project and Data Source names (`--project`, `--data-source`).
 
-To run this example in Spark local mode against a Cortex Cluster with access to the Catalog and Secrets, you must
-update the spark configuration file (e.g. `spark-conf.json`) used by the main application to match configuration for
-this example.
+To run this example in Spark cluster mode against a Cortex Cluster with access to the Catalog and Secrets, you must
+update the spark configuration file used by the main application (`main-app/src/main/resources/conf/spark-conf.json`) to
+match configuration for this example.
 
 Refer to the [instructions for running the Skill template](../README.md#skill-template) in the top level README for
 deploying and invoking the skill.
@@ -244,7 +244,7 @@ deploying and invoking the skill.
       "--class": "com.c12e.cortex.examples.Application",
       "--conf": {
         "spark.app.name": "CortexProfilesExamples",
-        "spark.cortex.client.phoenix.url": "http://cortex-api.cortex.svc.cluster.local:8080/fabric/v4/graphql",
+        "spark.cortex.client.phoenix.url": "http://cortex-api.cortex.svc.cluster.local:8080",
         "spark.cortex.client.secrets.url": "http://cortex-accounts.cortex.svc.cluster.local:5000",
         "spark.cortex.catalog.impl": "com.c12e.cortex.profiles.catalog.CortexRemoteCatalog",
         "spark.executor.cores": 1,
@@ -263,7 +263,7 @@ deploying and invoking the skill.
 
         "spark.ui.prometheus.enabled": "false",
         "spark.sql.streaming.metricsEnabled": "false",
-        "spark.executor.processTreeMetrics.enabled": "true",
+        "spark.executor.processTreeMetrics.enabled": "false",
         "spark.metrics.conf.*.sink.prometheusServlet.class": "org.apache.spark.metrics.sink.PrometheusServlet",
         "spark.metrics.conf.*.sink.prometheusServlet.path": "/metrics/prometheus",
         "spark.metrics.conf.master.sink.prometheusServlet.path": "/metrics/master/prometheus",

@@ -18,7 +18,7 @@ When working locally it is useful to set:
 * `spark.cortex.catalog.local.dir` to the local Catalog directory.
 * `spark.cortex.client.secrets.impl` to the local Secrets Client implementation.
 * `spark.cortex.proxy.impl` to a Guice `MethodInterceptor` implementation.
-* `spark.cortex.client.storage.impl` to `"com.c12e.cortex.profiles.client.InternalRemoteStorageClient"` to use a local directory to mock Cortex backend storage.
+* `spark.cortex.client.storage.impl` to `"com.c12e.cortex.profiles.client.LocalRemoteStorageClient"` to use a local directory to mock Cortex backend storage.
 * `spark.cortex.storage.file.baseDir` to the base directory when working with a local directory.
 
 Example usage of the above configuration options can be found at [../local-clients](../local-clients/README.md).
@@ -52,7 +52,7 @@ The hierarchy for loading Storage Configuration options (least to most priority)
 ```json
 {
   "spark.cortex.client.storage.impl": "com.c12e.cortex.profiles.client.InternalRemoteStorageClient",
-  "spark.cortex.client.phoenix.url": "http://cortex-api.cortex.svc.cluster.local:8080/fabric/v4/graphql",
+  "spark.cortex.client.phoenix.url": "http://cortex-api.cortex.svc.cluster.local:8080",
   "spark.cortex.storage.storageType": "file",
 
   "spark.cortex.storage.bucket.managedContent": "custom-mc-bucket",
