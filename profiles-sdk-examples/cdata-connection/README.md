@@ -278,26 +278,17 @@ To run this example locally in a container:
 * Update the `url` and `query` parameter (including the `ProjectId`) to match your data.
 * Include an additional volume mount to share the Service Account credentials.
 ```
-$ docker run -p 4040:4040 \
+docker run -p 4040:4040 \
     -e CORTEX_TOKEN="${CORTEX_TOKEN}" \
     -e CDATA_OEM_KEY="${CDATA_OEM_KEY}" \
-    -e CDATA_PRODUCT_CHECKSUM="{CDATA_PRODUCT_CHECKSUM}" \
+    -e CDATA_PRODUCT_CHECKSUM="${CDATA_PRODUCT_CHECKSUM}" \
     --entrypoint="python" \
-    -v $(pwd)/main-app/src/main/resources/credentials/:/secure-storage/
-    -v $(pwd)/cdata-connection/src/main/resources/conf:/app/conf
-    -v $(pwd)/main-app/src:/opt/spark/work-dir/src
-    -v $(pwd)/main-app/build:/opt/spark/work-dir/build
+    -v $(pwd)/main-app/src/main/resources/credentials/:/secure-storage/ \
+    -v $(pwd)/cdata-connection/src/main/resources/conf:/app/conf \
+    -v $(pwd)/main-app/src:/opt/spark/work-dir/src \
+    -v $(pwd)/main-app/build:/opt/spark/work-dir/build \
     profiles-example submit_job.py "{\"payload\" : {\"config\": \"/app/conf/spark-conf.json\"}}"
 ```
 
-
-This example is failing when using the CData BigQuery JDBC Connection:
-```
- java.sql.SQLException: 'port' is not a valid connection property.
-        at XcoreXgooglebigqueryX210X8059.qrc.a(Unknown Source)
-        at XcoreXgooglebigqueryX210X8059.qrc.b(Unknown Source)
-        at cdata.jdbc.googlebigquery.GoogleBigQueryDriver.connect(Unknown Source)
-        at org.apache.spark.sql.execution.datasources.jdbc.connection.BasicConnectionProvider.getConnection(BasicConnectionProvider.scala:49)
-        at org.apache.spark.sql.execution.datasources.jdbc.connection.ConnectionProvider$.create(ConnectionProvider.scala:77)
-```
-(Looks like Spark is passing `port` implicitly.)
+(See [Run locally in a Docker container](#run-locally-in-a-docker-container-with-spark-submit) for instructions to build
+the application  and create the Docker container).
