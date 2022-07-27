@@ -272,7 +272,7 @@ spec:
 
 <!-- TODO(LA): below google doc isn't public, we should link off to Google docs instead -->
 To run this example locally in a container:
-* Get a GCP Service Account JSON as described.
+* Get a GCP Service Account JSON as described
   in https://docs.google.com/document/d/1T1u8RMZhDYMIXHk7v3lLF2rzag7xLTr5CLHC-49UiYU/edit#heading=h.756ioo8pxy08 and put
   it into `profiles-examples/main-app/src/main/resources/credentials/`.
 * Update the `url` and `query` parameter (including the `ProjectId`) to match your data.
