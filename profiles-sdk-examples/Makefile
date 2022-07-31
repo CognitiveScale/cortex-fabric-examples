@@ -1,4 +1,4 @@
-.PHONY: clean build create-app-image
+.PHONY: clean build create-app-image test
 
 TAG := latest
 DOCKER_IMAGE := profiles-example
@@ -11,7 +11,7 @@ SPARK_CONTAINER := ${DOCKER_PREGISTRY_URL}/${DOCKER_IMAGE}:${TAG}
 all: clean build create-app-image deploy-skill
 
 create-app-image:
-	docker build --build-arg base_img=c12e/spark-template:profile-jar-base-6.3.0-M.2.3 -t profiles-example:latest -f ./main-app/build/resources/main/Dockerfile ./main-app/build
+	docker build --build-arg base_img=c12e/spark-template:profile-jar-base-6.3.0-M.2.3 -t ${DOCKER_IMAGE}:${TAG} -f ./main-app/build/resources/main/Dockerfile ./main-app/build
 
 # Build the Application
 build:
@@ -27,7 +27,7 @@ clean:
 
 # Tag the latest create-app-image built container
 tag-container: check-env
-	docker tag profiles-example:latest ${SPARK_CONTAINER}
+	docker tag ${DOCKER_IMAGE}:${TAG} ${SPARK_CONTAINER}
 
 # Push the container
 push-container: check-env
@@ -35,7 +35,7 @@ push-container: check-env
 
 # Deploy the action and save the skill
 skill-save: check-env
-	cortex actions deploy --actionName ${DOCKER_IMAGE} --actionType job --docker ${SPARK_CONTAINER} --project ${PROJECT_NAME} --cmd '["scuttle", "python", "submit_job.py"]' --podspec ./templates/podspec.yaml
+	cortex actions deploy --actionName profiles-example --actionType job --docker ${SPARK_CONTAINER} --project ${PROJECT_NAME} --cmd '["scuttle", "python", "submit_job.py"]' --podspec ./templates/podspec.yaml
 	cortex skills save -y templates/skill.yaml --project ${PROJECT_NAME}
 
 # Save types

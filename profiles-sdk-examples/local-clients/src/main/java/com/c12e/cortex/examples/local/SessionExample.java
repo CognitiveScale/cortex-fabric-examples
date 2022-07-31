@@ -16,7 +16,7 @@ import java.util.Map;
 public class SessionExample {
 
     private static final String SPARK_HOME = "SPARK_HOME";
-    private static boolean shouldUseDefaultOptions() {
+    public static boolean shouldUseDefaultOptions() {
         // Use the SPARK_HOME env variable as a proxy for whether this is running in-cluster or locally, and
         // whether to load spark-submit config file. (Guarding against missing config file & required properties).
         return System.getenv(SPARK_HOME) == null;

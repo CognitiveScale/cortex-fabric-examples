@@ -54,69 +54,6 @@ To run this example locally with local Cortex clients (from the parent directory
     ./gradlew main-app:run --args="cdata --project local --input cdata-csv --output sink"
     ```
 
-**NOTE**: This example is currently not working when running locally, because the Spark executors require a
-scratch-directory (`/opt-spark/work-dir`) which does not exist. This should be sett-able
-via `spark.local.dir` in the spark-conf.json file or via the `SPARK_LOCAL_DIRS` env var, but this configuration
-has not been taking effect. If you see an error similar  to the following, then instead try
-[running this example in a Docker container](#run-locally-in-a-docker-container-with-spark-submit):
-```
-16:29:55.486 [main] DEBUG c.c.c.p.m.c.DefaultCortexConnectionWriter - Writing to connection: 'file:///opt/spark/work-dir/build/tmp/test-data/sink-ds/'
-16:29:56.005 [main] ERROR o.a.h.m.l.output.FileOutputCommitter - Mkdirs failed to create file:/opt/spark/work-dir/build/tmp/test-data/sink-ds/_temporary/0
-16:29:57.191 [Executor task launch worker for task 0.0 in stage 0.0 (TID 0)] ERROR org.apache.spark.executor.Executor - Exception in task 0.0 in stage 0.0 (TID 0)
-java.io.IOException: Mkdirs failed to create file:/opt/spark/work-dir/build/tmp/test-data/sink-ds/_temporary/0/_temporary/attempt_202207111629564235807494301289100_0000_m_000000_0 (exists=false, cwd=file:/Users/laguirre/cortex/cortex-fabric-examples/profiles-sdk-examples/main-app)
-        at org.apache.hadoop.fs.ChecksumFileSystem.create(ChecksumFileSystem.java:515)
-        at org.apache.hadoop.fs.ChecksumFileSystem.create(ChecksumFileSystem.java:500)
-        at org.apache.hadoop.fs.FileSystem.create(FileSystem.java:1195)
-        at org.apache.hadoop.fs.FileSystem.create(FileSystem.java:1175)
-        at org.apache.parquet.hadoop.util.HadoopOutputFile.create(HadoopOutputFile.java:74)
-        at org.apache.parquet.hadoop.ParquetFileWriter.<init>(ParquetFileWriter.java:329)
-        at org.apache.parquet.hadoop.ParquetOutputFormat.getRecordWriter(ParquetOutputFormat.java:482)
-        at org.apache.parquet.hadoop.ParquetOutputFormat.getRecordWriter(ParquetOutputFormat.java:420)
-        at org.apache.parquet.hadoop.ParquetOutputFormat.getRecordWriter(ParquetOutputFormat.java:409)
-        at org.apache.spark.sql.execution.datasources.parquet.ParquetOutputWriter.<init>(ParquetOutputWriter.scala:36)
-        at org.apache.spark.sql.execution.datasources.parquet.ParquetFileFormat$$anon$1.newInstance(ParquetFileFormat.scala:150)
-        at org.apache.spark.sql.execution.datasources.SingleDirectoryDataWriter.newOutputWriter(FileFormatDataWriter.scala:161)
-        at org.apache.spark.sql.execution.datasources.SingleDirectoryDataWriter.<init>(FileFormatDataWriter.scala:146)
-        at org.apache.spark.sql.execution.datasources.FileFormatWriter$.executeTask(FileFormatWriter.scala:290)
-        at org.apache.spark.sql.execution.datasources.FileFormatWriter$.$anonfun$write$16(FileFormatWriter.scala:229)
-        at org.apache.spark.scheduler.ResultTask.runTask(ResultTask.scala:90)
-        at org.apache.spark.scheduler.Task.run(Task.scala:131)
-        at org.apache.spark.executor.Executor$TaskRunner.$anonfun$run$3(Executor.scala:506)
-        at org.apache.spark.util.Utils$.tryWithSafeFinally(Utils.scala:1462)
-        at org.apache.spark.executor.Executor$TaskRunner.run(Executor.scala:509)
-        at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128)
-        at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
-        at java.base/java.lang.Thread.run(Thread.java:829)
-16:29:57.216 [task-result-getter-0] WARN  o.a.spark.scheduler.TaskSetManager - Lost task 0.0 in stage 0.0 (TID 0) (c02wq091htdf.attlocal.net executor driver): java.io.IOException: Mkdirs failed to create file:/opt/spark/work-dir/build/tmp/test-data/sink-ds/_temporary/0/_temporary/attempt_202207111629564235807494301289100_0000_m_000000_0 (exists=false, cwd=file:/Users/laguirre/cortex/cortex-fabric-examples/profiles-sdk-examples/main-app)
-        at org.apache.hadoop.fs.ChecksumFileSystem.create(ChecksumFileSystem.java:515)
-        at org.apache.hadoop.fs.ChecksumFileSystem.create(ChecksumFileSystem.java:500)
-        at org.apache.hadoop.fs.FileSystem.create(FileSystem.java:1195)
-        at org.apache.hadoop.fs.FileSystem.create(FileSystem.java:1175)
-        at org.apache.parquet.hadoop.util.HadoopOutputFile.create(HadoopOutputFile.java:74)
-        at org.apache.parquet.hadoop.ParquetFileWriter.<init>(ParquetFileWriter.java:329)
-        at org.apache.parquet.hadoop.ParquetOutputFormat.getRecordWriter(ParquetOutputFormat.java:482)
-        at org.apache.parquet.hadoop.ParquetOutputFormat.getRecordWriter(ParquetOutputFormat.java:420)
-        at org.apache.parquet.hadoop.ParquetOutputFormat.getRecordWriter(ParquetOutputFormat.java:409)
-        at org.apache.spark.sql.execution.datasources.parquet.ParquetOutputWriter.<init>(ParquetOutputWriter.scala:36)
-        at org.apache.spark.sql.execution.datasources.parquet.ParquetFileFormat$$anon$1.newInstance(ParquetFileFormat.scala:150)
-        at org.apache.spark.sql.execution.datasources.SingleDirectoryDataWriter.newOutputWriter(FileFormatDataWriter.scala:161)
-        at org.apache.spark.sql.execution.datasources.SingleDirectoryDataWriter.<init>(FileFormatDataWriter.scala:146)
-        at org.apache.spark.sql.execution.datasources.FileFormatWriter$.executeTask(FileFormatWriter.scala:290)
-        at org.apache.spark.sql.execution.datasources.FileFormatWriter$.$anonfun$write$16(FileFormatWriter.scala:229)
-        at org.apache.spark.scheduler.ResultTask.runTask(ResultTask.scala:90)
-        at org.apache.spark.scheduler.Task.run(Task.scala:131)
-        at org.apache.spark.executor.Executor$TaskRunner.$anonfun$run$3(Executor.scala:506)
-        at org.apache.spark.util.Utils$.tryWithSafeFinally(Utils.scala:1462)
-        at org.apache.spark.executor.Executor$TaskRunner.run(Executor.scala:509)
-        at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128)
-        at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
-        at java.base/java.lang.Thread.run(Thread.java:829)
-
-16:29:57.217 [task-result-getter-0] ERROR o.a.spark.scheduler.TaskSetManager - Task 0 in stage 0.0 failed 1 times; aborting job
-16:29:57.228 [main] ERROR o.a.s.s.e.d.FileFormatWriter - Aborting job 34fffb76-0ae6-420e-9fa8-035623f9b018.
-org.apache.spark.SparkException: Job aborted due to stage failure: Task 0 in stage 0.0 failed 1 times, most recent failure: Lost task 0.0 in stage 0.0 (TID 0) (c02wq091htdf.attlocal.net executor driver): java.io.IOException: Mkdirs failed to create file:/opt/spark/work-dir/build/tmp/test-data/sink-ds/_temporary/0/_temporary/attempt_202207111629564235807494301289100_0000_m_000000_0 (exists=false, cwd=file:/Users/laguirre/cortex/cortex-fabric-examples/profiles-sdk-examples/main-app)
-```
-
 This will read the `cdata-csv` Connection and write it to the `sink` connection defined
 in [cdata-connections.yml](../main-app/src/main/resources/spec/cdata-connections.yml). Both connections require:
 - An `oem_key` to be set via `CDATA_OEM_KEY`.
@@ -152,6 +89,7 @@ To run this example in a Docker container with local Cortex clients (from the pa
         -v $(pwd)/main-app/build:/opt/spark/work-dir/build \
         profiles-example submit_job.py "{\"payload\" : {\"config\": \"/app/conf/spark-conf.json\"}}"
     ```
+
    NOTES:
     * Port 4040 is forwarded from the container to expose the Spark UI (for debugging).
     * The first volume mount is sharing the [spark-submit config file](./src/main/resources/conf/spark-conf.json).
@@ -246,7 +184,7 @@ Exit Code: 0
 ## Notes on CData BigQuery Connection
 
 The CData BigQuery Connection (shown below) requires authenticating to Google Cloud Storage along with providing the
-CDATA keys. This example is configured to use Google Service Account JSON credentials that is specified
+CDATA keys. This example is configured to use Google Service Account credentials that is specified
 at `/secure-storage/gcs-service-account.json` (see the `OAuthJWTCert` in the `url` parameter).
 
 ```yaml
@@ -272,7 +210,7 @@ spec:
 
 <!-- TODO(LA): below google doc isn't public, we should link off to Google docs instead -->
 To run this example locally in a container:
-* Get a GCP Service Account JSON as described
+* Get a GCP Service Account JSON file as described
   in https://docs.google.com/document/d/1T1u8RMZhDYMIXHk7v3lLF2rzag7xLTr5CLHC-49UiYU/edit#heading=h.756ioo8pxy08 and put
   it into `profiles-examples/main-app/src/main/resources/credentials/`.
 * Update the `url` and `query` parameter (including the `ProjectId`) to match your data.
@@ -282,6 +220,7 @@ docker run -p 4040:4040 \
     -e CORTEX_TOKEN="${CORTEX_TOKEN}" \
     -e CDATA_OEM_KEY="${CDATA_OEM_KEY}" \
     -e CDATA_PRODUCT_CHECKSUM="${CDATA_PRODUCT_CHECKSUM}" \
+    -e BIGQUERY_CREDS_FILE="${BIGQUERY_CREDS_FILE}" \
     --entrypoint="python" \
     -v $(pwd)/main-app/src/main/resources/credentials/:/secure-storage/ \
     -v $(pwd)/cdata-connection/src/main/resources/conf:/app/conf \
@@ -292,3 +231,9 @@ docker run -p 4040:4040 \
 
 (See [Run locally in a Docker container](#run-locally-in-a-docker-container-with-spark-submit) for instructions to build
 the application  and create the Docker container).
+
+### Resources
+* [Spark JDBC Data Sources](https://spark.apache.org/docs/latest/sql-data-sources-jdbc.html)
+* [CDATA JDBC CSV Driver Documentation](https://cdn.cdata.com/help/RVF/jdbc/default.htm)
+* [CDATA JDBC BigQuery Documentation](https://cdn.cdata.com/help/DBG/jdbc/default.htm)
+* [CDATA JDBC Postgres Documentation](https://cdn.cdata.com/help/FPG/jdbc/)

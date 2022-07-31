@@ -46,10 +46,30 @@ public class CData implements Runnable {
     public static class CDataSecretClient extends LocalSecretClient {
         private static LocalSecrets localSecrets = new LocalSecrets();
         static {{
-            // load 'oem_key' secret in the "local" project
+            // load 'oem_key' secret in the "shared" project
             requireEnvExists(List.of(CDATA_KEY_ENV, CDATA_CHECKSUM_ENV));
+            localSecrets.setSecretsForProject("shared", Map.of(
+                    "oem_key", System.getenv(CDATA_KEY_ENV),
+                    "product_checksum", System.getenv(CDATA_CHECKSUM_ENV)
+            ));
+
+
             localSecrets.setSecretsForProject("local", Map.of(
-                    "oem_key", System.getenv(CDATA_KEY_ENV)
+                    // The 'csv-props' Secret has a JSON String with parameters for the CData CSV Driver.
+                    // All parameters separated, but could optionally be combined into a single 'url' param, ex: "jdbc:csv:GenerateSchemaFiles=OnStart;URI=file://./src/main/resources/data/members_100_v14.csv;Location=./build/tmp;"
+                    "csv-props", "{\"GenerateSchemaFiles\":\"OnStart\",\" URI\":\"file://./src/main/resources/data/members_100_v14.csv\",\"Location\":\"./build/tmp/work\"}",
+
+                    // The 'bigquery-props' Secret has a JSON String with parameters for the CData BigQuery JDBC Driver.
+                    // Requires setting 'BIGQUERY_PROJECT' and 'BIGQUERY_CREDS_FILE' environment variable.
+                    "bigquery-props",  String.format(
+                            "{\"AuthScheme\":\"OAuthJWT\",\"InitiateOAuth\":\"GETANDREFRESH\",\"OAuthJWTCertType\":\"GOOGLEJSON\",\"OAuthJWTCert\":\"%s\",\"ProjectId\":\"%s\",\"DatasetId\":\"covid19_weathersource_co\"}",
+                            System.getenv().getOrDefault("BIGQUERY_CREDS_FILE", ""),
+                            System.getenv().getOrDefault("BIGQUERY_PROJECT", "")),
+
+                    // The 's3-props' Secret has a JSON String with parameters for the CData S3 JDBC Driver.
+                    "s3-props", String.format("{\"AWSAccessKey\":\"%s\",\"AWSSecretKey\":\"%s\"}",
+                            System.getenv().getOrDefault("S3_ACCESS_KEY", ""),
+                            System.getenv().getOrDefault("S3_SECRET_KEY", ""))
             ));
         }}
 
@@ -71,7 +91,6 @@ public class CData implements Runnable {
         public CDataSecretClient() {
             super(localSecrets);
             requireEnvExists(List.of(CDATA_KEY_ENV, CDATA_CHECKSUM_ENV));
-            System.setProperty("product_checksum", System.getenv(CDATA_CHECKSUM_ENV));
         }
     }
 
