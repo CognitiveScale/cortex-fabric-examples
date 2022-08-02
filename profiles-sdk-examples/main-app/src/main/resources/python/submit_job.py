@@ -103,6 +103,16 @@ if __name__ == '__main__':
         # get resource files from filesystem
         spark_config = get_config_file(config_file_loc)
 
+        # TODO: Verify app command is a list of strings
+        override_app_command = input_params.get("app_command")
+        if override_app_command:
+            spark_config.get("pyspark", {})["app_command"] = override_app_command
+
+        # TODO: Verify conf overrides is a dict
+        config_option_overrides = input_params.get("conf")
+        if config_option_overrides:
+            spark_config.get("pyspark", {}).get("options", {}).get("--conf", {}).update(config_option_overrides)
+
         # create spark-submit call
         run_args = get_runtime_args(spark_config, token)
 
