@@ -105,13 +105,6 @@ Follow the instructions below to setup a local catalog directory.
       - name: csv/header
         value: true
   ```
-  
-<!-- TODO(LA):
-    - should some/most of this be replaced w/ link to the Javadoc for LocalCatalog?
-    - we should really be annotating suggested/supported methods in the source, not listing them
-    - not sure extent of resources to include
-    - Remote Catalog cannot be created, unless specifying "..."
--->
 
 ### Supported Resources
 
@@ -151,8 +144,8 @@ spec:
       value: s3a://bucket/data-streaming/members_100_v14.csv
     - name: publicKey
       value: ***
-    - name: secretKey   # connections must contain credentials
-      value: ***
+    - name: secretKey
+      value: "#SECURE.secret"   # reference to a Secret
     - name: pathStyleAccess
       value: true
     - name: csv/header

@@ -31,7 +31,7 @@ When running outside the cluster, set:
 
 ### Cortex Backend Storage 
 
-* Set `spark.cortex.client.storage.impl` to set the client implementation you are  using. <!-- TODO: config not in table -->
+* Set `spark.cortex.client.storage.impl` to set the client implementation you are  using.
 * If using the local remote storage client implementation, then set `spark.cortex.storage.storageType` to `file` and
   update `spark.cortex.storage.file.baseDir` to the base directory in the local filesystem. You can optionally configure
   the bucket names to refer to a specific file path:
@@ -63,7 +63,7 @@ The hierarchy for loading Storage Configuration options (least to most priority)
   "spark.kubernetes.driverEnv.S3_ENDPOINT": "https://minio.example.com",
   "spark.kubernetes.driverEnv.S3_SSL_ENABLED": "false",
   "spark.kubernetes.driverEnv.AWS_ACCESS_KEY_ID": "xxxx",
-  "spark.kubernetes.driverEnv.AWS_SECRET_KEY": "xxxx",
+  "spark.kubernetes.driverEnv.AWS_SECRET_KEY": "xxxx"
 }
 ```
 
@@ -98,6 +98,7 @@ Cortex Config Options:
 | spark.cortex.client.phoenix.url               | Phoenix Client URL Key Path.                                                                                                                 |                         |                                 | true      |
 | spark.cortex.client.secrets.url               | Cortex Secrets Client URL.                                                                                                                   |                         |                                 | true      |
 | spark.cortex.catalog.local.dir                | Local Catalog directory path, only applicable if using a local Cortex catalog instance, @see com.c12e.cortex.phoenix.LocalCatalog.           |                         |                                 | true      |
+| spark.cortex.client.storage.impl              | CortexRemoteStorageClient implementation used for accessing remote storage when running in a Cortex Cluster                                  |                         |                                 | true      |
 | spark.cortex.storage.storageType              | Cortex Backend Storage type, one of: s3, gcs, file                                                                                           | STORAGE_TYPE            | file                            | true      |
 | spark.cortex.storage.file.baseDir             | Directory for file based backend storage                                                                                                     | FILE_BASE_DIR           | ./build/test-data/              | true      |
 | spark.cortex.storage.s3.assumeIam             | Whether IAM authentication is enabled for S3 based Cortex backend storage                                                                    | ASSUME_AWS_IAM          | false                           | true      |
