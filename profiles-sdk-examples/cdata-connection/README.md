@@ -1,37 +1,64 @@
-# CData Connection
+# Using a JDBC CData Connection
 
-This example is a CLI application for reading data from a CData Cortex Connection and writing that data to a separate
-Connection. This builds off the [Local Clients](../local-clients/README.md) example for its initial setup, but uses a
-separate set of connections defined in [cdata-connections.yml](../main-app/src/main/resources/spec/cdata-connections.yml).
+This example is a CLI application for reading data from a [JDBC CData Cortex Connection](https://cognitivescale.github.io/cortex-fabric/docs/reference-guides/connection-types#jdbc-cdata-connections)
+and writing that data to a separate Connection. This builds off the [Local Clients](../local-clients/README.md) example
+for its initial setup, but uses a separate set of connections defined in [cdata-connections.yml](../main-app/src/main/resources/spec/cdata-connections.yml).
 
-Two source Connections are defined in the [Local Catalog](../local-clients/README.md#catalog):
+Three example JDBC CData Connections are defined in the [Local Catalog](../local-clients/README.md#catalog):
 - `cdata-csv` - Connection to a local `members_100_v14.csv` file that is used for the following examples.
-- `cdata-bigquery` - CData Connection to Google BigQuery. To use this you must update the `url` and `query` parameters
-  to match your BigQuery data in the [cdata-connections.yml](../main-app/src/main/resources/spec/cdata-connections.yml)
-  file. (See [Notes on CData BigQuery Connection](#notes-on-cdata-bigquery-connection)).
+- `cdata-s3` - CData Connection to Amazon S3. To use this example you will need update the `plugin_properties`
+  and `query` parameters for your S3 data in  the [cdata-connections.yml](../main-app/src/main/resources/spec/cdata-connections.yml)
+  file. (See [Notes on CData S3 Connection](#notes-on-jdbc-cdata-s3-connection))
+- `cdata-bigquery` - CData Connection to Google BigQuery. To use this you must update the `plugin_properties`
+  and `query` parameters to match your BigQuery data in the [cdata-connections.yml](../main-app/src/main/resources/spec/cdata-connections.yml)
+  file. (See [Notes on CData BigQuery Connection](#notes-on-jdbc-cdata-bigquery-connection)).
 
 (See [CData.java](./src/main/java/com/c12e/cortex/examples/cdata/CData.java) for the source code.)
 
 ## Prerequisites
-* Get a CData OEM Key and CData Product Checksum and save these values for later use. If you do not have one then check with your SRE team or Systems Administrator.
+* Get a CData OEM Key and CData Product Checksum and save these values for later use. If you do not have one then check with your SRE team or Systems Administrator. Otherwise, try running this example as a Skill.
 * Download the CData driver jar files from: http://cdatabuilds.s3.amazonaws.com/support/JDBC_JARS_21.0.8059.zip
-* Add required driver jars and CData Spark SQL jar to [../main-app/src/main/resources/lib/](../main-app/src/main/resources/lib). These jars will be made available to the Spark driver and executors, as well as the current classpath for development.
-  - Copy: `cdata.jdbc.csv.jar`, `cdata.jdbc.sparksql.jar`. If using a BigQuery Connection copy: `cdata.jdbc.googlebigquery.jar`
-* (Optional) Update `query`, `url`, `driver` in the CData/JDBC connection definitions [cdata-connections.yml](../main-app/src/main/resources/spec/cdata-connections.yml) to control which subset of the datasets will be used. (Refer to [CData documentation](https://cdn.cdata.com/help/RVF/jdbc/pg_JDBCconnectcode.htm) for syntax details.)
+* Add the required driver jars and CData Spark SQL jar to [../main-app/src/main/resources/lib/](../main-app/src/main/resources/lib). These jars will be made available to the Spark driver and executors, as well as the current classpath for development.
+  - Copy: `cdata.jdbc.csv.jar`, `cdata.jdbc.sparksql.jar`.
+  - If using a BigQuery Connection copy: `cdata.jdbc.googlebigquery.jar`.
+  - If using a S3 Connection copy: `cdata.jdbc.amazons3.jar`.
+* (Optional) Update the fields within the `plugin_properties` parameters for the CData Connection you will be using.
+   [JDBC CData Connections](https://cognitivescale.github.io/cortex-fabric/docs/reference-guides/connection-types#jdbc-cdata-connections) require a secure `plugin_properties` parameter that is a reference to a Cortex Secret.
+   The corresponding Secret should be a JSON String that includes parameters specific to the CData JDBC Driver required by your Connection. These parameters will be passed to the CData Driver when reading/writing your data.
 
-**NOTE**: `cortex-cdata-plugin` cannot be used to create JDBC connections, nor can it parse Cortex Connections because
-Spark SQL has specific requirement for JDBC (see https://spark.apache.org/docs/latest/sql-data-sources-jdbc.html).
+Example:
 
-<!--
-**NOTE**: The above requires the additional jar files (from [Prerequisites](#prerequisites)) be listed
-as [dependencies in the main application](../main-app/build.gradle.kts). This is handled automatically by including the
-jar files in the [../main-app/src/main/resources/lib/](../main-app/src/main/resources/lib) folder:
-```kotlin
-// include extra jars (for CData/BigQuery examples)
-runtimeOnly(fileTree("src/main/resources/lib"){ include("*.jar") })
-testRuntimeOnly(fileTree("src/main/resources/lib"){ include("*.jar") })
+The `cdata-csv` Connection (show below) has a reference to the `csv-props` Secret, which is set in the local
+Secret Client (See [CData.java](./src/main/java/com/c12e/cortex/examples/cdata/CData.java) for the implementation).
+```yaml
+---
+apiVersion: cognitivescale.io/v1
+kind: Connection
+metadata:
+name: "cdata-csv"
+spec:
+title: CDATA CSV
+connectionType: jdbc_cdata
+params:
+- name: query
+  value: select * from members_100_v14
+- name: classname
+  value: cdata.jdbc.csv.CSVDriver
+- name: plugin_properties
+  value: "#SECURE.csv-props"
 ```
--->
+The JSON value of the `csv-props` Secret (shown below) includes parameters expected by the JDBC CData Driver (`cdata.jdbc.csv.CSVDriver`) and would be encoded to the JSON String: `"{\"GenerateSchemaFiles\":\"OnStart\",\" URI\":\"file://./src/main/resources/data/members_100_v14.csv\",\"Location\":\"./build/tmp/work\"}"`
+```json
+{
+  "GenerateSchemaFiles": "OnStart",
+  "URI": "file://./src/main/resources/data/members_100_v14.csv",
+  "Location": "./build/tmp/work"
+}
+```
+You can encode a JSON File to a String with `jq` by running: `cat <path-to-file> | jq -c '. | tostring'`.
+
+**NOTE**: The `cortex-cdata-plugin` cannot be used to create JDBC Connections with the Profiles SDK because Spark SQL
+has specific requirements for [JDBC connections](https://spark.apache.org/docs/latest/sql-data-sources-jdbc.html).
 
 ## Run Locally
 
@@ -181,46 +208,88 @@ Termination Reason:
 Exit Code: 0
 ```
 
-## Notes on CData BigQuery Connection
+### CData Connection Types
 
-The CData BigQuery Connection (shown below) requires authenticating to Google Cloud Storage along with providing the
-CDATA keys. This example is configured to use Google Service Account credentials that is specified
-at `/secure-storage/gcs-service-account.json` (see the `OAuthJWTCert` in the `url` parameter).
+* Expected fields are `plugin_properties`, `classname`, (optionally `query`)
+* The value of `plugin_properties` the field should be a reference to a Cortex Secret (JSON) with values specific to the
+  CDATA Driver being used. Example properties could include `url`, `dbtable`, `query`, `username`, `password`, etc.
+* The `classname` is the class path to the JDBC Driver you will use.
+* The JDBC CData adapter expects the CDATA OEM Key and Product Checksum to be in the `"shared"` project, but these values are configurable.
+* It currently **does not** inject the driver into the classpath (like the cortex-cdata-plugin does).
 
+## Run as a Skill
+
+These instructions will use the [JDBC CData S3 Connection](#notes-on-jdbc-cdata-s3-connection).
+
+### Prerequisites
+* Generate a `CORTEX_TOKEN`.
+* Save a JSON Cortex Secret to use as the `plugin_properties` parameter for your Connection. It should include driver specific
+  properties for authenticating to Amazon S3 and configuring your JDBC Connection. Refer to the [CData JDBC S3 Documentation](https://cdn.cdata.com/help/SXG/jdbc/).
+* Ensure that the Cortex resources exist, specifically the Project, Connections, and any associated Secrets.
+* Ensure the CData Driver jar file is included in the Skill Docker image. This should be handled automatically by including the jar in `../main-app/src/main/resources/lib/`.
+* When deployed in a Skill the Profiles SDK will utilize shared a CDATA OEM Key and Product Checksum saved in the Cortex Cluster. **No action is required to specify the CData OEM Key or Product Checksum.**
+* Update the [spark-conf.json](./src/main/resources/conf/spark-conf.json) file to:
+    - Use the [Remote Catalog](../docs/catalog.md#remote-catalog) implementation by setting the Cortex URL (`spark.cortex.client.phoenix.url`) to the in-cluster GraphQL API endpoint (`"http://cortex-api.cortex.svc.cluster.local:8080"`) and removing the Local Catalog implementation (`spark.cortex.catalog.impl`).
+    - Use the [remote storage client](../docs/backendstorage.md#remote-storage-client) implementation by setting the Cortex URL (`spark.cortex.client.phoenix.url`) to the GraphQL API endpoint, and remove the local storage client implementation (`spark.cortex.client.storage.impl`).
+    - Remove the local Secret client implementation (`spark.cortex.client.secrets.impl`).
+    - Update the `app_command` arguments to match your Cortex Project and Profile Schema (`--project`, `--input`, `--output`)
+
+To run this example in Spark cluster mode against a Cortex Cluster with access to the Catalog and Secrets, you must
+update the spark configuration file used by the main application (`main-app/src/main/resources/conf/spark-conf.json`) to
+match configuration for this example.
+
+Refer to the [instructions for running the Skill Template](../README.md#skill-template) in the top level README for
+deploying and invoking the skill.
+
+## Notes on JDBC CData S3 Connection
+
+The CData S3 Connection defined in the local Catalog (shown below) requires authenticating to Amazon S3 along with
+providing the CDATA keys. The Connection includes a reference to the `s3-props` Secret with properties specific to
+the [CData JDBC S3 Documentation](https://cdn.cdata.com/help/SXG/jdbc/).
 ```yaml
 ---
 apiVersion: cognitivescale.io/v1
 kind: Connection
 metadata:
-  name: "cdata-bigquery"
+  name: "cdata-s3"
 spec:
-  title: CDATA BigQuery
-  connectionType: jdbc
+  title: JDBC CDATA BigQuery
+  connectionType: jdbc_cdata
   params:
+    - name: plugin_properties
+      value: "#SECURE.s3-props"
+    - name: classname
+      value: cdata.jdbc.amazons3.AmazonS3Driver
     - name: query
-      value: SELECT * FROM `bigquery-public-data.covid19_weathersource_com.postal_code_day_forecast` WHERE forecast_date = '2022-06-03' LIMIT 10
-    - name: url
-      value: "jdbc:cdata:googlebigquery:AuthScheme:OAuthJWT;InitiateOAuth=GETANDREFRESH;OAuthJWTCertType:GOOGLEJSON;OAuthJWTCert:/secure-storage/gcp-service-account.json;ProjectId=fabric-qa;DatasetId=covid19_weathersource_co;"
-    - name: driver
-      value: cdata.jdbc.googlebigquery.GoogleBigQueryDriver
-    - name: oem_key
-      value: "#SECURE.oem_key"
+      value: "SELECT * FROM Objects WHERE Object = 'objectKey' AND Bucket = 'bucket'"
 ```
 
+The `s3-props` Secret has a JSON value similar to the object shown below, but the AWS access and secret keys are
+replaced with the value of the `S3_ACCESS_KEY ` and `S3_SECRET_KEY` environment variables.
+```json
+{
+  "AWSAccessKey": "<S3_ACCESS_KEY env var>",
+  "AWSSecretKey": "<S3_SECRET_KEY env var>"
+}
+```
 
-<!-- TODO(LA): below google doc isn't public, we should link off to Google docs instead -->
-To run this example locally in a container:
-* Get a GCP Service Account JSON file as described
-  in https://docs.google.com/document/d/1T1u8RMZhDYMIXHk7v3lLF2rzag7xLTr5CLHC-49UiYU/edit#heading=h.756ioo8pxy08 and put
-  it into `profiles-examples/main-app/src/main/resources/credentials/`.
-* Update the `url` and `query` parameter (including the `ProjectId`) to match your data.
-* Include an additional volume mount to share the Service Account credentials.
+You can encode a JSON File to a String with `jq` by running: `cat <path-to-file> | jq -c '. | tostring'`.
+
+To run the CLI application locally in a container:
+* Set the `S3_ACCESS_KEY` and `S3_SECRET_KEY` environment variables to authenticate against Amazon, for example:
+  ```
+  export S3_ACCESS_KEY=""
+  export S3_SECRET_KEY=""
+  ```
+* Update the `query` parameter in the Connection for your data. You can optionally keep the same query and only update the
+  name of your S3 `bucket` and `objectKey` to lookup metadata about the S3 Object.
+* Update the `app_command` argument in the `spark-conf.json` file to reference the `cdata-s3` connection.
+* (Optional) Update the Secret value used by the Connection's `plugin_properties` in `CData.java` if you are using an alternative authentication mechanism.
 ```
 docker run -p 4040:4040 \
     -e CORTEX_TOKEN="${CORTEX_TOKEN}" \
     -e CDATA_OEM_KEY="${CDATA_OEM_KEY}" \
     -e CDATA_PRODUCT_CHECKSUM="${CDATA_PRODUCT_CHECKSUM}" \
-    -e BIGQUERY_CREDS_FILE="${BIGQUERY_CREDS_FILE}" \
     --entrypoint="python" \
     -v $(pwd)/main-app/src/main/resources/credentials/:/secure-storage/ \
     -v $(pwd)/cdata-connection/src/main/resources/conf:/app/conf \
@@ -230,10 +299,81 @@ docker run -p 4040:4040 \
 ```
 
 (See [Run locally in a Docker container](#run-locally-in-a-docker-container-with-spark-submit) for instructions to build
-the application  and create the Docker container).
+the application and create the Docker container).
+
+## Notes on JDBC CData BigQuery Connection
+
+The CData BigQuery Connection defined in the local Catalog (shown below) requires authenticating to Google Cloud Storage
+along with providing the CDATA keys. The Connection includes a reference to the `bigquery-props` Secret with properties specific
+to the [CDATA JDBC BigQuery Driver](https://cdn.cdata.com/help/DBG/jdbc/default.htm).
+```yaml
+---
+apiVersion: cognitivescale.io/v1
+kind: Connection
+metadata:
+  name: "cdata-bigquery"
+spec:
+  title: JDBC CDATA BigQuery
+  connectionType: jdbc_cdata
+  params:
+    - name: plugin_properties
+      value: "#SECURE.bigquery-props"
+    - name: classname
+      value: cdata.jdbc.googlebigquery.GoogleBigQueryDriver
+    - name: query
+      value: "SELECT * FROM `bigquery-public-data.covid19_weathersource_com.postal_code_day_forecast` LIMIT 10"
+```
+
+The `bigquery-props` Secret has a JSON value similar to the object shown below, but instead the `OAuthJWTCert`
+is replaced with the value of the `BIGQUERY_CREDS_FILE` environment variable and the `ProjectId` is replaced with the value
+of the `BIGQUERY_PROJECT` environment variable.
+```json
+{
+    "AuthScheme": "OAuthJWT",
+    "InitiateOAuth": "GETANDREFRESH",
+    "OAuthJWTCertType": "GOOGLEJSON",
+    "DatasetId": "covid19_weathersource_co"
+    "OAuthJWTCert": "<service-account-json-file-path>",
+    "ProjectId": "<google-project>",
+}
+```
+
+You can encode a JSON File to a String with `jq` by running: `cat <path-to-file> | jq -c '. | tostring'`.
+
+<!-- TODO(LA): below google doc isn't public, we should link off to Google docs instead -->
+To run the CLI application locally in a container:
+* Get a GCP Service Account JSON file as described
+  in https://docs.google.com/document/d/1T1u8RMZhDYMIXHk7v3lLF2rzag7xLTr5CLHC-49UiYU/edit#heading=h.756ioo8pxy08 and put
+  it into `profiles-examples/main-app/src/main/resources/credentials/`.
+* Set the `BIGQUERY_CREDS_FILE` environment variable to the path of the credentials in the container, for example:
+  ```
+  export BIGQUERY_CREDS_FILE=/opt/spark/work-dir/src/main/resources/credentials/gcs-service-account.json
+  ```
+* Update the `app_command` argument in the `spark-conf.json` file to reference the `cdata-bigquery` connection.
+* Include an additional volume mount to share the Service Account credentials. The below command mounts the GCP Credentials
+  file to `/secure-storage/` in the container.
+* (Optional) Update the Secret value used by the Connection's `plugin_properties` in `CData.java` if you are using an alternative authentication mechanism.
+```
+docker run -p 4040:4040 \
+    -e CORTEX_TOKEN="${CORTEX_TOKEN}" \
+    -e CDATA_OEM_KEY="${CDATA_OEM_KEY}" \
+    -e CDATA_PRODUCT_CHECKSUM="${CDATA_PRODUCT_CHECKSUM}" \
+    -e BIGQUERY_CREDS_FILE="${BIGQUERY_CREDS_FILE}" \
+    -e BIGQUERY_PROJECT="${BIGQUERY_PROJECT}" \
+    --entrypoint="python" \
+    -v $(pwd)/main-app/src/main/resources/credentials/:/secure-storage/ \
+    -v $(pwd)/cdata-connection/src/main/resources/conf:/app/conf \
+    -v $(pwd)/main-app/src:/opt/spark/work-dir/src \
+    -v $(pwd)/main-app/build:/opt/spark/work-dir/build \
+    profiles-example submit_job.py "{\"payload\" : {\"config\": \"/app/conf/spark-conf.json\"}}"
+```
+
+(See [Run locally in a Docker container](#run-locally-in-a-docker-container-with-spark-submit) for instructions to build
+the application and create the Docker container).
 
 ### Resources
 * [Spark JDBC Data Sources](https://spark.apache.org/docs/latest/sql-data-sources-jdbc.html)
 * [CDATA JDBC CSV Driver Documentation](https://cdn.cdata.com/help/RVF/jdbc/default.htm)
 * [CDATA JDBC BigQuery Documentation](https://cdn.cdata.com/help/DBG/jdbc/default.htm)
 * [CDATA JDBC Postgres Documentation](https://cdn.cdata.com/help/FPG/jdbc/)
+* [CData JDBC S3 Documentation](https://cdn.cdata.com/help/SXG/jdbc/)

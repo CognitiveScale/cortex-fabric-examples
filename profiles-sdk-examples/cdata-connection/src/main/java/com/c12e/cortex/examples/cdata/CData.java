@@ -41,16 +41,17 @@ public class CData implements Runnable {
     private static final String CDATA_CHECKSUM_ENV = "CDATA_PRODUCT_CHECKSUM";
 
     /**
-     * Custom Secrets Client.
+     * Local Secrets Client including CData Keys from the "shared" project.
      */
     public static class CDataSecretClient extends LocalSecretClient {
         private static LocalSecrets localSecrets = new LocalSecrets();
         static {{
-            // load 'oem_key' secret in the "shared" project
+            // Load the 'cdata-oem_key' and 'cdata-prdct-checksum' secret in the "shared" project.
+            // These Secrets are assumed to have the following names in this project by default.
             requireEnvExists(List.of(CDATA_KEY_ENV, CDATA_CHECKSUM_ENV));
             localSecrets.setSecretsForProject("shared", Map.of(
-                    "oem_key", System.getenv(CDATA_KEY_ENV),
-                    "product_checksum", System.getenv(CDATA_CHECKSUM_ENV)
+                    "cdata-oem-key", System.getenv(CDATA_KEY_ENV),
+                    "cdata-prdct-checksum", System.getenv(CDATA_CHECKSUM_ENV)
             ));
 
 
@@ -112,5 +113,4 @@ public class CData implements Runnable {
         // Write to a connection
         cortexSession.write().connection(ds, project, sink).mode(SaveMode.Overwrite).save();
     }
-
 }

@@ -83,8 +83,8 @@ The Profiles SDK provides:
 ## Installation and Setup
 
 The Cortex Profiles SDK consists of:
-* The Profiles SDK jar file (`com.c12e.cortex.profiles:profiles-sdk:6.3.0-M.2.1`)
-* Platform dependencies jar file (`com.c12e.cortex.profiles:platform-dependencies:6.3.0-M.2.1`)
+* The Profiles SDK jar file (`com.c12e.cortex.profiles:profiles-sdk`)
+* Platform dependencies jar file (`com.c12e.cortex.profiles:platform-dependencies`)
 * Example materials and templates located in this repo
 
 The Profile SDK jar files can be pulled from CognitiveScale's JFrog Artifactory if access has been shared with
@@ -152,13 +152,9 @@ To include a new project in the example Profiles application you will need to:
 
 ## Skill Template
 
-<!-- TODO: Seems inefficient that we package the config in the docker image. We should be able to set some config
-    options in the payload, so we don't have to rebuild an image for a config update.
--->
-
 The [Skill Template](./templates) directory contains files for packaging as [Cortex Job Skill](templates/skill.yaml), where:
-* The input to the skill is a [JSON Payload](templates/payload.json) with the path to [Spark Configuration File](https://spark.apache.org/docs/latest/submitting-applications.html) in the Skill Docker container.
-* The output of the skill is the Job execution logs
+* The input to the skill is a [JSON Payload](templates/payload.json) with the path to [Spark Configuration File](https://spark.apache.org/docs/latest/submitting-applications.html).
+* The output of the skill is the Job execution logs.
 * The [Docker image](main-app/src/main/resources/Dockerfile) for the `main-app` uses a [spark-submit](https://spark.apache.org/docs/latest/submitting-applications.html)
   based wrapper to launch the Spark application. The resources for the `spark-submit` wrapper is in the
   [main-app/src/main/resources/python/](./main-app/src/main/resources/python) directory and is necessary for packaging
@@ -166,7 +162,6 @@ The [Skill Template](./templates) directory contains files for packaging as [Cor
 
 **NOTE:** The `ENTRYPOINT` for the Docker image is [scuttle](https://github.com/CognitiveScale/scuttle). When running application
 in a Docker container locally, you should set the `--entrypoint` option.
-
 
 1. **Before creating the Skill**, you will need to:
 * Set the Private Registry URL accessible from Cortex as an environment variable, `export DOCKER_PREGISTRY_URL=...`.

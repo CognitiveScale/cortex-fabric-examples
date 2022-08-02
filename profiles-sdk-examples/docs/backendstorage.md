@@ -1,6 +1,6 @@
 # Cortex Backend Storage
 
-When packaged in an Agent, the Profiles SDK will has access to the Cortex Clusters remote storage
+When packaged in an Agent, the Profiles SDK has access to the Cortex Clusters remote storage
 for [Managed Content](https://cognitivescale.github.io/cortex-fabric/docs/manage-data/managed-content),
 [Cortex Profile](https://cognitivescale.github.io/cortex-fabric/docs/introduction/intro-fabric-profiles),
 and [Cortex Campaigns](https://cognitivescale.github.io/cortex-fabric/docs/introduction/intro-fabric-campaigns) data.
