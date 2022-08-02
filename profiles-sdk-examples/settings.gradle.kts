@@ -10,7 +10,7 @@
  *  limitations under the License.
  */
 
-rootProject.name = "profiles-jar-examples"
+rootProject.name = "profiles-sdk-examples"
 include("main-app")
 include("local-clients")
 include("join-connections")
