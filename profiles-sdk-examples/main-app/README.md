@@ -1,7 +1,7 @@
 # Profiles Examples Main Application
 
 Refer to top level [README.md](../README.md) for instructions to build and run the Profile examples.
-This main Profile application is a CLI with all other examples included as subcommands.
+This main application is a CLI with all other examples included as subcommands.
 
 In addition, all (local) resources and data used by the examples are defined in this module.
 

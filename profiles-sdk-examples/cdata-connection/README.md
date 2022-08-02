@@ -332,9 +332,9 @@ of the `BIGQUERY_PROJECT` environment variable.
     "AuthScheme": "OAuthJWT",
     "InitiateOAuth": "GETANDREFRESH",
     "OAuthJWTCertType": "GOOGLEJSON",
-    "DatasetId": "covid19_weathersource_co"
+    "DatasetId": "covid19_weathersource_co",
     "OAuthJWTCert": "<service-account-json-file-path>",
-    "ProjectId": "<google-project>",
+    "ProjectId": "<google-project>"
 }
 ```
 

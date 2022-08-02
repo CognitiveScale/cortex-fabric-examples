@@ -225,7 +225,6 @@ deploying and invoking the skill.
 ### Example
 
 ```json
-// spark-conf.json
 {
   "pyspark": {
     "pyspark_bin": "bin/spark-submit",

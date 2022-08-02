@@ -236,9 +236,6 @@ To run this example in a Docker container with local Cortex clients (from the pa
     docker run -p 4040:4040 --entrypoint="python" \
       -e CORTEX_TOKEN="${CORTEX_TOKEN}" \
       -e STREAMING_SECRET_KEY="${STREAMING_SECRET_KEY}" \
-      -e STORAGE_TYPE="file" \
-      -e AWS_ACCESS_KEY_ID="xxx" \
-      -e AWS_SECRET_ACCESS_KEY="xxx" \
       -v $(pwd)/datasource-streaming/src/main/resources/conf:/app/conf \
       -v $(pwd)/main-app/src:/opt/spark/work-dir/src \
       -v $(pwd)/main-app/build:/opt/spark/work-dir/build \
