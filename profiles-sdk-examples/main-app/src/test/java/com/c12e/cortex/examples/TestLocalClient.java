@@ -32,7 +32,7 @@ public class TestLocalClient {
         assertTrue(session.catalog() instanceof LocalCatalog);
         for (var connectionName : EXPECTED_CONNECTIONS) {
             assertTrue(connections.stream().anyMatch(c -> connectionName.equals(c.getName())),
-                    String.format("Connection '%s' not found in the LocalCatalog"));
+                    String.format("Connection '%s' not found in the LocalCatalog", connectionName));
         }
     }
 
