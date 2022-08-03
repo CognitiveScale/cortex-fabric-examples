@@ -1,7 +1,7 @@
 # Reading from BigQuery
 
 This example is a CLI application that writes data from a Google BigQuery Table to the location of a Cortex Connection.
-This builds off the [Local Clients](../local-clients/README.md) example for its initial setup.
+This builds off of the [Local Clients](../local-clients/README.md) example for its initial setup.
 
 (See [BigQuery.java](./src/main/java/com/c12e/cortex/examples/bigquery/BigQuery.java) for the source code.)
 
@@ -59,7 +59,7 @@ See https://docs.gradle.org/7.4/userguide/command_line_interface.html#sec:comman
 BUILD SUCCESSFUL in 21s
 ```
 
-The sink connection is defined in the [cdata-connections.yml](../main-app/src/main/resources/spec/cdata-connections.yml) file,
+The sink connection is defined in the [cdata-connections.yml](../main-app/src/main/resources/spec/cdata-connections.yml) file
 and can be found at `./main-app/build/tmp/test-data/sink-ds` after running the command. The above example is writing
 data to the Connection from a [BigQuery Sample table](https://cloud.google.com/bigquery/public-data#sample_tables).
 
@@ -220,7 +220,7 @@ and can be found at `./main-app/build/tmp/test-data/sink-ds` after running the c
 
 Notes on the above example:
 * The `--master` and `--deploy-mode` have been set to run the Spark job in the Cortex (Kubernetes) Cluster.
-* The Phoenix Client URL and Secret Client URL are referring to services in Kubernetes Cluster
+* The Phoenix Client URL and Secret Client URL are referring to services in Kubernetes Cluster.
 * The Spark Driver and Spark Executors (`"spark.executor.instances"`) have a 2g and 4g of memory respectively. **Adjust the amount of resources used for your cluster/data.**
 * The Cortex [Backend Storage configuration](../docs/config.md#cortex-backend-storage) is configured by the default remote  storage client implementation.
 * THe `--secret` is set in the `app_command`.

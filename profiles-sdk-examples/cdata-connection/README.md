@@ -1,8 +1,8 @@
 # Using a JDBC CData Connection
 
 This example is a CLI application for reading data from a [JDBC CData Cortex Connection](https://cognitivescale.github.io/cortex-fabric/docs/reference-guides/connection-types#jdbc-cdata-connections)
-and writing that data to a separate Connection. This builds off the [Local Clients](../local-clients/README.md) example
-for its initial setup, but uses a separate set of connections defined in [cdata-connections.yml](../main-app/src/main/resources/spec/cdata-connections.yml).
+and writing that data to a separate Connection. This builds off of the [Local Clients](../local-clients/README.md) example
+for its initial setup but uses a separate set of connections defined in [cdata-connections.yml](../main-app/src/main/resources/spec/cdata-connections.yml).
 
 Three example JDBC CData Connections are defined in the [Local Catalog](../local-clients/README.md#catalog):
 - `cdata-csv` - Connection to a local `members_100_v14.csv` file that is used for the following examples.
@@ -15,9 +15,17 @@ Three example JDBC CData Connections are defined in the [Local Catalog](../local
 
 (See [CData.java](./src/main/java/com/c12e/cortex/examples/cdata/CData.java) for the source code.)
 
+## CData Connection Types
+* The expected parameters in a CData Connection are `plugin_properties`, `classname`, and optionally `query`.
+* The value of `plugin_properties` the field should be a reference to a Cortex Secret (JSON) with values specific to the
+  CDATA Driver being used. Example properties could include `url`, `dbtable`, `query`, `username`, `password`, etc.
+* The `classname` is the class path of to your JDBC Driver.
+* The Profiles SDK expects the CDATA OEM Key and Product Checksum to be Secrets in the `"shared"` project, but Secrets and Project name are configurable.
+* The Profiles SDK **does not** inject the driver into the classpath (like the cortex-cdata-plugin does).
+
 ## Prerequisites
-* Get a CData OEM Key and CData Product Checksum and save these values for later use. If you do not have one then check with your SRE team or Systems Administrator. Otherwise, try running this example as a Skill.
-* Download the CData driver jar files from: http://cdatabuilds.s3.amazonaws.com/support/JDBC_JARS_21.0.8059.zip
+* Get a CData OEM Key and CData Product Checksum and save these values for later use. If you do not have one, then check with your SRE team or Systems Administrator. Otherwise, try running this example as a Skill.
+* Download the CData driver jar files from: http://cdatabuilds.s3.amazonaws.com/support/JDBC_JARS_21.0.8059.zip.
 * Add the required driver jars and CData Spark SQL jar to [../main-app/src/main/resources/lib/](../main-app/src/main/resources/lib). These jars will be made available to the Spark driver and executors, as well as the current classpath for development.
   - Copy: `cdata.jdbc.csv.jar`, `cdata.jdbc.sparksql.jar`.
   - If using a BigQuery Connection copy: `cdata.jdbc.googlebigquery.jar`.
@@ -208,14 +216,6 @@ Termination Reason:
 Exit Code: 0
 ```
 
-### CData Connection Types
-
-* Expected fields are `plugin_properties`, `classname`, (optionally `query`)
-* The value of `plugin_properties` the field should be a reference to a Cortex Secret (JSON) with values specific to the
-  CDATA Driver being used. Example properties could include `url`, `dbtable`, `query`, `username`, `password`, etc.
-* The `classname` is the class path to the JDBC Driver you will use.
-* The JDBC CData adapter expects the CDATA OEM Key and Product Checksum to be in the `"shared"` project, but these values are configurable.
-* It currently **does not** inject the driver into the classpath (like the cortex-cdata-plugin does).
 
 ## Run as a Skill
 
@@ -227,7 +227,7 @@ These instructions will use the [JDBC CData S3 Connection](#notes-on-jdbc-cdata-
   properties for authenticating to Amazon S3 and configuring your JDBC Connection. Refer to the [CData JDBC S3 Documentation](https://cdn.cdata.com/help/SXG/jdbc/).
 * Ensure that the Cortex resources exist, specifically the Project, Connections, and any associated Secrets.
 * Ensure the CData Driver jar file is included in the Skill Docker image. This should be handled automatically by including the jar in `../main-app/src/main/resources/lib/`.
-* When deployed in a Skill the Profiles SDK will utilize shared a CDATA OEM Key and Product Checksum saved in the Cortex Cluster. **No action is required to specify the CData OEM Key or Product Checksum.**
+* When deployed in a Skill, the Profiles SDK utilizes a CDATA OEM Key and Product Checksum saved in the Cortex Cluster.
 * Update the [spark-conf.json](./src/main/resources/conf/spark-conf.json) file to:
     - Use the [Remote Catalog](../docs/catalog.md#remote-catalog) implementation by setting the Cortex URL (`spark.cortex.client.phoenix.url`) to the in-cluster GraphQL API endpoint (`"http://cortex-api.cortex.svc.cluster.local:8080"`) and removing the Local Catalog implementation (`spark.cortex.catalog.impl`).
     - Use the [remote storage client](../docs/backendstorage.md#remote-storage-client) implementation by setting the Cortex URL (`spark.cortex.client.phoenix.url`) to the GraphQL API endpoint, and remove the local storage client implementation (`spark.cortex.client.storage.impl`).
@@ -324,9 +324,9 @@ spec:
       value: "SELECT * FROM `bigquery-public-data.covid19_weathersource_com.postal_code_day_forecast` LIMIT 10"
 ```
 
-The `bigquery-props` Secret has a JSON value similar to the object shown below, but instead the `OAuthJWTCert`
-is replaced with the value of the `BIGQUERY_CREDS_FILE` environment variable and the `ProjectId` is replaced with the value
-of the `BIGQUERY_PROJECT` environment variable.
+The `bigquery-props` Secret has a JSON value similar to the object shown below, but instead the `OAuthJWTCert` is
+replaced with the value of the `BIGQUERY_CREDS_FILE` environment variable, and the `ProjectId` is replaced with the
+value of the `BIGQUERY_PROJECT` environment variable.
 ```json
 {
     "AuthScheme": "OAuthJWT",

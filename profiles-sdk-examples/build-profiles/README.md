@@ -1,6 +1,6 @@
 # Build Profiles
 
-This example is a CLI application for building Cortex Profiles. This builds off
+This example is a CLI application for building Cortex Profiles. This builds off of
 the [Local Clients](../local-clients/README.md) example for its setup.
 
 (See [BuildProfile.java](./src/main/java/com/c12e/cortex/examples/profile/BuildProfile.java) for the source code.)

@@ -1,6 +1,6 @@
 # Streaming To a Data Source
 
-This example is contains a CLI application for refreshing a Data Source via streaming. This builds off
+This example is contains a CLI application for refreshing a Data Source via streaming. This builds off of
 the [Local Clients](../local-clients/README.md) example for its setup but uses a different set of Connections and Data Source for this example defined in [streaming-connections.yml](../main-app/src/main/resources/spec/streaming-connections.yml) and [streaming-datasource.yml](../main-app/src/main/resources/spec/streaming-datasources.yml) respectively.
 
 (See [StreamDataSource.java](./src/main/java/com/c12e/cortex/examples/streaming/StreamingDataSource.java) for the full source.)

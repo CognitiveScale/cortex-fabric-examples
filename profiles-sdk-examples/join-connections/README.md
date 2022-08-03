@@ -1,7 +1,7 @@
 # Join Connections
 
 This example is a CLI application for Joining two Cortex Connections and saving the resulting dataset to
-another Cortex Connection. This builds off the [Local Clients](../local-clients/README.md) example for its setup.
+another Cortex Connection. This builds off of the [Local Clients](../local-clients/README.md) example for its setup.
 
 (See [JoinConnections.java](./src/main/java/com/c12e/cortex/examples/joinconn/JoinConnections.java) for the full source.)
 
