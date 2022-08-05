@@ -65,7 +65,7 @@ The Spark-submit [configuration options](./config.md#cortex-backend-storage) sho
 ```
 
 Note that the base directory can be configured and that the storage buckets are optional. The above example
-configures the Profiles SDK be use the local filesystem at:
+configures the Profiles SDK to use the local filepaths:
 - `/tmp/local-data/cortex-content`
 - `/tmp/local-data/cortex-profiles`
 - `/tmp/local-data/cortex-amp`
