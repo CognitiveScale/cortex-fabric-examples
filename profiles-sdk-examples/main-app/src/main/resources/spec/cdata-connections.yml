@@ -1,0 +1,59 @@
+---
+apiVersion: cognitivescale.io/v1
+kind: Connection
+metadata:
+  name: "cdata-csv"
+spec:
+  title: CDATA CSV
+  connectionType: jdbc_cdata
+  params:
+    - name: query
+      value: select * from members_100_v14
+    - name: classname
+      value: cdata.jdbc.csv.CSVDriver
+    - name: plugin_properties
+      value: "#SECURE.csv-props"
+---
+apiVersion: cognitivescale.io/v1
+kind: Connection
+metadata:
+  name: "cdata-s3"
+spec:
+  title: JDBC CDATA BigQuery
+  connectionType: jdbc_cdata
+  params:
+    - name: plugin_properties
+      value: "#SECURE.s3-props"
+    - name: classname
+      value: cdata.jdbc.amazons3.AmazonS3Driver
+    - name: query
+      value: "SELECT * FROM Objects WHERE Object = 'objectKey' AND Bucket = 'bucket'"
+---
+apiVersion: cognitivescale.io/v1
+kind: Connection
+metadata:
+  name: "cdata-bigquery"
+spec:
+  title: JDBC CDATA BigQuery
+  connectionType: jdbc_cdata
+  params:
+    - name: plugin_properties
+      value: "#SECURE.bigquery-props"
+    - name: classname
+      value: cdata.jdbc.googlebigquery.GoogleBigQueryDriver
+    - name: query
+      value: "SELECT * FROM `bigquery-public-data.covid19_weathersource_com.postal_code_day_forecast` LIMIT 10"
+---
+apiVersion: cognitivescale.io/v1
+kind: Connection
+metadata:
+  name: "sink"
+spec:
+  title: Sink File
+  connectionType: file
+  contentType: parquet
+  allowRead: true
+  allowWrite: false
+  params:
+    - name: uri
+      value: ./build/tmp/test-data/sink-ds/

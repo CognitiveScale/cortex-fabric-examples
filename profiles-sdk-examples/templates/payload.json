@@ -1,0 +1,5 @@
+{
+  "payload" : {
+    "config": "/app/conf/spark-conf.json"
+  }
+}

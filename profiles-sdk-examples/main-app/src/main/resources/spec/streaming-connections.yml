@@ -1,0 +1,36 @@
+---
+apiVersion: cognitivescale.io/v1
+kind: Connection
+metadata:
+  name: member-base-s3-stream
+spec:
+  title: Member Base S3 File
+  connectionType: s3FileStream
+  contentType: csv
+  allowRead: true
+  allowWrite: false
+  params:
+    - name: uri
+      value: s3a://cortex-examples/data/data-streaming/members_100_v14.csv
+    - name: publicKey
+      value: "****"
+    - name: secretKey
+      value: "#SECURE.streaming-secret"
+    - name: s3Endpoint
+      value: http://localhost:9000
+    - name: sslEnabled
+      value: false
+    - name: pathStyleAccess
+      value: true
+    - name: csv/header
+      value: true
+    - name: streamReadDir
+      value: s3a://cortex-examples/data/data-streaming
+    - name: isTriggered
+      value: false
+    - name: pollInterval
+      value: 10
+    - name: csv/multiline
+      value: true
+    - name: csv/header
+      value: true

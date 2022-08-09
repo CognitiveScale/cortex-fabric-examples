@@ -1,0 +1,57 @@
+{
+  "pyspark": {
+    "pyspark_bin": "bin/spark-submit",
+    "app_command": [
+      "bigquery",
+      "--project",
+      "local",
+      "--google-project",
+      "fabric-qa",
+      "--table",
+      "bigquery-public-data.samples.shakespeare",
+      "--output",
+      "sink"
+    ],
+    "app_location": "local:///app/libs/app.jar",
+    "options": {
+      "--master": "local[*]",
+      "--class": "com.c12e.cortex.examples.Application",
+      "--conf": {
+        "spark.app.name": "CortexProfilesExamples",
+        "spark.ui.enabled":"true",
+        "spark.ui.prometheus.enabled": "true",
+        "spark.sql.streaming.metricsEnabled": "true",
+        "spark.cortex.catalog.impl": "com.c12e.cortex.phoenix.LocalCatalog",
+        "spark.cortex.catalog.local.dir":  "src/main/resources/spec",
+        "spark.cortex.client.secrets.impl": "com.c12e.cortex.examples.local.CustomSecretsClient",
+        "spark.cortex.client.storage.impl": "com.c12e.cortex.profiles.client.LocalRemoteStorageClient",
+        "spark.cortex.storage.storageType": "file",
+        "spark.cortex.storage.file.baseDir": "src/main/resources/data",
+        "spark.delta.logStore.gs.impl": "io.delta.storage.GCSLogStore",
+        "spark.shuffle.service.enabled": "false",
+        "spark.dynamicAllocation.enabled": "false",
+        "spark.scheduler.mode": "FAIR",
+        "spark.sql.streaming.schemaInference": "true",
+        "spark.sql.legacy.timeParserPolicy": "LEGACY",
+        "spark.sql.adaptive.enabled": "true",
+        "spark.sql.adaptive.coalescePartitions.enabled": "true",
+        "spark.sql.extensions": "io.delta.sql.DeltaSparkSessionExtension",
+        "spark.sql.catalog.spark_catalog": "org.apache.spark.sql.delta.catalog.DeltaCatalog",
+        "spark.hadoop.fs.s3a.imp": "org.apache.hadoop.fs.s3a.S3AFileSystem",
+        "spark.hadoop.fs.s3a.fast.upload.buffer": "disk",
+        "spark.hadoop.fs.s3a.block.size": "128M",
+        "spark.hadoop.fs.s3a.fast.upload": "true",
+        "spark.hadoop.fs.s3a.multipart.size": "512M",
+        "spark.hadoop.fs.s3a.multipart.threshold": "512M",
+        "spark.hadoop.fs.s3a.fast.upload.active.blocks": "2048",
+        "spark.hadoop.fs.s3a.committer.threads": "2048",
+        "spark.hadoop.fs.s3a.max.total.tasks": "2048",
+        "spark.hadoop.fs.s3a.threads.max": "2048",
+        "spark.databricks.delta.schema.autoMerge.enabled": "true",
+        "spark.databricks.delta.merge.repartitionBeforeWrite.enabled": "true",
+        "spark.sql.shuffle.partitions": "10"
+      }
+    }
+  }
+}
+

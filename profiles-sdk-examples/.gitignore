@@ -1,0 +1,50 @@
+**/.DS_Store
+HELP.md
+.gradle
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**
+!**/src/test/**
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+out/
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+### VS Code ###
+.vscode/
+**/bin/**
+
+.local/
+
+.ipynb_checkpoints/
+__pycache__/
+
+.env
+
+### Spark Configuration ###
+main-app/src/main/resources/conf
+
+### Extra Spark Jars ###
+main-app/src/main/resources/lib
+
+### Credentials ###
+main-app/src/main/resources/credentials/*

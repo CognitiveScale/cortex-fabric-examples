@@ -1,0 +1,35 @@
+{
+  "pyspark": {
+    "pyspark_bin": "bin/spark-submit",
+    "app_command": [
+      "join-connections",
+      "--project",
+      "local",
+      "--left-conn",
+      "member-base-file",
+      "--right-conn",
+      "member-flu-risk-file",
+      "--write-conn",
+      "member-joined-file",
+      "--column",
+      "member_id"
+    ],
+    "app_location": "local:///app/libs/app.jar",
+    "options": {
+      "--master": "local[*]",
+      "--class": "com.c12e.cortex.examples.Application",
+      "--conf": {
+        "spark.app.name": "CortexProfilesExamples",
+        "spark.ui.enabled":"true",
+        "spark.ui.prometheus.enabled": "true",
+        "spark.sql.streaming.metricsEnabled": "true",
+        "spark.cortex.catalog.impl": "com.c12e.cortex.phoenix.LocalCatalog",
+        "spark.cortex.catalog.local.dir":  "src/main/resources/spec",
+        "spark.cortex.client.secrets.impl": "com.c12e.cortex.examples.local.CustomSecretsClient",
+        "spark.cortex.client.storage.impl": "com.c12e.cortex.profiles.client.LocalRemoteStorageClient",
+        "spark.cortex.storage.storageType": "file",
+        "spark.cortex.storage.file.baseDir": "src/main/resources/data"
+      }
+    }
+  }
+}
