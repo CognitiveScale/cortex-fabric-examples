@@ -1,2 +1,14 @@
 - path: '/containers/0/imagePullPolicy'
   value: "Always"
+- path: '/containers/0/env/-'
+  value:
+    name: POD_UID
+    valueFrom:
+      fieldRef:
+        fieldPath: metadata.uid
+- path: '/containers/0/env/-'
+  value:
+    name: POD_NAME
+    valueFrom:
+      fieldRef:
+        fieldPath: metadata.name
