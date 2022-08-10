@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  ownerReferences:
+    - apiVersion: v1
+      controller: true
+      kind: Pod
+      name: ${CONTROLLER_NAME}
+      uid: ${CONTROLLER_UID}
+spec:
+  containers:
+    - name: spark-kubernetes-driver
