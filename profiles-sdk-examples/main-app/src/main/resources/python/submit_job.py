@@ -112,17 +112,19 @@ if __name__ == '__main__':
         input_params = payload['payload']
         n = len(sys.argv)
         # TODO throw error if wrong amount of args
-        spark_config = input_params.get("spark_config")
-        if not spark_config:
-            # get resource files from filesystem
-            config_file_loc = input_params.get("config")
-            spark_config = get_config_file(config_file_loc)
+        config_file_loc = input_params.get("config")
+        # get resource files from filesystem
+        spark_config = get_config_file(config_file_loc)
 
-        app_config = input_params.get("app_config")
-        if app_config:
-            with open("/opt/spark/conf/app-conf.json", 'w') as file:
-                file.write(json.dumps(app_config))
+        # TODO: Verify app command is a list of strings
+        override_app_command = input_params.get("app_command")
+        if override_app_command:
+            spark_config.get("pyspark", {})["app_command"] = override_app_command
 
+        # TODO: Verify conf overrides is a dict
+        config_option_overrides = input_params.get("conf")
+        if config_option_overrides:
+            spark_config.get("pyspark", {}).get("options", {}).get("--conf", {}).update(config_option_overrides)
         driver_template = get_driver_template("/app/conf/driverTemplate.yaml")
 
         # variable replace and write new driver podspec
