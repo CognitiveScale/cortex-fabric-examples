@@ -165,9 +165,11 @@ def make_batch_predictions(input_params):
                 cursor = client[database][collection].find({}).limit(batch_size).skip(skip_records)
                 # Expand the cursor and construct the DataFrame
                 chunked_df = pd.DataFrame(list(cursor))
+                # We should drop _id column before using the data for predictions
+                chunked_df = chunked_df.drop(["_id"], axis=1)
                 if not chunked_df.empty:
                     if outcome in chunked_df.columns.tolist():
-                        chunked_df = chunked_df.drop([outcome, "_id"], axis=1)
+                        chunked_df = chunked_df.drop([outcome], axis=1)
                     logging.info("Processing records of size: {}".format(chunked_df.shape[0]))
 
                     # Score Predictions for a Batch
