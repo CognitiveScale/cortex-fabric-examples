@@ -11,7 +11,7 @@ inputs:
     routing:
       all:
         action: online-prediction
-        runtime: cortex/jobs
+        runtime: cortex/daemon
         output: response
 
 outputs:
