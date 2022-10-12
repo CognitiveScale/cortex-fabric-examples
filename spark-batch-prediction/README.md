@@ -301,4 +301,4 @@ pickle.dump(config, open('config.pickle', 'wb'))
 
 [To read more about accessing Spark UI during job run, go here](https://spark.apache.org/docs/latest/running-on-kubernetes.html#accessing-driver-ui).
 
-For more details about how to build Skills go to [Cortex Fabric Documentation - Define Skills](/build-skills/define-skills.md).
+For more details about how to build Skills go to [Cortex Fabric Documentation - Develop Skills](https://cognitivescale.github.io/cortex-fabric/docs/build-skills/define-skills).
