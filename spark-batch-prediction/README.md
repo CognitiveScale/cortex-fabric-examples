@@ -1,4 +1,4 @@
-# Spark-submit jobs
+# Spark-submit Job
 
 This page contains instructions for working with Spark Submit jobs.
 
@@ -41,6 +41,145 @@ Some of the commonly used options are:
 | `--conf` | Arbitrary Spark configuration property in key=value format. For values that contain spaces wrap “key=value” in quotes. Multiple configurations should be passed as separate arguments. | `--conf <key>=<value> --conf <key2>=<value2>` | |
 | `<application-jar>` | Path to a bundled jar including your application and all dependencies. The URL must be globally visible inside of your cluster. | a `hdfs://` path or a `file://` path that is present on all nodes | |
 | `application-arguments` | Arguments passed to the main method of your main class, if any. | |
+
+### Use PVCs in Distributed Mode
+
+Spark Jobs are able to use PVCs (Persistent Volume Claim) in the distributed mode for shuffle read/writes and spills for both EKS and GKE.
+
+Datasets larger than task memory size that have aggregations (sort, join, groupby, etc) require disk space to spill shuffle partitions onto. The more IOPs (input/output operations per second) available, the faster shuffle read/write runs, but standard storage classes are reasonable where time is not an issue.
+
+Configure the following to enable PVCs in Spark jobs:
+
+- Standard storage class for AWS: `gp2`
+- Standard storage class for Google Cloud: `standard`
+- Claim name set to `OnDemand` dynamically creates the persistent volume claim.
+
+**Config for EKS**
+
+<details> <summary> Click to view the EKS Config to enable PVCs </summary>
+
+**ingest-source.json**
+```
+{
+	"pyspark": {
+		"pyspark_bin": "bin/spark-submit",
+		"app_location": "local:///app/libs/api-cli.jar",
+		"app_command": [
+			"scuttle",
+			"java",
+			"-jar",
+			"./libs/api-cli.jar"
+		],
+		"options": {
+			"--master": "k8s://https://kubernetes.default.svc:443",
+			"--deploy-mode": "cluster",
+			"--name": "amp-cli",
+			"--class": "com.c12e.cortex.phoenix.cli.ApplicationKt",
+			"--conf": {
+				"spark.kubernetes.local.dirs.tmpfs": "false",
+				"spark.kubernetes.driver.limit.cores": "3",
+				"spark.kubernetes.driver.request.cores": "3",
+				"spark.executor.instances": "3",
+				"spark.kubernetes.driver.master": "https://kubernetes.default.svc:443",
+				"spark.kubernetes.authenticate.driver.serviceAccountName": "default",
+				"spark.kubernetes.executor.annotation.traffic.sidecar.istio.io/excludeOutboundPorts": "7078,7079",
+				"spark.kubernetes.driver.annotation.traffic.sidecar.istio.io/excludeInboundPorts": "7078,7079",
+				"spark.kubernetes.driver.podTemplateContainerName": "fabric-action",
+				"spark.driver.memory": "5g",
+				"spark.kubernetes.executor.limit.cores": "3",
+				"spark.kubernetes.executor.request.cores": "3",
+				"spark.executor.memory": "8g",
+				"spark.task.cpus": "1",
+				"spark.executor.memoryOverhead": "3G",
+				"spark.executor.extraJavaOptions": "-Dlogback.configurationFile=/opt/spark/jars/logback.xml",
+				"spark.executor.heartbeatInterval": "100s",
+				"spark.network.timeout": "300s",
+				"spark.scheduler.mode": "FAIR",
+				"spark.sql.legacy.timeParserPolicy": "LEGACY",
+				"spark.sql.adaptive.enabled": "true",
+				"spark.sql.adaptive.coalescePartitions.enabled": "true",
+				"spark.sql.extensions": "io.delta.sql.DeltaSparkSessionExtension",
+				"spark.sql.catalog.spark_catalog": "org.apache.spark.sql.delta.catalog.DeltaCatalog",
+				"spark.databricks.delta.schema.autoMerge.enabled": "true",
+				"spark.databricks.delta.merge.repartitionBeforeWrite.enabled": "true",
+				"spark.kubernetes.executor.volumes.persistentVolumeClaim.spark-local-dir-1.options.claimName": "OnDemand",
+                "spark.kubernetes.executor.volumes.persistentVolumeClaim.spark-local-dir-1.options.storageClass": "gp2",
+                "spark.kubernetes.executor.volumes.persistentVolumeClaim.spark-local-dir-1.options.sizeLimit": "200Gi",
+                "spark.kubernetes.executor.volumes.persistentVolumeClaim.spark-local-dir-1.mount.path": "/data",
+                "spark.kubernetes.executor.volumes.persistentVolumeClaim.spark-local-dir-1.readOnly": "false",
+				"spark.kubernetes.authenticate.caCertFile": "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt",
+				"spark.kubernetes.authenticate.oauthTokenFile": "/var/run/secrets/kubernetes.io/serviceaccount/token"
+			}
+		}
+	}
+}
+```
+
+</details>
+
+
+**Config for GKE**
+
+<details> <summary> Click to view the GKE Config to enable PVCs </summary>
+
+**ingest-source.json**
+```
+{
+	"pyspark": {
+		"pyspark_bin": "bin/spark-submit",
+		"app_location": "local:///app/libs/api-cli.jar",
+		"app_command": [
+			"scuttle",
+			"java",
+			"-jar",
+			"./libs/api-cli.jar"
+		],
+		"options": {
+			"--master": "k8s://https://kubernetes.default.svc:443",
+			"--deploy-mode": "cluster",
+			"--name": "amp-cli",
+			"--class": "com.c12e.cortex.phoenix.cli.ApplicationKt",
+			"--conf": {
+				"spark.kubernetes.local.dirs.tmpfs": "false",
+				"spark.kubernetes.driver.limit.cores": "3",
+				"spark.kubernetes.driver.request.cores": "3",
+				"spark.executor.instances": "3",
+				"spark.kubernetes.driver.master": "https://kubernetes.default.svc:443",
+				"spark.kubernetes.authenticate.driver.serviceAccountName": "default",
+				"spark.kubernetes.executor.annotation.traffic.sidecar.istio.io/excludeOutboundPorts": "7078,7079",
+				"spark.kubernetes.driver.annotation.traffic.sidecar.istio.io/excludeInboundPorts": "7078,7079",
+				"spark.kubernetes.driver.podTemplateContainerName": "fabric-action",
+				"spark.driver.memory": "5g",
+				"spark.kubernetes.executor.limit.cores": "3",
+				"spark.kubernetes.executor.request.cores": "3",
+				"spark.executor.memory": "8g",
+				"spark.task.cpus": "1",
+				"spark.executor.memoryOverhead": "3G",
+				"spark.executor.extraJavaOptions": "-Dlogback.configurationFile=/opt/spark/jars/logback.xml",
+				"spark.executor.heartbeatInterval": "100s",
+				"spark.network.timeout": "300s",
+				"spark.scheduler.mode": "FAIR",
+				"spark.sql.legacy.timeParserPolicy": "LEGACY",
+				"spark.sql.adaptive.enabled": "true",
+				"spark.sql.adaptive.coalescePartitions.enabled": "true",
+				"spark.sql.extensions": "io.delta.sql.DeltaSparkSessionExtension",
+				"spark.sql.catalog.spark_catalog": "org.apache.spark.sql.delta.catalog.DeltaCatalog",
+				"spark.databricks.delta.schema.autoMerge.enabled": "true",
+				"spark.databricks.delta.merge.repartitionBeforeWrite.enabled": "true",
+				"spark.kubernetes.executor.volumes.persistentVolumeClaim.spark-local-dir-1.options.claimName": "OnDemand",
+                "spark.kubernetes.executor.volumes.persistentVolumeClaim.spark-local-dir-1.options.storageClass": "standard",
+                "spark.kubernetes.executor.volumes.persistentVolumeClaim.spark-local-dir-1.options.sizeLimit": "200Gi",
+                "spark.kubernetes.executor.volumes.persistentVolumeClaim.spark-local-dir-1.mount.path": "/data",
+                "spark.kubernetes.executor.volumes.persistentVolumeClaim.spark-local-dir-1.readOnly": "false",
+				"spark.kubernetes.authenticate.caCertFile": "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt",
+				"spark.kubernetes.authenticate.oauthTokenFile": "/var/run/secrets/kubernetes.io/serviceaccount/token"
+			}
+		}
+	}
+}
+```
+
+</details>
 
 ## Use Spark-submit with Cortex
 
