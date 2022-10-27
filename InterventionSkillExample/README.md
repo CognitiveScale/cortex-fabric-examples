@@ -1,7 +1,7 @@
 ### Daemon Skill type
 
 This Skill is a template for an action which will be mapped to an intervention.
-Refer tests/local.json for sample payload.
+Refer [tests/local.json](./tests/local.json) for sample payload.
 
 Note:
 > This project assumes a `fast api server` with one endpoint `/invoke` that is run with the Uvicorn python3 binary; you may change to another framework or language.

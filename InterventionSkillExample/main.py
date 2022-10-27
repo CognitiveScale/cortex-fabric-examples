@@ -12,6 +12,7 @@ def run(params:dict,response: Response):
         intervention = payload["intervention_id"]
         campaign_name = payload["campaign"]
         mission_name = payload["mission"]
+        profile_schema = payload["profileSchema"]
         #Add logic for action here
         message = "Action being invoked for Campaign "+str(campaign_name)+" and Mission: "+str(mission_name)+"\n"
         message += " Successfully invoked action for given profile ID "+str(profileId)+" for intervention "+str(intervention)
