@@ -1,0 +1,33 @@
+camel: 1.0.0
+name: extract
+title: extract Title
+description: extract Description
+
+inputs:
+  - name: request
+    title: Job Request
+    parameters:
+      - name: params
+        type: object
+        description: Request Parameters
+        required: true
+    routing:
+      all:
+        action: extract
+        runtime: cortex/jobs
+        output: response
+
+outputs:
+  - name: response
+    title: Job Response
+    parameters:
+      - name: result
+        type: object
+        description: Job Response
+        required: true
+
+actions:
+  - name: extract
+    type: job
+    image: extract
+    environmentVariables: '"TEST"="value"'

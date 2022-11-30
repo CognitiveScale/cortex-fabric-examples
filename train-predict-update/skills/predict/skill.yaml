@@ -1,0 +1,33 @@
+camel: 1.0.0
+name: predict
+title: predict Title
+description: predict Description
+
+inputs:
+  - name: request
+    title: Job Request
+    parameters:
+      - name: params
+        type: object
+        description: Request Parameters
+        required: true
+    routing:
+      all:
+        action: predict
+        runtime: cortex/jobs
+        output: response
+
+outputs:
+  - name: response
+    title: Job Response
+    parameters:
+      - name: result
+        type: object
+        description: Job Response
+        required: true
+
+actions:
+  - name: predict
+    type: job
+    image: predict
+    environmentVariables: '"TEST"="value"'

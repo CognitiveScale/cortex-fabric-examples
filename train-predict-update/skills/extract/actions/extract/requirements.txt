@@ -1,0 +1,6 @@
+cortex-python==6.1.0
+boto3
+pyarrow==4.0.1
+gql==3.0.0a5
+aiohttp==3.8.0
+pandas==1.2.4

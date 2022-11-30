@@ -1,0 +1,33 @@
+camel: 1.0.0
+name: train
+title: train Title
+description: train Description
+
+inputs:
+  - name: request
+    title: Job Request
+    parameters:
+      - name: params
+        type: object
+        description: Request Parameters
+        required: true
+    routing:
+      all:
+        action: train
+        runtime: cortex/jobs
+        output: response
+
+outputs:
+  - name: response
+    title: Job Response
+    parameters:
+      - name: result
+        type: object
+        description: Job Response
+        required: true
+
+actions:
+  - name: train
+    type: job
+    image: train
+    environmentVariables: '"TEST"="value"'

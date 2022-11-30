@@ -1,0 +1,9 @@
+{
+    "payload": {
+        "profileSchema": "german-credit-9afca",
+        "filter": "first_name.eq('John')",
+        "experimentName": "german_credit",
+        "targetColumn": "outcome",
+        "runId": ""
+    }
+}

@@ -1,0 +1,224 @@
+{
+  "camel": "1.0.0",
+  "name": "example3",
+  "title": "example3",
+  "tags": [],
+  "properties": [],
+  "inputs": [
+    {
+      "name": "service1",
+      "title": "input",
+      "parameters": [
+        {
+          "name": "payload",
+          "required": false,
+          "title": "payload",
+          "type": "object"
+        }
+      ],
+      "signalId": "9816bf55-c3bc-4355-9a28-07e76aef2e26",
+      "output": "service1",
+      "signalType": "Service"
+    },
+    {
+      "name": "service2",
+      "title": "input",
+      "parameters": [
+        {
+          "name": "payload",
+          "required": false,
+          "title": "payload",
+          "type": "object"
+        }
+      ],
+      "signalId": "7816bf55-c3bc-4355-9a28-07e76aef2e26",
+      "output": "service2",
+      "signalType": "Service"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "service1",
+      "title": "output",
+      "parameters": [
+        {
+          "name": "payload",
+          "required": false,
+          "title": "payload",
+          "type": "object"
+        }
+      ],
+      "signalId": "46b48182-2397-4a02-b4f0-1e85c2b11ad9",
+      "signalType": "Service"
+    },
+    {
+      "name": "service2",
+      "title": "output",
+      "parameters": [
+        {
+          "name": "payload",
+          "required": false,
+          "title": "payload",
+          "type": "object"
+        }
+      ],
+      "signalId": "56b48182-2397-4a02-b4f0-1e85c2b11ad9",
+      "signalType": "Service"
+    }
+  ],
+  "skills": [
+    {
+      "skillName": "extract",
+      "title": "extract-pred",
+      "description": "Entry point",
+      "refId": "80dc6540-4594-46ba-ab1b-7f0931a883d8",
+      "properties": [],
+      "_layout": {
+        "cellIndex": 70
+      }
+    },
+    {
+      "skillName": "extract",
+      "title": "extract-train",
+      "description": "Entry point",
+      "refId": "81dc4540-4594-46ba-ab1b-7f0931a883d8",
+      "properties": [],
+      "_layout": {
+        "cellIndex": 67
+      }
+    },
+    {
+      "skillName": "predict",
+      "title": "predict",
+      "description": "Make predictions using the model",
+      "refId": "ece4d7ce-0099-4865-a12d-26c1905ecb41",
+      "properties": [],
+      "_layout": {
+        "cellIndex": 74
+      }
+    },
+    {
+      "skillName": "update",
+      "title": "update",
+      "description": "Update the predictions back to profile",
+      "refId": "2eec6780-0345-40b9-9e6e-3c985ce59147",
+      "properties": [],
+      "_layout": {
+        "cellIndex": 78
+      }
+    },
+    {
+      "skillName": "train",
+      "title": "train",
+      "description": "Train/Retrain the model and save to experiments",
+      "refId": "6eec6780-0345-40b9-9e6e-3c985ce59147",
+      "properties": [],
+      "_layout": {
+        "cellIndex": 71
+      }
+    }
+  ],
+  "mappings": [
+    {
+      "from": {
+        "input": {
+          "signalId": "9816bf55-c3bc-4355-9a28-07e76aef2e26"
+        }
+      },
+      "to": {
+        "skill": {
+          "refId": "80dc6540-4594-46ba-ab1b-7f0931a883d8",
+          "input": "request"
+        }
+      },
+      "rules": []
+    },
+    {
+      "from": {
+        "skill": {
+          "refId": "80dc6540-4594-46ba-ab1b-7f0931a883d8",
+          "output": "response"
+        }
+      },
+      "to": {
+        "skill": {
+          "refId": "ece4d7ce-0099-4865-a12d-26c1905ecb41",
+          "input": "request"
+        }
+      },
+      "rules": []
+    },
+    {
+      "from": {
+        "skill": {
+          "refId": "ece4d7ce-0099-4865-a12d-26c1905ecb41",
+          "output": "response"
+        }
+      },
+      "to": {
+        "skill": {
+          "refId": "2eec6780-0345-40b9-9e6e-3c985ce59147",
+          "input": "request"
+        }
+      },
+      "rules": []
+    },
+    {
+      "from": {
+        "skill": {
+          "refId": "2eec6780-0345-40b9-9e6e-3c985ce59147",
+          "output": "response"
+        }
+      },
+      "to": {
+        "output": {
+          "signalId": "46b48182-2397-4a02-b4f0-1e85c2b11ad9"
+        }
+      },
+      "rules": []
+    },
+    {
+      "from": {
+        "skill": {
+          "refId": "6eec6780-0345-40b9-9e6e-3c985ce59147",
+          "output": "response"
+        }
+      },
+      "to": {
+        "output": {
+          "signalId": "56b48182-2397-4a02-b4f0-1e85c2b11ad9"
+        }
+      },
+      "rules": []
+    },
+    {
+      "from": {
+        "input": {
+          "signalId": "7816bf55-c3bc-4355-9a28-07e76aef2e26"
+        }
+      },
+      "to": {
+        "skill": {
+          "refId": "81dc4540-4594-46ba-ab1b-7f0931a883d8",
+          "input": "request"
+        }
+      },
+      "rules": []
+    },
+    {
+      "from": {
+        "skill": {
+          "refId": "81dc4540-4594-46ba-ab1b-7f0931a883d8",
+          "output": "response"
+        }
+      },
+      "to": {
+        "skill": {
+          "refId": "6eec6780-0345-40b9-9e6e-3c985ce59147",
+          "input": "request"
+        }
+      },
+      "rules": []
+    }
+  ]
+}

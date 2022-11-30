@@ -1,0 +1,59 @@
+camel: 1.0.0
+name: update
+title: update Title
+description: update Description
+
+inputs:
+  - name: request
+    title: Job Request
+    parameters:
+      - name: params
+        type: object
+        description: Request Parameters
+        required: true
+    routing:
+      all:
+        action: update
+        runtime: cortex/jobs
+        output: response
+
+outputs:
+  - name: response
+    title: Job Response
+    parameters:
+      - name: result
+        type: object
+        description: Job Response
+        required: true
+
+actions:
+  - name: update
+    type: job
+    image: update
+    environmentVariables: '"TEST"="value"'
+
+properties:
+  - name: bucket_name
+    title: BucketName
+    description: Managed Content Bucket Name
+    required: false
+    type: String
+    defaultValue: cortex-content
+  - name: bucket_protocol
+    title: BucketProtocol
+    description: Bucket Protocol
+    required: false
+    type: String
+    defaultValue: s3a://
+  - name: connection_type
+    title: ConnectionType
+    description: Connection Type
+    required: false
+    type: String
+    defaultValue: s3FileStream
+  - name: bucket_api_endpoint
+    title: BucketApiEndpoint
+    description: Bucket Api Endpoint
+    required: false
+    type: String
+    defaultValue: s3Endpoint
