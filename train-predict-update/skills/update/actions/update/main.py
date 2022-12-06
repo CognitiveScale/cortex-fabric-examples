@@ -125,7 +125,7 @@ def create_connections(projectId, bootstrap_uri, stream_read_dir, gql_client, co
                             name
                           }
                         }
-                """ % (projectId, connection_type, connection_name, connection_name, "", bucket_api_endpoint, conn_uri, stream_read_dir)]
+                """ % (projectId, connection_type, connection_name, connection_name + " Predictions", "Predictions for " + connection_name, bucket_api_endpoint, conn_uri, stream_read_dir)]
         execute_query(query[0], gql_client)
     except Exception as e:
         log_message(msg=f"Error in create_connections {str(e)}", log=get_logger(
@@ -156,7 +156,7 @@ def create_datasource(gql_client, data_source, projectId, conn_name):
                     __typename
                   }
             }  
-            """ % (data_source, data_source, projectId, conn_name)]
+            """ % (data_source, "Predicitons for " + data_source, projectId, conn_name)]
         execute_query(query[0], gql_client)
     except Exception as e:
         log_message(msg=f"Error in create_datasource {str(e)}", log=get_logger(
@@ -225,6 +225,9 @@ def get_profile_schema(gql_client, profile_schema, projectId):
                         project: "{projectId}"
                         name: "{profile_schema}"
                     ){{
+                        name
+                        title
+                        description
                         primarySource {{
                             attributes
                             profileKey
@@ -233,9 +236,9 @@ def get_profile_schema(gql_client, profile_schema, projectId):
                      }}
                 }}
                 """ 
-        primary_source = execute_query(query, gql_client)[
-            "profileSchemaByName"]["primarySource"]
-        return [feature for feature in primary_source["attributes"]], primary_source['name'], primary_source["profileKey"]
+        res = execute_query(query, gql_client)["profileSchemaByName"]
+        primary_source = res["primarySource"]
+        return [feature for feature in primary_source["attributes"]], primary_source['name'], primary_source["profileKey"], res["title"]
     except Exception as e:
         log_message(msg=f"Error in get_datasources {str(e)}", log=get_logger(
             'feedback-aggregator'), level=logging.ERROR)
@@ -264,7 +267,7 @@ def get_datasources(projectId, mission_name, gql_client):
         sys.exit(1)
 
 
-def update_profile_schema(gql_client, projectId, profile_schema, data_source, feature_list, primary_source_name, primary_key):
+def update_profile_schema(gql_client, projectId, profile_schema, data_source, feature_list, primary_source_name, primary_key, title):
     try:
         query = f"""mutation {{
               updateProfileSchema(input: {{
@@ -272,11 +275,11 @@ def update_profile_schema(gql_client, projectId, profile_schema, data_source, fe
                   name: "{profile_schema}",
                   names: {{
                     categories: [],
-                    title: "{profile_schema}",
+                    title: "{title}",
                     plural: "",
                     singular: ""
                   }},
-                  title: "{profile_schema}",
+                  title: "{title}",
                   joins: [
                         {{
                             name: "{data_source}",
@@ -427,8 +430,8 @@ def run(params):
         projectId = params["projectId"]
         payload = params["payload"]
         profile_schema = payload["profileSchema"]
-        connection_name = profile_schema+"pred"
-        data_source = profile_schema+"pred"
+        connection_name = profile_schema
+        data_source = profile_schema
        
 
         properties = params["properties"]
@@ -450,10 +453,11 @@ def run(params):
         if (get_datasources(projectId, data_source, gql_client) != True):
             log_message(msg="Datasource does not exist", log=get_logger("feedback-aggregator"), level=logging.INFO)
             create_datasource(gql_client, data_source, projectId, connection_name)
-            feature_list, primary_source_name, primary_key = get_profile_schema(gql_client, profile_schema, projectId)
-            update_profile_schema(gql_client, projectId, profile_schema, data_source, feature_list, primary_source_name, primary_key)
+            feature_list, primary_source_name, primary_key, title = get_profile_schema(gql_client, profile_schema, projectId)
+            update_profile_schema(gql_client, projectId, profile_schema, data_source, feature_list, primary_source_name, primary_key, title)
         
         ingest_datasource(projectId, data_source, gql_client)
+        time.sleep(20) # wait for the ingest source to spin up
 
         if (get_datasource_status(projectId, data_source, gql_client)):
             invoked_time = datetime.datetime.utcnow()

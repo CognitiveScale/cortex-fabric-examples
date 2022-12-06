@@ -6,7 +6,7 @@
   "properties": [],
   "inputs": [
     {
-      "name": "service1",
+      "name": "predict_service",
       "title": "input",
       "parameters": [
         {
@@ -17,11 +17,11 @@
         }
       ],
       "signalId": "9816bf55-c3bc-4355-9a28-07e76aef2e26",
-      "output": "service1",
+      "output": "predict_service",
       "signalType": "Service"
     },
     {
-      "name": "service2",
+      "name": "train_service",
       "title": "input",
       "parameters": [
         {
@@ -32,13 +32,13 @@
         }
       ],
       "signalId": "7816bf55-c3bc-4355-9a28-07e76aef2e26",
-      "output": "service2",
+      "output": "train_service",
       "signalType": "Service"
     }
   ],
   "outputs": [
     {
-      "name": "service1",
+      "name": "predict_service",
       "title": "output",
       "parameters": [
         {
@@ -52,7 +52,7 @@
       "signalType": "Service"
     },
     {
-      "name": "service2",
+      "name": "train_service",
       "title": "output",
       "parameters": [
         {

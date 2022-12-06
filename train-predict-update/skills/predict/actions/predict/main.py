@@ -46,11 +46,11 @@ def download_model(client, projectId, exp_name, run_id=None):
         model = exp_run.get_artifact('model')
         return model
     except Exception as e:
-        logging.error("Model does not exist {:s}".format(str(e)), level=logging.FATAL)
+        logging.critical("Model does not exist {:s}".format(str(e)))
         return {}
 
 
-def score_predictions(df, model, primary_column):
+def score_predictions(df, model, primary_column, predicted_column):
     """
     Score Predictions using the downloaded model
 
@@ -75,30 +75,33 @@ def score_predictions(df, model, primary_column):
                     x_transformed = x_encoded if np.any(x_encoded) else x_normalized
             else:
                 x_transformed = df.values
-            df.loc[:, 'prediction'] = model["model"].predict(x_transformed)
+            df.loc[:, predicted_column] = model["model"].predict(x_transformed)
         else:
             # If the model object is an instance of model itself
-            df.loc[:, 'prediction'] = model.predict(df.values)
+            df.loc[:, predicted_column] = model.predict(df.values)
     except Exception as e:
         raise Exception("Error occurred while making predictions, Please check the model. Message: {}".format(e))
     return df
 
 
-def make_predictions(data: pd.DataFrame, target_column: str, primary_column: str, model) -> pd.DataFrame:
+def make_predictions(data: pd.DataFrame, target_column: str, primary_column: str, predicted_column: str, model) -> pd.DataFrame:
     logging.info("Running Prediction: Invoke Request:")
     try:
         if target_column in data.columns.tolist():
             data = data.drop(target_column, axis=1)
+
+        if predicted_column in data.columns.tolist():
+            data = data.drop(predicted_column, axis=1)
         
         logging.info("Processing records of size: {}".format(data.shape[0]))
 
         # Score Predictions for a Batch
-        predicted_df = score_predictions(data, model=model, primary_column=primary_column)
+        predicted_df = score_predictions(data, model=model, primary_column=primary_column, predicted_column=predicted_column)
        
         logging.info("Prediction Job Completed!")
         return predicted_df
     except Exception as e:
-        logging.error("Error while processing batch predictions. Message: ", e, level=logging.FATAL)
+        logging.critical("Error while processing batch predictions. Message: ", e)
         return pd.DataFrame()
 
 def get_data(managed_content: ManagedContentClient, key: str, project: str) -> pd.DataFrame:
@@ -138,6 +141,7 @@ def run(params):
     experiment_name = payload["experimentName"]
     target_column = payload["targetColumn"]
     primary_column = "profileId"
+    predicted_column = "prediction"
     run_id = payload.get("runId", None)
 
     cortex_client = Cortex.client(
@@ -145,7 +149,7 @@ def run(params):
     managed_content = ManagedContentClient(cortex_client)
     data = get_data(managed_content, profile_schema + ".parquet", project)
     model = download_model(cortex_client, project, experiment_name, run_id)
-    pred = make_predictions(data, target_column, primary_column, model)[[primary_column, "prediction"]]
+    pred = make_predictions(data, target_column, primary_column, predicted_column, model)[[primary_column, predicted_column]]
     # the new data needs to be written to sub folder
     pred_file_location = profile_schema + "_predictions/pred-" + str(datetime.utcnow()) + ".parquet"
     bootstrap_file = profile_schema + "_predictions/pred.parquet"
@@ -181,7 +185,7 @@ if __name__ == '__main__':
     params = sys.argv[1]
     params = json.loads(params)
     # params = {
-    #     "token": "eyJhbGciOiJFZERTQSIsImtpZCI6Im5WalJOdWhPQzc5ZFpPYVMwaGt4U09Bek14Zm1mTWl0SUpLY05fdWQwTGcifQ.eyJzdWIiOiIyNmU5NmU1OC1kYjhjLTQ5NWQtODI3OS1jMjQ1YzNlMjMzMGUiLCJhdWQiOiJjb3J0ZXgiLCJpc3MiOiJjb2duaXRpdmVzY2FsZS5jb20iLCJpYXQiOjE2Njk4MjMzNzgsImV4cCI6MTY2OTkwOTc3OH0.5kmaTBBGcn90-yKDilNhgKmMkrhw2fQT6kxVBY95UoFfgLNjYbK6w1nXXr68vIQ81HdKx-yR9-Vv_xzQJTucAQ",
+    #     "token": "eyJhbGciOiJFZERTQSIsImtpZCI6Im5WalJOdWhPQzc5ZFpPYVMwaGt4U09Bek14Zm1mTWl0SUpLY05fdWQwTGcifQ.eyJzdWIiOiIyNmU5NmU1OC1kYjhjLTQ5NWQtODI3OS1jMjQ1YzNlMjMzMGUiLCJhdWQiOiJjb3J0ZXgiLCJpc3MiOiJjb2duaXRpdmVzY2FsZS5jb20iLCJpYXQiOjE2Njk5NjgwMTQsImV4cCI6MTY3MDA1NDQxNH0.i6DitKdU9Gw-iJ-8nEPEW5aNCQcc8UF1lie89vwgc2D5q8Oj6vwtaE85gSYkfI6jXkEbLqkI7PHf2NCh4GW5DA",
     #     "apiEndpoint": "https://api.dci-dev.dev-eks.insights.ai",
     #     "projectId": "bptest",
     #     "payload": {
@@ -190,8 +194,8 @@ if __name__ == '__main__':
     #         "targetColumn": "outcome"
     #     }
     # }
-    print(f'Received: {params["payload"]}')
     # need to parse the payload to get the original json
-    print(f'Parsed : --')
-    print(extract_json_objects(params["payload"]))
+    print(f'Parsing Payload : --')
+    params["payload"] = extract_json_objects(params["payload"])
+    print(f'Received: {params["payload"]}')
     run(params)

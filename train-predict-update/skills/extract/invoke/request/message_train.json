@@ -1,0 +1,8 @@
+{
+    "payload": {
+        "profileSchema": "german-credit-af496",
+        "experimentName": "german_credit",
+        "targetColumn": "outcome",
+        "filter": "profile_id.gt(50)"
+    }
+}
