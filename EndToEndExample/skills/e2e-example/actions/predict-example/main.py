@@ -14,7 +14,7 @@ model_ctx = {}
 
 app = FastAPI()
 
-# predict
+# predict-example
 @app.post('/invoke')
 def run(req: dict):
     payload = req["payload"]
@@ -40,7 +40,7 @@ def run(req: dict):
 
     instances = encoder(instances)
 
-    # predict
+    # predict-example
     predictions = model_obj["model"].predict(instances)
     scores = model_obj["model"].predict_proba(instances)
     labels = model_obj["model"].classes_

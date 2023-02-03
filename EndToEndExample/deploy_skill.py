@@ -5,8 +5,8 @@
 ## steps
 1. S3 bucket contains the data(in this case csv file) 
 2. We save a connection of the given types -> (demonstrated using cortex-python sdk)
-5. Dockerize and push an action to train multiple models and save in expermients (use the connection in step 2 to load the data) -> job
-3. Dockerize and push another action to predict using the exprinment name(to specify a particular model) -> daemon
+5. Dockerize and push an action to train-example multiple models and save in expermients (use the connection in step 2 to load the data) -> job
+3. Dockerize and push another action to predict-example using the exprinment name(to specify a particular model) -> daemon
 4. Save a skill definition, and route inputs to two different actions -> (demonstrated using cortex-python sdk)
 5. Test the skills using cli
 """
@@ -53,13 +53,13 @@ if __name__ == "__main__":
     cc.save_connection(connection=conn_params)
 
     # ### run the following command
-    # ``make build`` to build the docker images for train(job) and predict(daemon) action 
+    # ``make build`` to build the docker images for train-example(job) and predict-example(daemon) action
     # ``make push`` to push the images to docker registry set by the env variable DOCKER_PREGISTRY_URL
 
     # Deploying the Skills and actions
 
     skill_object = {}
-    with open("skill.json") as f:
+    with open("skill.yaml") as f:
         skill_object = json.load(f)
 
     skill_client = SkillClient(client)

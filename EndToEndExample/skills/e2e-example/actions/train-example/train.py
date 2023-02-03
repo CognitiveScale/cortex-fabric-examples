@@ -99,7 +99,7 @@ def save_experiment(client, experiment_name, filename, algo, modelId, project):
     print(f'Experiment saved, name: {experiment_name} run_id: {run_id}')
 
 
-# train model using the connection
+# train-example model using the connection
 def train(params):
     client = Cortex.from_message(params)
 
