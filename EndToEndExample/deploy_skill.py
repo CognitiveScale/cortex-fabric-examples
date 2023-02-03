@@ -50,7 +50,7 @@ if __name__ == "__main__":
     # create a secret called awssecretadmin in your project which contains the aws secret key
 
     # create a connection
-    cc.save_connection(project=PROJECT_ID, connection=conn_params)
+    cc.save_connection(connection=conn_params)
 
     # ### run the following command
     # ``make build`` to build the docker images for train(job) and predict(daemon) action 
