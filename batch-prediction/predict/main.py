@@ -14,6 +14,7 @@ import pymongo
 
 # cortex
 from cortex import Cortex
+from cortex.experiment import Experiment
 
 
 def load_model(client, experiment_name, run_id, artifact_key):
@@ -28,11 +29,11 @@ def load_model(client, experiment_name, run_id, artifact_key):
     """
     logging.info("Loading Model from Experiment Run: {}".format(run_id))
     try:
-        experiment = client.experiment(experiment_name)
+        experiment = Experiment(document=client.experiments.get_experiment(experiment_name), client=client.experiments)
         run = experiment.get_run(run_id)
         return run.get_artifact(artifact_key)
     except Exception as e:
-        logging.error("Error: Failed to load model: {}".format(e))
+        logging.error(f"Error: Failed to load model: {e}")
 
 
 def score_predictions(df, model):
@@ -65,7 +66,7 @@ def score_predictions(df, model):
             # If the model object is an instance of model itself
             df.loc[:, 'prediction'] = model.predict(df.values)
     except Exception as e:
-        raise Exception("Error occurred while making predictions, Please check the model. Message: {}".format(e))
+        raise Exception(f"Error occurred while making predictions, Please check the model. Message: {e}")
     return df
 
 
@@ -110,22 +111,19 @@ def upload_file(s3_client, filepath, s3_output_path):
 def make_batch_predictions(input_params):
     logging.info("Batch Prediction: Invoke Request:{}".format(input_params))
     conn_params = {}
-    url = input_params["apiEndpoint"]
-    token = input_params["token"]
-    project = input_params["projectId"]
     outcome = input_params["properties"]["outcome"]
     batch_size = int(input_params["properties"]["batch-size"])
 
     try:
         # Initialize Cortex Client
-        client = Cortex.client(api_endpoint=url, token=token, project=project)
+        client = Cortex.from_message(params)
 
         # Read cortex connection details
-        connection = client.get_connection(input_params["properties"]["connection-name"])
+        connection = client.connections.get_connection(input_params["properties"]["connection-name"])
         for p in connection['params']:
             conn_params.update({p['name']: p['value']})
         print(conn_params)
-        logging.info("connection params", conn_params)
+        logging.info(f"connection params: {conn_params}")
 
         # Load Model from the experiment run
         model = load_model(client, input_params["properties"]["experiment-name"], input_params["properties"]["run-id"],
@@ -158,11 +156,11 @@ def make_batch_predictions(input_params):
             mongo_uri = conn_params.get("uri")
             database = conn_params.get("database")
             collection = conn_params.get("collection")
-            client = pymongo.MongoClient(mongo_uri)
-            total_records = client[database][collection].count({})
+            mongo_client = pymongo.MongoClient(mongo_uri)
+            total_records = mongo_client[database][collection].count({})
             skip_records = 0
             while skip_records < total_records:
-                cursor = client[database][collection].find({}).limit(batch_size).skip(skip_records)
+                cursor = mongo_client[database][collection].find({}).limit(batch_size).skip(skip_records)
                 # Expand the cursor and construct the DataFrame
                 chunked_df = pd.DataFrame(list(cursor))
                 # We should drop _id column before using the data for predictions
@@ -181,7 +179,7 @@ def make_batch_predictions(input_params):
                     skip_records += batch_size
                 else:
                     break
-            client.close()
+            mongo_client.close()
         logging.info("Prediction Job Completed!")
     except Exception as e:
         logging.error("Error while processing batch predictions. Message: ", e)
