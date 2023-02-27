@@ -1,7 +1,6 @@
 from fastapi import FastAPI
 
 from cortex import Cortex
-from cortex.session import SessionClient
 
 app = FastAPI()
 
@@ -16,8 +15,7 @@ def start(req: dict):
         ttl = payload["ttl"]
     if "description" in payload:
         description = payload["description"]
-    session_client = SessionClient(client)
-    session = session_client.start_session(ttl, description, req["projectId"])
+    session = client.sessions.start_session(ttl, description, req["projectId"])
     return {'payload': {"session_id": session}}
 
 
@@ -36,8 +34,7 @@ def get(req: dict):
         key = payload["key"]
         if len(key) < 1:
             key = None
-    session_client = SessionClient(client)
-    session = session_client.get_session_data(session_id, key, req["projectId"])
+    session = client.sessions.get_session_data(session_id, key, req["projectId"])
     return {'payload': session}
 
 
@@ -56,7 +53,7 @@ def put(req: dict):
         data = payload["data"]
     else:
         return {'payload': "data is required"}
-    result = SessionClient(client).put_session_data(session_id, data, req["projectId"])
+    result = client.sessions.put_session_data(session_id, data, req["projectId"])
     return {"payload": result}
 
 
@@ -70,5 +67,5 @@ def delete(req: dict):
         session_id = payload["session_id"]
     else:
         return {'payload': "session_id is required"}
-    result = SessionClient(client).delete_session(session_id, req["projectId"])
+    result = client.sessions.delete_session(session_id, req["projectId"])
     return {"payload": result}
