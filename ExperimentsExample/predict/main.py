@@ -3,7 +3,7 @@ Copyright (c) 2021. Cognitive Scale Inc. All rights reserved.
 """
 
 from cortex import Cortex
-from cortex.experiment import Experiment, ExperimentClient
+from cortex.experiment import Experiment
 from fastapi import FastAPI
 from cat_encoder import CatEncoder
 
@@ -27,7 +27,7 @@ def run(req: dict):
 
     # if model is not loaded
     client = Cortex.client(api_endpoint=req["apiEndpoint"], project=req["projectId"], token=req["token"])
-    model_ctx[exp_name] = init_model(exp_name, run_id, client, req["projectId"])
+    model_ctx[exp_name] = init_model(exp_name, run_id, client)
 
     # retrieve model from the context
     model_obj = model_ctx[exp_name]
@@ -54,9 +54,8 @@ def run(req: dict):
 
 
 # initialize model using experiment name
-def init_model(exp_name, run_id, client, project):
-    experiment_client = ExperimentClient(client)
-    experiment = Experiment.get_experiment(exp_name, project, experiment_client)
+def init_model(exp_name, run_id, client):
+    experiment = Experiment(client.experiments.get_experiment(exp_name), client.experiments)
     if not run_id:
         exp_run = experiment.last_run()
     else:
