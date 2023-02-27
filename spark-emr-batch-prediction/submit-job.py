@@ -11,7 +11,7 @@ import sys
 import os
 
 from cortex import Cortex
-from cortex.experiment import Experiment, ExperimentClient
+from cortex.experiment import Experiment
 
 
 def get_runtime_args(config):
@@ -118,9 +118,8 @@ if __name__ == '__main__':
     run_id = input_params["properties"]["run-id"]
 
     client = Cortex.client(api_endpoint=url, token=token, project=project)
-    experiment_client = ExperimentClient(client)
-    result = experiment_client.get_experiment(experiment_name, project)
-    experiment = Experiment(result, project, experiment_client)
+    result = client.experiments.get_experiment(experiment_name)
+    experiment = Experiment(result, client.experiments)
     run = experiment.get_run(run_id)
     spark_config = run.get_artifact('spark-config')
     

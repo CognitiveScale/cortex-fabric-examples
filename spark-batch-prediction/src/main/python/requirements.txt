@@ -1,4 +1,4 @@
 pandas==1.2.4
-cortex-python==6.1.0
+cortex-python==6.3.1a1
 catboost==0.25.1
 scikit-learn==0.24.0

@@ -6,7 +6,7 @@ Licensed under CognitiveScale Example Code [License](https://cognitivescale.gith
 import sys
 from cortex import Cortex
 from cortex.utils import log_message, get_logger
-from cortex.experiment import Experiment, ExperimentClient
+from cortex.experiment import Experiment
 import json
 import numpy as np
 import logging
@@ -68,10 +68,9 @@ def initialize_spark_session(conf):
     return builder.getOrCreate()
 
 
-def load_model(client, experiment_name, run_id, project):
-    experiment_client = ExperimentClient(client)
-    result = experiment_client.get_experiment(experiment_name, project)
-    experiment = Experiment(result, project, experiment_client)
+def load_model(client, experiment_name, run_id):
+    result = client.experiments.get_experiment(experiment_name)
+    experiment = Experiment(result, client.experiments)
     run = experiment.get_run(run_id)
     return run.get_artifact('model')
 
@@ -97,12 +96,12 @@ def make_batch_predictions(input_params):
     client = Cortex.client(api_endpoint=url, token=token, project=project)
 
     # Read cortex connection details
-    connection = client.get_connection(input_params["properties"]["connection-name"])
+    connection = client.connections.get_connection(input_params["properties"]["connection-name"])
     for p in connection['params']:
         conn_params.update({p['name']: p['value']})
     log_message(msg=f"Connection Params: {str(conn_params)}", log=get_logger(skill_name), level=logging.INFO)
     # Load Model from the experiment run
-    model = load_model(client, input_params["properties"]["experiment-name"], input_params["properties"]["run-id"], project)
+    model = load_model(client, input_params["properties"]["experiment-name"], input_params["properties"]["run-id"])
 
     if connection.get("connectionType") == "s3":
         output_path = input_params["properties"]["output-path"]
