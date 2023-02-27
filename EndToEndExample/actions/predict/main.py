@@ -55,8 +55,7 @@ def run(req: dict):
 
 # initialize model using experiment name
 def init_model(exp_name, run_id, client, project):
-    experiment_client = ExperimentClient(client)
-    experiment = Experiment.get_experiment(exp_name, experiment_client)
+    experiment = Experiment(client.experiments.get_experiment(exp_name), client.experiments)
     if not run_id:
         exp_run = experiment.last_run()
     else:

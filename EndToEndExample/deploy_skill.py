@@ -23,10 +23,6 @@ from pprint import pprint
 from config import PROJECT_ID, API_ENDPOINT, CORTEX_TOKEN, CONN_PARAMS
 
 from cortex import Cortex
-from cortex.model import Model, ModelClient
-from cortex.experiment import Experiment, ExperimentClient
-from cortex.connection import ConnectionClient, Connection
-from cortex.skill import SkillClient
 
 
 params = {
@@ -36,9 +32,7 @@ params = {
 }
 
 if __name__ == "__main__":
-    client = Cortex.client(
-        api_endpoint=params['apiEndpoint'], project=params['projectId'], token=params['token'])
-    cc = ConnectionClient(client)
+    client = Cortex.client()
     conn_params = {}
     with open("conn.json") as f:
         conn_params = json.load(f)
@@ -50,7 +44,7 @@ if __name__ == "__main__":
     # create a secret called awssecretadmin in your project which contains the aws secret key
 
     # create a connection
-    cc.save_connection(connection=conn_params)
+    client.connections.save_connection(connection=conn_params)
 
     # ### run the following command
     # ``make build`` to build the docker images for train(job) and predict(daemon) action 
@@ -62,12 +56,10 @@ if __name__ == "__main__":
     with open("skill.json") as f:
         skill_object = json.load(f)
 
-    skill_client = SkillClient(client)
-
-    skill_client.save_skill(skill_object)
+    client.skills.save_skill(skill_object)
 
     # we can see the skill with name e2e-example has been deployed
 
-    sks = skill_client.get_skill(skill_object['name'])
+    sks = client.skills.get_skill(skill_object['name'])
 
     pprint(sks)

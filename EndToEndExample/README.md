@@ -15,7 +15,7 @@ We create a connection using the cortex-sdk and use that connection for Train Ac
 We are using files such as [conn.json](conn.json) to define the connection definition and [config.py](config.py) for defining the secrets like AWS_PUBLIC_KEY, S3_BUCKET, FILE_NAME etc
 ##### Secrets 
 There are certain configs and secrets like AWS Public key and Private Key we need to create and set in the Project to successfully create the connections. [Configs](https://github.com/CognitiveScale/cortex-fabric-examples/blob/5cd95021cc6ba62315e3ee23756cb3e5a98fe301/EndToEndExample/deploy_skill.py#L31-L35)
-[secrets](https://github.com/CognitiveScale/cortex-fabric-examples/blob/5cd95021cc6ba62315e3ee23756cb3e5a98fe301/EndToEndExample/deploy_skill.py#L66)
+[secrets](./deploy_skill.py#L66)
 
 Example: If you have a secret key called `awssecret` set in your project you can use it to create connections by Using `#SECURE.awssecret` as the value to one of the parameters in the Connections Object. Similary any secret key set such as `<secret_name>` can be used as `#SECURE.<secret_name>`. This needs to be updated in [config.py](config.py) 
 
