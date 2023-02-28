@@ -1,6 +1,6 @@
 pandas
 numpy
-cortex-python==6.0.2a3
+cortex-python==6.3.1a1
 scikit-learn==0.24.2
 fastapi
 uvicorn

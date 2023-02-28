@@ -6,7 +6,7 @@ Licensed under CognitiveScale Example Code [License](https://cognitivescale.gith
 import sys
 from cortex import Cortex
 from cortex.utils import log_message, get_logger
-from cortex.experiment import Experiment, ExperimentClient
+from cortex.experiment import Experiment
 import json
 import numpy as np
 import logging
@@ -68,10 +68,9 @@ def initialize_spark_session(conf):
     return builder.getOrCreate()
 
 
-def load_model(client, experiment_name, run_id, project):
-    experiment_client = ExperimentClient(client)
-    result = experiment_client.get_experiment(experiment_name, project)
-    experiment = Experiment(result, project, experiment_client)
+def load_model(client, experiment_name, run_id):
+    result = client.experiments.get_experiment(experiment_name)
+    experiment = Experiment(result, client.experiments)
     run = experiment.get_run(run_id)
     return run.get_artifact('model')
 
@@ -98,7 +97,7 @@ def make_batch_predictions(input_params):
     # Read cortex connection details
     print("connection retreival started")
     # Load Model from the experiment run
-    model = load_model(client, input_params["experiment-name"], input_params["run-id"], project)
+    model = load_model(client, input_params["experiment-name"], input_params["run-id"])
 
     
     output_path = input_params["output-path"]

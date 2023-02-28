@@ -14,8 +14,7 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from cat_encoder import CatEncoder
 from cortex import Cortex
-from cortex.model import Model, ModelClient
-from cortex.experiment import Experiment, ExperimentClient
+from cortex.experiment import Experiment
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.neural_network import MLPClassifier
 from sklearn import svm
@@ -64,7 +63,7 @@ def pickle_model(model, encoder, model_name, test_accuracy, description, filenam
 
 
 # save model metadata
-def save_model(client, project, name, title, description, source, model_type, status, tags):
+def save_model(client, name, title, description, source, model_type, status, tags):
     # create model
     model_obj = {
         "name": name,
@@ -75,18 +74,16 @@ def save_model(client, project, name, title, description, source, model_type, st
         "status": status,
         "tags": tags
     }
-    model_client = ModelClient(project, client)
-    result = model_client.save_model(model_obj)
+    result = client.models.save_model(model_obj)
 
     print(f'Model saved, name: {name}')
 
 
 # save experiment using model
-def save_experiment(client, experiment_name, filename, algo, modelId, project):
+def save_experiment(client, experiment_name, filename, algo, model_id):
     # create experiment
-    experiment_client = ExperimentClient(client)
-    result = experiment_client.save_experiment(experiment_name, project, title=experiment_name, modelId=modelId)
-    experiment = Experiment.get_experiment(experiment_name, project, experiment_client)
+    result = client.experiments.save_experiment(experiment_name, title=experiment_name, modelId=model_id)
+    experiment = Experiment(client.experiments.get_experiment(experiment_name), client.experiments)
     run_id = None
     with open(filename, "rb") as model:
         with experiment.start_run() as run:
@@ -99,15 +96,13 @@ def save_experiment(client, experiment_name, filename, algo, modelId, project):
 
 # train model using the connection
 def train(params):
-    project = params['projectId']
-    # create a Cortex client instance from the job's parameters
-    client = Cortex.client(api_endpoint=params['apiEndpoint'], project=project, token=params['token'])
+    client = Cortex.from_message(params)
 
     payload = params['payload']
     # Read connection
     connection_name = payload['connection_name']
     print(f'Reading connection {connection_name}')
-    connection = client.get_connection(connection_name)
+    connection = client.connections.get_connection(connection_name)
     conn_params = {}
     for p in connection['params']:
         conn_params.update({p['name']: p['value']})
@@ -178,7 +173,7 @@ def train(params):
 
     model_name = payload["model_name"]
 
-    save_model(client, project, model_name, payload.get("model_title", ""), payload.get("model_description", ""),
+    save_model(client, model_name, payload.get("model_title", ""), payload.get("model_description", ""),
                payload.get("model_source", ""), payload.get("model_type", ""), payload.get("model_status", ""), payload.get("model_tags", []))
 
     # Save models as pickle files and Save experiments
@@ -187,10 +182,10 @@ def train(params):
     pickle_model(mlp, encoder, 'MLP', mlp_acc, 'Basic MLP model', 'german_credit_mlp.pkl')
     pickle_model(SVM, encoder, 'SVM', svm_acc, 'Basic SVM model', 'german_credit_svm.pkl')
 
-    save_experiment(client, 'gc_dtree_exp', 'german_credit_dtree.pkl', 'DecisionTreeClassifier', model_name, project)
-    save_experiment(client, 'gc_logit_exp', 'german_credit_logit.pkl', 'LogisticRegression', model_name, project)
-    save_experiment(client, 'gc_mlp_exp', 'german_credit_mlp.pkl', 'MLPClassifier', model_name, project)
-    save_experiment(client, 'gc_svm_exp', 'german_credit_svm.pkl', 'SVM', model_name, project)
+    save_experiment(client, 'gc_dtree_exp', 'german_credit_dtree.pkl', 'DecisionTreeClassifier', model_name)
+    save_experiment(client, 'gc_logit_exp', 'german_credit_logit.pkl', 'LogisticRegression', model_name)
+    save_experiment(client, 'gc_mlp_exp', 'german_credit_mlp.pkl', 'MLPClassifier', model_name)
+    save_experiment(client, 'gc_svm_exp', 'german_credit_svm.pkl', 'SVM', model_name)
 
 
 if __name__ == "__main__":
