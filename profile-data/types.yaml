@@ -1,0 +1,17 @@
+camel: 1.0.0
+types:
+  - camel: 1.0.0
+    name: default/NutrReq
+    title: ProfDataRequest
+    description: Parameters passed to Nutrition Skill
+    parameters:
+      - name: payload
+        type: object
+        required: true
+  - camel: 1.0.0
+    name: default/NutrRes
+    title: ProfDataResponse
+    description: Nutrition Skill Response
+    parameters:
+      - name: payload
+        type: object
