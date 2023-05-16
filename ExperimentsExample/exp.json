@@ -1,0 +1,6 @@
+{
+  "name": "gc_dtree_exp",
+  "title": "Decision Tree model",
+  "description": "Decision Tree model",
+  "modelId": "german-credit-model"
+}

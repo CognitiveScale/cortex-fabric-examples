@@ -1,5 +1,5 @@
 {
-  "name": "exp-connection",
+  "name": "exp-connection-gc",
   "title": "S3 Conn for fabric examples - German Credit Data",
   "description": "S3 Conn",
   "connectionType": "s3",
@@ -17,7 +17,7 @@
     },
     {
       "name": "publicKey",
-      "value": ""
+      "value": "replace-me"
     },
     {
       "name": "secretKey",

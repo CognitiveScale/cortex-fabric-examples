@@ -9,7 +9,8 @@ import logging
 import numpy as np
 import pandas as pd
 from cortex import Cortex
-
+from cortex.experiment import Experiment
+from predict.cat_encoder import CatEncoder
 from predict.request_models import InvokeRequest
 
 model = None
@@ -27,11 +28,11 @@ def load_model(api_endpoint: str, token: str, project_id: str, experiment_name: 
     # Load Model from the experiment run
     logging.info("Loading model artifacts from experiment run...")
     try:
-        experiment = client.experiment(experiment_name)
+        experiment = Experiment(document=client.experiments.get_experiment(experiment_name), client=client.experiments)
         run = experiment.get_run(run_id) if run_id else experiment.last_run()
         model = run.get_artifact(artifact_key)
-    except Exception as e:
-        logging.error("Error: Failed to load model: {}".format(e))
+    except Exception as exp:
+        logging.error(f"Error: Failed to load model: {exp}")
         raise
 
     logging.info("Model Loaded!")

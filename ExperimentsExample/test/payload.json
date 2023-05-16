@@ -1,6 +1,6 @@
 {
   "payload": {
-    "connection_name": "german-credit-e9cef",
+    "connection_name": "exp-connection",
     "model_name": "german_credit_model",
     "model_title": "German Credit Model",
     "model_description": "German Credit Model",
@@ -37,7 +37,6 @@
         "foreign - yes"
       ]
     ],
-    "exp_name": "gc_dtree_exp",
-    "run_id": "gl103av"
+    "exp_name": "gc_dtree_exp"
   }
 }

@@ -5,5 +5,10 @@
       "instances": [
         ["... >= 200 DM / salary assignments for at least 1 year", 6,"critical account/ other credits existing (not at this bank)", "car (new)", 1343, "... < 100 DM", ".. >= 7 years", 1, "male : single", "others - none", 4, "real estate", "> 25 years", "none", "own", 2, "skilled employee / official", 2, "phone - none", "foreign - no"],
         ["... < 0 DM", 28, "existing credits paid back duly till now", "car (new)", 4006, "... < 100 DM", "1 <= ... < 4 years", 3, "male : single", "others - none", 2, "car or other, not in attribute 6", "> 25 years", "none", "own", 1, "unskilled - resident", 1, "phone - none", "foreign - yes"]]
+  },
+  "properties": {
+    "experiment-name": "gc_dtree_exp",
+    "run-id": "6210u6o",
+    "model-id": "german-credit-model"
   }
 }
