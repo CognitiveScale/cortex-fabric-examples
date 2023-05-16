@@ -1,0 +1,9 @@
+{
+  "payload": {
+    "domain_contract_repo": "https://raw.githubusercontent.com/project-hadron/hadron-asset-bank/nutrition/contracts/factory/nutrition",
+    "hadron_kwargs": {
+      "HADRON_REPORTS_SOURCE": "csv/titanic.csv",
+      "HADRON_REPORTS_SINK": "demoo2"
+    }
+  }
+}

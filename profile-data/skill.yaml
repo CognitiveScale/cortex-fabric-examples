@@ -1,0 +1,21 @@
+camel: 1.0.0
+name: profile-data
+title: profile-data
+description: profile-data
+inputs:
+  - name: params
+    title: Job Input
+    parameters:
+      $ref: default/NutrReq
+    routing:
+      all:
+        action  : profile-data
+        runtime: cortex/jobs
+        output: result
+
+outputs:
+  - name: result
+    title: Job result
+    parameters:
+      $ref: default/NutrRes
+  
