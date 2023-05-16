@@ -23,10 +23,19 @@ tests: check-env
 	cortex skills invoke --params-file ./test/payload.json ${SKILL_NAME} train --project ${PROJECT_NAME}
 	cortex skills invoke --params-file ./test/payload.json ${SKILL_NAME} predict --project ${PROJECT_NAME}
 
+train-invoke: check-env
+	cortex skills invoke --params-file ./test/payload.json ${SKILL_NAME} train --project ${PROJECT_NAME}
+
+infer-invoke: check-env
+	cortex skills invoke --params-file ./test/payload.json ${SKILL_NAME} predict --project ${PROJECT_NAME}
+
+conn:
+	cortex connections save conn.json --project ${PROJECT_NAME}
+
 types:
 	cortex types save -y types.yaml --project ${PROJECT_NAME}
 
-all: types build push deploy tests
+all: conn types build push deploy tests
 
 get: check-env
 	cortex skills describe ${SKILL_NAME} --project ${PROJECT_NAME}
