@@ -175,7 +175,7 @@ def make_batch_predictions(input_params):
                     predicted_df.reset_index(inplace=True, drop=True)
                     data_dict = predicted_df.to_dict("records")
                     # Insert collection
-                    client[database][output_collection].insert_many(data_dict)
+                    mongo_client[database][output_collection].insert_many(data_dict)
                     skip_records += batch_size
                 else:
                     break
