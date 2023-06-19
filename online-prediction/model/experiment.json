@@ -1,6 +1,6 @@
 {
-  "name": "gc_dtree_exp",
-  "title": "Decision Tree model",
+  "name": "gc_dtree_exp_op",
+  "title": "Decision Tree model for Online prediction",
   "description": "Decision Tree model",
   "modelId": "german-credit-model"
 }

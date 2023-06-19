@@ -42,6 +42,7 @@ def init(request: InitializeRequest):
 @app.post('/invoke')
 async def run(request: InvokeRequest):
     logging.info("Online Prediction: Invoke Request:{}".format(request))
+    logging.info("Online Prediction: Invoke Request Properties:{}".format(request.properties))
 
     try:
         predictions = await process(request)
@@ -57,4 +58,4 @@ async def run(request: InvokeRequest):
 
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=5000)
+    uvicorn.run(app, host="0.0.0.0", port=5000, log_level="debug")

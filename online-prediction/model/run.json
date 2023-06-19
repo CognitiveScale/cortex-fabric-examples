@@ -1,5 +1,5 @@
 {
-  "experimentName": "gc_dtree_exp",
+  "experimentName": "gc_dtree_exp_op",
   "meta": {
     "algo": "DecisionTreeClassifier"
   },
