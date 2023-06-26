@@ -1,5 +1,5 @@
 requests==2.31.0
-cortex-python==6.0.3
+cortex-python==6.3.1
 websocket-client==1.2.1
 fastapi==0.68.1
 uvicorn==0.15.0
