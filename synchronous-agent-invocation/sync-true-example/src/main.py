@@ -49,7 +49,7 @@ def invoke_agent(api_endpoint, project, token, payload):
     }
     response = requests.request("POST", url, data=json.dumps({"payload": payload}), headers=headers,
                                 params={"sync": True})
-    if response.headers.get('Content-Type') == 'application/json':
+    if 'application/json' in response.headers.get('Content-Type'):
         agent_res = json.loads(response.text)
         activation_id = agent_res['activationId']
     else:
