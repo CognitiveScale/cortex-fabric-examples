@@ -20,6 +20,7 @@ you may change to another framework or language.
 
 #### Files to review
 * `skill.yaml` Skill definition
+* `types.yaml` Types definition (used in `skill.yaml`)
 * `train/train.py` Model train code to be run as Cortex Job
 * `train/requirements.txt` Python3 libraries dependencies
 * `train/Dockerfile` to build Docker image for train action
@@ -55,8 +56,13 @@ A Makefile is provided to do these steps. Set environment variables `DOCKER_PREG
   --docker <DOCKER_IMAGE> \
   --project <Project Name>
   ```
-6. Modify the `skill.yaml` file.
-7. Save/deploy the Skill.
+6. Save custom types from `types.yaml` file (if any).
+```
+cortex types save types.yaml --project <Project Name>
+```
+
+7. Modify the `skill.yaml` file.
+8. Save/deploy the Skill.
   ```
   cortex skills save -y skill.yaml --project <Project Name>
   ```
