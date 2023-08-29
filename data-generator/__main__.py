@@ -1,10 +1,7 @@
 import json
-import sys
-#from cortex import Cortex,Message
 from ds_discovery import Controller
 import os
 import warnings
-import requests
 
 warnings.simplefilter(action='ignore', category=FutureWarning)
 warnings.simplefilter(action='ignore', category=DeprecationWarning)
