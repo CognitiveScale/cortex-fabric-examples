@@ -1,4 +1,4 @@
-cortex-python
+sensa-python
 fastapi
 uvicorn
 scikit-learn

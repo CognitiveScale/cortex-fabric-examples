@@ -1,4 +1,4 @@
-cortex-python
+sensa-python
 pymongo[srv]
 logzero
 fastapi
