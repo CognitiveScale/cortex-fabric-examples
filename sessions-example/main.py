@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-from cortex import Cortex
+from sensa import Sensa
 
 app = FastAPI()
 
@@ -8,7 +8,7 @@ app = FastAPI()
 @app.post('/start')
 def start(req: dict):
     payload = req['payload']
-    client = Cortex.client(api_endpoint=req["apiEndpoint"], project=req["projectId"], token=req["token"])
+    client = Sensa.client(api_endpoint=req["apiEndpoint"], project=req["projectId"], token=req["token"])
     ttl = None
     description = "No description given"
     if "ttl" in payload:
@@ -22,7 +22,7 @@ def start(req: dict):
 @app.post('/get')
 def get(req: dict):
     payload = req['payload']
-    client = Cortex.client(api_endpoint=req["apiEndpoint"], project=req["projectId"], token=req["token"])
+    client = Sensa.client(api_endpoint=req["apiEndpoint"], project=req["projectId"], token=req["token"])
 
     session_id = None
     if "session_id" in payload:
@@ -41,7 +41,7 @@ def get(req: dict):
 @app.post('/put')
 def put(req: dict):
     payload = req['payload']
-    client = Cortex.client(api_endpoint=req["apiEndpoint"], project=req["projectId"], token=req["token"])
+    client = Sensa.client(api_endpoint=req["apiEndpoint"], project=req["projectId"], token=req["token"])
 
     session_id = None
     if "session_id" in payload:
@@ -60,7 +60,7 @@ def put(req: dict):
 @app.post('/delete')
 def delete(req: dict):
     payload = req['payload']
-    client = Cortex.client(api_endpoint=req["apiEndpoint"], project=req["projectId"], token=req["token"])
+    client = Sensa.client(api_endpoint=req["apiEndpoint"], project=req["projectId"], token=req["token"])
 
     session_id = None
     if "session_id" in payload:
