@@ -13,8 +13,8 @@ import boto3
 import pymongo
 
 # cortex
-from cortex import Cortex
-from cortex.experiment import Experiment
+from sensa import Sensa
+from sensa.experiment import Experiment
 
 
 def load_model(client, experiment_name, run_id, artifact_key):
@@ -115,8 +115,8 @@ def make_batch_predictions(input_params):
     batch_size = int(input_params["properties"]["batch-size"])
 
     try:
-        # Initialize Cortex Client
-        client = Cortex.from_message(params)
+        # Initialize Sensa Client
+        client = Sensa.from_message(params)
 
         # Read cortex connection details
         connection = client.connections.get_connection(input_params["properties"]["connection-name"])
