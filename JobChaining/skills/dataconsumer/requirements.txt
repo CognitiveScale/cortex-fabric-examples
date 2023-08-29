@@ -1,2 +1,2 @@
-cortex-python
+sensa-python
 pandas

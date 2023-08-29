@@ -8,7 +8,7 @@ The filename uses the `activationId` which is passed to all skills/actions durin
 - Python 3.x
 - Docker client
 - Bash shell ( Power shell TBA )
-- Cortex client
+- Sensa client
 - URL/Credentials for a cortex instance
 
 ## Deploying

@@ -3,15 +3,15 @@ Copyright (c) 2020. Cognitive Scale Inc. All rights reserved.
 
 Licensed under CognitiveScale Example Code [License](https://cognitivescale.github.io/cortex-fabric-examples/LICENSE.md)
 """
-from cortex import Cortex
-from cortex.content import ManagedContentClient
+from sensa import Sensa
+from sensa.content import ManagedContentClient
 import pandas as pd
 import sys
 import json
 
 def process(params):
-    # create a Cortex client instance from the job's parameters
-    client = Cortex.client(api_endpoint=params['apiEndpoint'], token=params['token'])
+    # create a Sensa client instance from the job's parameters
+    client = Sensa.client(api_endpoint=params['apiEndpoint'], token=params['token'])
     # get he agent payload
     payload = params['payload']
     # You can print logs to the console these are collected by docker/k8s
@@ -23,7 +23,7 @@ def process(params):
             raise Exception("'datafileKey' is required in the payload")
         content_key = payload['datafileKey']
     print(f'Fetching datafile from managed content: {content_key}')
-    # use the `client` instance to use Cortex client libraries
+    # use the `client` instance to use Sensa client libraries
     content_client = ManagedContentClient(client);
     # This is streaming the records to Cortex's managed content
     # if this was called as part of an agent
@@ -36,5 +36,5 @@ if __name__ == "__main__":
     if len(sys.argv)<2:
         print("Message/payload commandline is required")
         exit(1)
-    # The last argument in sys.argv is the payload from cortex
+    # The last argument in sys.argv is the payload from sensa
     process(json.loads(sys.argv[-1]))
