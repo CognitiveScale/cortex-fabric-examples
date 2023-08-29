@@ -4,9 +4,9 @@ Copyright (c) 2021. Cognitive Scale Inc. All rights reserved.
 Licensed under CognitiveScale Example Code [License](https://cognitivescale.github.io/cortex-fabric-examples/LICENSE.md)
 """
 import sys
-from cortex import Cortex
-from cortex.utils import log_message, get_logger
-from cortex.experiment import Experiment
+from sensa import Sensa
+from sensa.utils import log_message, get_logger
+from sensa.experiment import Experiment
 import json
 import numpy as np
 import logging
@@ -92,7 +92,7 @@ def make_batch_predictions(input_params):
     outcome = input_params["outcome"]
 
     # Initialize Cortex Client
-    client = Cortex.client(api_endpoint=url, token=token, project=project)
+    client = Sensa.client(api_endpoint=url, token=token, project=project)
 
     # Read cortex connection details
     print("connection retreival started")
