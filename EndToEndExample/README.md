@@ -1,12 +1,12 @@
-### Cortex End to End Example Demonstrating cortex-python SDK (Train and Predict Skill)
+### Sensa End to End Example Demonstrating sensa-python SDK (Train and Predict Skill)
 
 ### Prerequisites
 - Python 3.x
 - Docker client
 - Bash shell ( Power shell TBA )
-- Cortex client ( installed )
+- Sensa client ( installed )
 - URL/Credentials for a cortex instance
-- Use `make install` to install the cortex-python SDK
+- Use `make install` to install the sensa-python SDK
 
 #### Connections and Data Set
 For simplicity we selected german credit dataset(find it in [data](data)) and training on this dataset. 
@@ -20,17 +20,17 @@ There are certain configs and secrets like AWS Public key and Private Key we nee
 Example: If you have a secret key called `awssecret` set in your project you can use it to create connections by Using `#SECURE.awssecret` as the value to one of the parameters in the Connections Object. Similary any secret key set such as `<secret_name>` can be used as `#SECURE.<secret_name>`. This needs to be updated in [config.py](config.py) 
 
 #### Train Action: 
-Cortex action to train and save model in Experiment. 
-This is implemented as a background job (Cortex Action of type Job) that trains a model on specified connection.
+Sensa action to train and save model in Experiment. 
+This is implemented as a background job (Sensa Action of type Job) that trains a model on specified connection.
 It uses the connection saved in the above step
 
-In the end trained model is saved with metadata in Cortex Experiments to fetch and run predictions later.
+In the end trained model is saved with metadata in Sensa Experiments to fetch and run predictions later.
 Every time we run this Job to train model, the model will be versioned and stored with its metadata. 
 Later this metadata and version numbers will be used to select required model.
 
 #### Predict Action: 
-This Action demonstrates fetching saved model from Cortex Experiment and running predictions on it. 
-For simplicity, this skill is loading the latest trained model in the Cortex Experiment(we can specify the `run_id` as well). 
+This Action demonstrates fetching saved model from Sensa Experiment and running predictions on it. 
+For simplicity, this skill is loading the latest trained model in the Sensa Experiment(we can specify the `run_id` as well). 
 In production environment, users can select a model at specific version or based on metadata saved. 
 This will load and cache the model in memory for subsequent prediction invocation.
 
@@ -42,28 +42,28 @@ you may change to another framework or language.
 * `skill.json` Skill definition and action mapping
 * `conn.json` Connection definition
 * `config.py` Configuration file to update connection and project configurations and secrets
-* `actions/train/train.py` Model train code to be run as Cortex Job
+* `actions/train/train.py` Model train code to be run as Sensa Job
 * `actions/train/requirements.txt` Python3 libraries dependencies
 * `actions/train/Dockerfile` to build Docker image for train action
 * `Makefile` Makefile to build and push Train and Predict Action Docker images to the specified `DOCKER_PREGISTRY_URL`
-* `actions/predict/main.py` Predict code to be run as Cortex Daemon
+* `actions/predict/main.py` Predict code to be run as Sensa Daemon
 * `actions/predict/requirements.txt` Python3 libraries dependencies
 * `actions/predict/Dockerfile` to build Docker image for predict action
-* `deploy_skill.py` Uses cortex-python SDK to deploy skill and actions
+* `deploy_skill.py` Uses sensa-python SDK to deploy skill and actions
 * `tests/test_train.json` Sample Payload for Train Skill
 * `tests/test_predict.json` Sample Payload for Predict Skill
 
 #### Steps
 
-A Makefile is provided to do these steps. Set environment variables `DOCKER_PREGISTRY_URL` (like `<docker-registry-url>/<namespace-org>`) and `PROJECT_NAME` (Cortex Project Name) and use Makefile to build and push docker images of Train and Predict Actions.
+A Makefile is provided to do these steps. Set environment variables `DOCKER_PREGISTRY_URL` (like `<docker-registry-url>/<namespace-org>`) and `PROJECT_NAME` (Sensa Project Name) and use Makefile to build and push docker images of Train and Predict Actions.
 `make deploy` will build & push Docker images for Train and Predict Actions and then deploy the skill(wrapping the actions).  
-Alternatively running the cells in [cortex-python_v6_example.ipynb](cortex-python_v6_example.ipynb)
+Alternatively running the cells in [sensa-python_v6_example.ipynb](sensa-python_v6_example.ipynb)
 will also deploy the skills and the actions.
 
 In order to modify the actions follow the steps below: 
 
 
-1. Set environment variables `DOCKER_PREGISTRY_URL` (like `<docker-registry-url>/<namespace-org>`) and `PROJECT_NAME` (Cortex Project Name)
+1. Set environment variables `DOCKER_PREGISTRY_URL` (like `<docker-registry-url>/<namespace-org>`) and `PROJECT_NAME` (Sensa Project Name)
 2. Start by modifying the `conn.json` file updating the connection definition
 3. Make sure the secrets such as AWS_PUBLIC_KEY, S3_BUCKET, FILE_NAME, API_ENDPOINT and CORTEX_TOKEN  are updated in the `config.py` file
 4. Modify the main executable (`main.py` by default) run by the action image's entrypoint/command to handle the action's custom logic.
@@ -189,4 +189,4 @@ And the Predict action output will look something like this
 
 
 
-For more details about how to build skills go to [Cortex Fabric Documentation - Development - Develop Skills](https://cognitivescale.github.io/cortex-fabric/docs/build-skills/define-skills)
+For more details about how to build skills go to [Sensa Fabric Documentation - Development - Develop Skills](https://cognitivescale.github.io/cortex-fabric/docs/build-skills/define-skills)

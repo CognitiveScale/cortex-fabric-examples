@@ -2,8 +2,8 @@
 Copyright (c) 2021. Cognitive Scale Inc. All rights reserved.
 """
 
-from cortex import Cortex
-from cortex.experiment import Experiment
+from sensa import Sensa
+from sensa.experiment import Experiment
 from fastapi import FastAPI
 
 import numpy as np
@@ -25,7 +25,7 @@ def run(req: dict):
         run_id = payload["run_id"]
 
     # if model is not loaded
-    client = Cortex.client(api_endpoint=req["apiEndpoint"], project=req["projectId"], token=req["token"])
+    client = Sensa.client(api_endpoint=req["apiEndpoint"], project=req["projectId"], token=req["token"])
     
     model_ctx[exp_name] = init_model(exp_name, run_id, client)
 
