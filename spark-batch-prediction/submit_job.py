@@ -8,9 +8,9 @@ import os
 import json
 import subprocess
 import logging
-from cortex import Cortex
-from cortex.utils import log_message, get_logger
-from cortex.experiment import Experiment
+from sensa import Sensa
+from sensa.utils import log_message, get_logger
+from sensa.experiment import Experiment
 
 
 def get_runtime_args(config):
@@ -38,7 +38,7 @@ if __name__ == '__main__':
     skill_name = input_params["skillName"]
     experiment_name = input_params["properties"]["experiment-name"]
     run_id = input_params["properties"]["run-id"]
-    client = Cortex.client(api_endpoint=url, token=token, project=project)
+    client = Sensa.client(api_endpoint=url, token=token, project=project)
     result = client.experiments.get_experiment(experiment_name)
     experiment = Experiment(result, client.experiments)
     run = experiment.get_run(run_id)

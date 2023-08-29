@@ -33,5 +33,5 @@ ifndef DOCKER_PREGISTRY_URL
 	$(error environment variable DOCKER_PREGISTRY_URL is not set. Set it like <docker-registry-url>/<namespace-org>)
 endif
 ifndef PROJECT_NAME
-	$(error environment variable PROJECT_NAME is not set. Set this to Cortex project name.)
+	$(error environment variable PROJECT_NAME is not set. Set this to Sensa project name.)
 endif

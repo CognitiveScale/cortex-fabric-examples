@@ -8,8 +8,8 @@ import sys
 import json
 import requests
 
-from cortex.utils import generate_token
-from cortex.env import CortexEnv
+from sensa.utils import generate_token
+from sensa.env import SensaEnv
 
 
 def read_config() -> dict:
@@ -26,7 +26,7 @@ def get_env_details():
     Environment Details from Local Cortex Configure
     :return: host, token, project
     """
-    env = CortexEnv()
+    env = SensaEnv()
     token = generate_token(env.config)
     host = env.api_endpoint
     project = env.project

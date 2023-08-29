@@ -8,8 +8,8 @@ import logging
 
 import numpy as np
 import pandas as pd
-from cortex import Cortex
-from cortex.experiment import Experiment
+from sensa import Sensa
+from sensa.experiment import Experiment
 from predict.cat_encoder import CatEncoder
 from predict.request_models import InvokeRequest
 
@@ -23,7 +23,7 @@ def load_model(api_endpoint: str, token: str, project_id: str, experiment_name: 
         raise ValueError("experiment-name is required if a model is not initialized")
 
     # Initialize Cortex Client
-    client = Cortex.client(api_endpoint=api_endpoint, token=token, project=project_id)
+    client = Sensa.client(api_endpoint=api_endpoint, token=token, project=project_id)
 
     # Load Model from the experiment run
     logging.info("Loading model artifacts from experiment run...")

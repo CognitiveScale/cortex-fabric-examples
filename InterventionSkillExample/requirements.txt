@@ -1,3 +1,3 @@
-cortex-python
+sensa-python
 fastapi
 uvicorn

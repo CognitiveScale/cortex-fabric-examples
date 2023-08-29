@@ -4,8 +4,8 @@ discovery-transition-ds == 3.02.074
 kubernetes
 pyarrow == 4.0.1
 fastparquet
-# Cortex
-cortex-python
+# Sensa
+sensa-python
 # Data Science packages
 pandas >= 1.1
 numpy

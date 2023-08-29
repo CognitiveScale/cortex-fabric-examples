@@ -4,10 +4,10 @@
 """
 ## steps
 1. S3 bucket contains the data(in this case csv file) 
-2. We save a connection of the given types -> (demonstrated using cortex-python sdk)
+2. We save a connection of the given types -> (demonstrated using sensa-python sdk)
 5. Dockerize and push an action to train multiple models and save in expermients (use the connection in step 2 to load the data) -> job
 3. Dockerize and push another action to predict using the exprinment name(to specify a particular model) -> daemon
-4. Save a skill definition, and route inputs to two different actions -> (demonstrated using cortex-python sdk)
+4. Save a skill definition, and route inputs to two different actions -> (demonstrated using sensa-python sdk)
 5. Test the skills using cli
 """
 
@@ -22,7 +22,7 @@ from pprint import pprint
 
 from config import PROJECT_ID, API_ENDPOINT, CORTEX_TOKEN, CONN_PARAMS
 
-from cortex import Cortex
+from sensa import Sensa
 
 
 params = {
@@ -32,7 +32,7 @@ params = {
 }
 
 if __name__ == "__main__":
-    client = Cortex.client()
+    client = Sensa.client()
     conn_params = {}
     with open("conn.json") as f:
         conn_params = json.load(f)

@@ -13,8 +13,8 @@ import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from cat_encoder import CatEncoder
-from cortex import Cortex
-from cortex.experiment import Experiment
+from sensa import Sensa
+from sensa.experiment import Experiment
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.neural_network import MLPClassifier
 from sklearn import svm
@@ -91,7 +91,7 @@ def save_experiment(client, experiment_name, filename, algo, model_id):
 def train(params):
     project = params['projectId']
     # create a Cortex client instance from the job's parameters
-    # client = Cortex.client(api_endpoint=params['apiEndpoint'], project=project, token=params['token'])
+    # client = Sensa.client(api_endpoint=params['apiEndpoint'], project=project, token=params['token'])
     client = Cortex.from_message(params)
 
     payload = params['payload']
@@ -181,5 +181,5 @@ if __name__ == "__main__":
     if len(sys.argv) < 2:
         print("Message/payload commandline is required")
         exit(1)
-    # The last argument in sys.argv is the payload from cortex
+    # The last argument in sys.argv is the payload from sensa
     train(json.loads(sys.argv[-1]))

@@ -1,7 +1,7 @@
 {
     "name": "e2e-example",
     "camel": "1.0.0",
-    "title": "End to End example with cortex-python v6 SDK",
+    "title": "End to End example with sensa-python v6 SDK",
     "description": "Training multiple models and using them to predict",
     "inputs": [
         {

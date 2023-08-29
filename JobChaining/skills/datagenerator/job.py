@@ -3,8 +3,8 @@ Copyright (c) 2020. Cognitive Scale Inc. All rights reserved.
 
 Licensed under CognitiveScale Example Code [License](https://cognitivescale.github.io/cortex-fabric-examples/LICENSE.md)
 """
-from cortex import Cortex
-from cortex.content import ManagedContentClient
+from sensa import Sensa
+from sensa.content import ManagedContentClient
 import json
 import sys
 import time
@@ -21,13 +21,13 @@ def datagen_stream(count):
     print('DONE GENERATING DATA')
 
 def process(params):
-    # create a Cortex client instance from the job's parameters
-    client = Cortex.client(api_endpoint=params['apiEndpoint'], token=params['token'])
+    # create a Sensa client instance from the job's parameters
+    client = Sensa.client(api_endpoint=params['apiEndpoint'], token=params['token'])
     # get the agent payload
     payload = params.get('payload',{})
     # You can print logs to the console these are collected by docker/k8s
     print(f'Got payload: {payload}')
-    # use the `client` instance to use Cortex client libraries
+    # use the `client` instance to use Sensa client libraries
     content_client = ManagedContentClient(client);
     if 'activationId' in params:
         file_name = f'jobchain-data-{params["activationId"]}'
@@ -44,5 +44,5 @@ if __name__ == "__main__":
     if len(sys.argv)<2:
         print("Message/payload commandline is required")
         exit(1)
-    # The last argument in argv[] is the payload from cortex
+    # The last argument in argv[] is the payload from sensa
     process(json.loads(sys.argv[-1]))

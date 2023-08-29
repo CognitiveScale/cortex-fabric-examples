@@ -9,8 +9,8 @@ import time
 import json
 import urllib.parse
 from threading import Thread
-from cortex.utils import generate_token
-from cortex.env import CortexEnv
+from sensa.utils import generate_token
+from sensa.env import SensaEnv
 
 
 def on_message(ws, message):
@@ -77,7 +77,7 @@ def get_env_details():
     Environment Details from Local Cortex Configure
     :return: host, token, project
     """
-    env = CortexEnv()
+    env = SensaEnv()
     token = generate_token(env.config)
     host = env.api_endpoint
     project = env.project
