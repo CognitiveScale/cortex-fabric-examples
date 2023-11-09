@@ -3,6 +3,6 @@ discovery-transition-ds
 cortex-python-profiles==1.3.0a1
 fastparquet==0.7.0
 pandas==1.3.3
-pyarrow==5.0.0
+pyarrow==14.0.1
 git+https://github.com/project-hadron/discovery-connectors.git@a0039e527f
 Jinja2==3.0.3
