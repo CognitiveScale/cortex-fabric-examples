@@ -3,6 +3,8 @@
 .idea/
 .DS_Store
 .vscode
+*.pickle
+*.log
 venv/
 dist
 ai-missions/*/skills/*/src/common
