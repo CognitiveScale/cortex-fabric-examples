@@ -1,0 +1,11 @@
+time,text
+2022-12-14 15:18:37.133788,start run-cycle 0
+2022-12-14 15:18:37.134279,start task cycle 0
+2022-12-14 15:18:37.135034,running telco_churn_tr
+2022-12-14 15:18:39.129411,"canonical shape is (7043, 21)"
+2022-12-14 15:18:39.130494,running telco_churn_sb
+2022-12-14 15:18:39.181718,"canonical shape is (1000, 21)"
+2022-12-14 15:18:39.182548,running telco_churn_wr
+2022-12-14 15:18:39.188143,"canonical shape is (1000, 21)"
+2022-12-14 15:18:39.188711,tasks complete
+2022-12-14 15:18:39.189168,end of report
