@@ -1,3 +1,3 @@
 cortex-python==6.3.1a1
-fastapi==0.66.0
+fastapi==0.109.1
 uvicorn==0.14.0
